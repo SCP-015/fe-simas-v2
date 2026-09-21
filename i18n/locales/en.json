@@ -679,6 +679,18 @@
   },
   "pages": {
     "auth": {
+      "leftPanel": {
+        "badge": "Admin Portal",
+        "title": "Manage company assets in real-time",
+        "subtitle": "One platform for asset assignments, inventory, and history.",
+        "feature1Title": "Manage assets & inventory",
+        "feature1Description": "Organize asset data, categories, locations, and inventory.",
+        "feature2Title": "Track history & reports",
+        "feature2Description": "View assignments, returns, and asset reports in real-time.",
+        "feature3Title": "Schedules & reminders",
+        "feature3Description": "Plan asset maintenance and get automatic reminders.",
+        "footer": "All rights reserved."
+      },
       "signIn": {
         "title": "Sign In",
         "subtitle": "Please enter your credentials to sign in",
@@ -1150,7 +1162,8 @@
       "title": "Handover",
       "description": "Manage handover documents",
       "addHandover": "Create Handover",
-      "columnDate": "Date",
+      "columnDate": "Created Date",
+      "columnHandoverDate": "Handover Date",
       "columnHandedOverBy": "Handed Over By",
       "columnReceivedBy": "Received By",
       "columnDocNo": "Doc No.",
@@ -1216,7 +1229,8 @@
           "itemsRequired": "At least one asset or stock item is required",
           "itemRequired": "Item selection is required",
           "handedOverByRequired": "Handover employee is required",
-          "receivedByRequired": "Receiver employee is required"
+          "receivedByRequired": "Receiver employee is required",
+          "dateRequired": "Handover date is required"
         }
       },
       "types": {
