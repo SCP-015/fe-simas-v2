@@ -1162,7 +1162,8 @@
       "title": "Serah Terima",
       "description": "Kelola dokumen serah terima",
       "addHandover": "Buat Serah Terima",
-      "columnDate": "Tanggal",
+      "columnDate": "Tanggal Dibuat",
+      "columnHandoverDate": "Tanggal Serah Terima",
       "columnHandedOverBy": "Diserahkan Oleh",
       "columnReceivedBy": "Diterima Oleh",
       "columnDocNo": "No. Dokumen",
@@ -1228,7 +1229,8 @@
           "itemsRequired": "Minimal harus ada satu item aset atau stok",
           "itemRequired": "Barang wajib dipilih",
           "handedOverByRequired": "Karyawan penyerah wajib dipilih",
-          "receivedByRequired": "Karyawan penerima wajib dipilih"
+          "receivedByRequired": "Karyawan penerima wajib dipilih",
+          "dateRequired": "Tanggal serah terima wajib diisi"
         }
       },
       "types": {

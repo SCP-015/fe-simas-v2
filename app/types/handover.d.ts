@@ -56,6 +56,7 @@ export interface Handover {
   } | null
   transactionType: TransactionType
   status: HandoverStatus
+  date: string | null
   note: string | null
   customFields: HandoverCustomField[]
   parentHandover: {

@@ -204,6 +204,15 @@ const baseColumns: TableColumn<Handover>[] = [
     }
   },
   {
+    accessorKey: 'date',
+    header: sortHeader(t('pages.handover.columnHandoverDate'), 'date'),
+    cell: ({ row }) => {
+      const d = row.original.date || row.original.createdAt
+      const formatted = d ? d.replace('T', ' ').slice(0, 16) : '-'
+      return h('span', { class: 'text-toned font-medium' }, formatted)
+    }
+  },
+  {
     accessorKey: 'handedOver',
     header: t('pages.handover.columnHandedOverBy'),
     cell: ({ row }) => {

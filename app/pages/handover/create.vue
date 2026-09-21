@@ -22,19 +22,34 @@
         :state="form"
         @submit="handleSubmit"
       >
-        <!-- Transaction Type: top-level radio (Penetapan / Pengembalian) -->
-        <UFormField
-          :label="$t('pages.handover.form.transactionType')"
-          name="transactionType"
-          required
-          class="mb-6"
-        >
-          <URadioGroup
-            v-model="form.transactionType"
-            :items="transactionTypeOptions"
-            orientation="horizontal"
-          />
-        </UFormField>
+        <!-- Transaction Type + Handover Date, same 2-column layout as Handed Over By / Received By below -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-6">
+          <!-- Transaction Type: top-level radio (Penetapan / Pengembalian) -->
+          <UFormField
+            :label="$t('pages.handover.form.transactionType')"
+            name="transactionType"
+            required
+          >
+            <URadioGroup
+              v-model="form.transactionType"
+              :items="transactionTypeOptions"
+              orientation="horizontal"
+            />
+          </UFormField>
+
+          <!-- Handover Date: defaults to now, editable -->
+          <UFormField
+            :label="$t('pages.handover.form.date')"
+            name="date"
+            required
+          >
+            <UInput
+              v-model="form.date"
+              type="datetime-local"
+              class="w-full"
+            />
+          </UFormField>
+        </div>
 
         <!-- ═══ Document Metadata — full width, employee pickers paired side by side ═══ -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-4">
@@ -450,6 +465,7 @@ const transactionTypeOptions = computed(() =>
 // Form state
 const form = reactive({
   transactionType: 'assign' as TransactionType,
+  date: getLocalDatetimeString(),
   note: '',
   receivedById: undefined as unknown as number,
   handedOverById: undefined as unknown as number,
@@ -622,6 +638,7 @@ const removeStockRow = (index: number) => {
 // Zod schema for form validation
 const schema = z.object({
   transactionType: z.enum(HANDOVER_TRANSACTION_TYPES),
+  date: z.string().min(1, t('pages.handover.form.validation.dateRequired')),
   note: z.string().optional().or(z.literal('')),
   receivedById: z.number().int().positive(t('pages.handover.form.validation.receivedByRequired')),
   handedOverById: z.number().int().positive(t('pages.handover.form.validation.handedOverByRequired')),
@@ -691,6 +708,7 @@ const handleSubmit = async () => {
       receivedById: form.receivedById,
       handedOverById: form.handedOverById,
       transactionType: form.transactionType,
+      date: form.date,
       note: form.note || null,
       customFields: form.customFields,
       attachmentIds: attachmentIds.value

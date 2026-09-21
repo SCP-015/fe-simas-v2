@@ -1162,7 +1162,8 @@
       "title": "Handover",
       "description": "Manage handover documents",
       "addHandover": "Create Handover",
-      "columnDate": "Date",
+      "columnDate": "Created Date",
+      "columnHandoverDate": "Handover Date",
       "columnHandedOverBy": "Handed Over By",
       "columnReceivedBy": "Received By",
       "columnDocNo": "Doc No.",
@@ -1228,7 +1229,8 @@
           "itemsRequired": "At least one asset or stock item is required",
           "itemRequired": "Item selection is required",
           "handedOverByRequired": "Handover employee is required",
-          "receivedByRequired": "Receiver employee is required"
+          "receivedByRequired": "Receiver employee is required",
+          "dateRequired": "Handover date is required"
         }
       },
       "types": {

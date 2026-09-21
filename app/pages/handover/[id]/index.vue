@@ -81,7 +81,7 @@
           <div class="col-span-12 sm:col-span-6 md:col-span-4">
             <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('pages.handover.form.date') }}</span>
             <div class="text-sm text-highlighted font-medium">
-              {{ formatDateTime(handover.createdAt) }}
+              {{ formatDateTime(handover.date || handover.createdAt) }}
             </div>
           </div>
 
