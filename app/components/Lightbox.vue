@@ -11,17 +11,20 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 cursor-zoom-out"
         @click.self="closeLightbox"
       >
-        <NuxtImg 
-          :src="lightboxImage" 
-          alt="Full Screenshot" 
+        <NuxtImg
+          :src="lightboxImage"
+          alt="Full Screenshot"
           class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-2xl object-contain cursor-default"
         />
         <button
           class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-          @click="closeLightbox"
           aria-label="Close Preview"
+          @click="closeLightbox"
         >
-          <UIcon name="i-lucide-x" class="w-5 h-5" />
+          <UIcon
+            name="i-lucide-x"
+            class="w-5 h-5"
+          />
         </button>
       </div>
     </Transition>

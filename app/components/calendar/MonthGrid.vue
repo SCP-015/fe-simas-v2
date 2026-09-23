@@ -110,7 +110,7 @@ const cells = computed(() => {
       inMonth: d.getMonth() === currentMonth,
       isToday: iso === todayIso,
       visible: events.slice(0, limit.value),
-      hidden: Math.max(0, events.length - limit.value),
+      hidden: Math.max(0, events.length - limit.value)
     }
   })
 })

@@ -1,5 +1,3 @@
-import type { ApiResponse } from './api'
-
 export interface Location {
   id: number
   name: string

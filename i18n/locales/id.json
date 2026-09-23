@@ -86,6 +86,7 @@
     "feedback": "Feedback",
     "capturing": "Menangkap...",
     "inventory": "Persediaan",
+    "transfer": "Transfer",
     "calendar": "Kalender"
   },
   "component": {
@@ -1002,6 +1003,31 @@
       "deleteOrganization": "Hapus Organisasi",
       "deleteTitle": "Hapus Organisasi",
       "deleteSuccess": "Organisasi berhasil dihapus"
+    },
+    "transfer": {
+      "title": "Transfer",
+      "description": "Lengkapi data barang masuk dan gabungkan menjadi Aset",
+      "statusAll": "Semua Status",
+      "statusPending": "Menunggu",
+      "statusMerged": "Sudah Digabung",
+      "noSerial": "Belum ada nomor seri",
+      "noSerialWithQuantity": "{quantity} unit, belum ada nomor seri",
+      "codeWithMore": "{codes} (+{more} lagi)",
+      "columnName": "Nama",
+      "columnCode": "Nomor Seri",
+      "columnPrice": "Harga",
+      "columnPurchaseDate": "Tanggal Pembelian",
+      "columnStatus": "Status",
+      "columnCreatedBy": "Dibuat Oleh",
+      "columnCreatedAt": "Dibuat Pada",
+      "createdBySystem": "Sistem Eksternal",
+      "columnAction": "Aksi",
+      "mergeToAsset": "Gabung ke Aset",
+      "mergeTitle": "Gabungkan ke Aset",
+      "mergeDescription": "Lengkapi data untuk menggabungkan barang transfer ini menjadi Aset",
+      "mergeSubmit": "Gabungkan",
+      "mergeNotFound": "Barang transfer tidak ditemukan",
+      "mergeAlreadyDone": "Barang transfer ini sudah digabung sebelumnya"
     },
     "subCategory": {
       "title": "Manajemen Sub Kategori",

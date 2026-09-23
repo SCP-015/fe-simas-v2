@@ -1,6 +1,6 @@
-import type { Attachment } from "./attachment"
+import type { Attachment } from './attachment'
 
-export type ScheduleRecurrence = "none" | "weekly" | "monthly" | "yearly"
+export type ScheduleRecurrence = 'none' | 'weekly' | 'monthly' | 'yearly'
 
 export interface ScheduleAssetRef {
   id: number

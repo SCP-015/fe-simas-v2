@@ -11,7 +11,6 @@
   >
     <template #body>
       <div class="space-y-4">
-
         <!-- Code Type -->
         <UFormField :label="$t('component.asset.printCodeModal.codeType')">
           <URadioGroup
@@ -72,14 +71,27 @@
               {{ $t('component.asset.printCodeModal.totalLabels', { count: assets.length }) }}
             </span>
           </div>
-          <div class="border border-default rounded-lg overflow-hidden bg-elevated relative" style="height: 380px;">
+          <div
+            class="border border-default rounded-lg overflow-hidden bg-elevated relative"
+            style="height: 380px;"
+          >
             <!-- Loading -->
-            <div v-if="isGenerating" class="flex items-center justify-center h-full">
-              <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+            <div
+              v-if="isGenerating"
+              class="flex items-center justify-center h-full"
+            >
+              <UIcon
+                name="i-lucide-loader-2"
+                class="w-6 h-6 animate-spin text-dimmed"
+              />
             </div>
 
             <!-- Canvas pages -->
-            <div v-else ref="previewContainer" class="h-full overflow-y-auto p-3 flex flex-col items-center gap-3">
+            <div
+              v-else
+              ref="previewContainer"
+              class="h-full overflow-y-auto p-3 flex flex-col items-center gap-3"
+            >
               <canvas
                 v-for="n in totalPages"
                 :key="n"
@@ -89,13 +101,29 @@
             </div>
 
             <!-- Page nav (multi-page) -->
-            <div v-if="totalPages > 1" class="absolute bottom-3 right-3 flex items-center gap-1">
-              <UButton size="xs" color="neutral" variant="solid" icon="i-lucide-chevron-up" :disabled="currentPage <= 1" @click="scrollToPage(currentPage - 1)" />
-              <UButton size="xs" color="neutral" variant="solid" icon="i-lucide-chevron-down" :disabled="currentPage >= totalPages" @click="scrollToPage(currentPage + 1)" />
+            <div
+              v-if="totalPages > 1"
+              class="absolute bottom-3 right-3 flex items-center gap-1"
+            >
+              <UButton
+                size="xs"
+                color="neutral"
+                variant="solid"
+                icon="i-lucide-chevron-up"
+                :disabled="currentPage <= 1"
+                @click="scrollToPage(currentPage - 1)"
+              />
+              <UButton
+                size="xs"
+                color="neutral"
+                variant="solid"
+                icon="i-lucide-chevron-down"
+                :disabled="currentPage >= totalPages"
+                @click="scrollToPage(currentPage + 1)"
+              />
             </div>
           </div>
         </div>
-
       </div>
     </template>
 
@@ -125,12 +153,9 @@ import * as pdfjsLib from 'pdfjs-dist'
 import pdfjsWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 import type { Asset } from '~/types/asset'
 
-// pdf.js always loads its worker as an ES module (`new Worker(src, { type: 'module' })`),
-// which browsers reject unless the response has a JS/module MIME type. Some static hosts
-// serve .mjs as application/octet-stream, which silently falls back to pdf.js's slow
-// single-threaded "fake worker". Re-wrapping the script in a Blob with an explicit JS
-// type sidesteps the host's Content-Type header entirely, since blob: URLs carry their
-// own type.
+// Some static hosts serve .mjs as application/octet-stream, which browsers reject for
+// pdf.js's ES-module worker and silently falls back to its slow "fake worker". Re-fetching
+// as a Blob with an explicit JS type sidesteps the host's Content-Type header entirely.
 let pdfWorkerReady: Promise<void> | null = null
 const ensurePdfWorker = () => {
   if (!pdfWorkerReady) {
@@ -170,28 +195,27 @@ const settings = reactive({
   showAssetName: false,
   showAssetCode: true,
   showCategoryName: false,
-  showCutMarks: true,
+  showCutMarks: true
 })
 
 const codeTypeOptions = computed(() => [
   { label: t('component.asset.printCodeModal.qrCode'), value: 'qrcode' },
-  { label: t('component.asset.printCodeModal.barcode128'), value: 'barcode128' },
+  { label: t('component.asset.printCodeModal.barcode128'), value: 'barcode128' }
 ])
 
 const labelSizeOptions = computed(() => [
   { label: t('component.asset.printCodeModal.sizeSmall'), value: 'small' },
   { label: t('component.asset.printCodeModal.sizeMedium'), value: 'medium' },
-  { label: t('component.asset.printCodeModal.sizeLarge'), value: 'large' },
+  { label: t('component.asset.printCodeModal.sizeLarge'), value: 'large' }
 ])
 
 const columnOptions = computed(() => [
   { label: '2', value: 2 },
   { label: '3', value: 3 },
   { label: '4', value: 4 },
-  { label: '5', value: 5 },
+  { label: '5', value: 5 }
 ])
 
-// --- Build PDF (same as before) ---
 const buildPdf = async (): Promise<jsPDF> => {
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
   const pageW = pdf.internal.pageSize.getWidth()
@@ -208,7 +232,6 @@ const buildPdf = async (): Promise<jsPDF> => {
   const fontSub = { small: 4, medium: 5.5, large: 7 }[settings.labelSize]
   const padCell = { small: 1.5, medium: 2.5, large: 3.5 }[settings.labelSize]
 
-  // Generate code images
   const codeImages: Record<number, string> = {}
   for (const asset of props.assets) {
     const offscreen = document.createElement('canvas')
@@ -216,13 +239,13 @@ const buildPdf = async (): Promise<jsPDF> => {
       if (settings.codeType === 'qrcode') {
         await QRCode.toCanvas(offscreen, asset.code, {
           width: 200, margin: 1,
-          color: { dark: '#000000', light: '#ffffff' },
+          color: { dark: '#000000', light: '#ffffff' }
         })
       } else {
         JsBarcode(offscreen, asset.code, {
           format: 'CODE128', width: 2, height: 60,
           displayValue: false, margin: 4,
-          background: '#ffffff', lineColor: '#000000',
+          background: '#ffffff', lineColor: '#000000'
         })
       }
       codeImages[asset.id] = offscreen.toDataURL('image/png')
@@ -320,7 +343,6 @@ const buildPdf = async (): Promise<jsPDF> => {
   return pdf
 }
 
-
 let debounceTimer: ReturnType<typeof setTimeout>
 const generatePreview = async () => {
   isGenerating.value = true
@@ -369,7 +391,7 @@ const debouncedPreview = () => {
 
 watch(
   () => [settings.codeType, settings.labelSize, settings.columns, settings.showAssetName, settings.showAssetCode, settings.showCategoryName, settings.showCutMarks],
-  () => { if (open.value) debouncedPreview() },
+  () => { if (open.value) debouncedPreview() }
 )
 
 watch(open, async (isOpen) => {

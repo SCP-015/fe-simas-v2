@@ -1,3 +1,20 @@
+interface NdefRecord {
+  recordType: string
+  encoding?: string
+  data: BufferSource
+}
+
+interface NdefReadingEvent {
+  serialNumber?: string
+  message?: { records: NdefRecord[] }
+}
+
+interface NdefReader {
+  scan(options: { signal: AbortSignal }): Promise<void>
+  onreadingerror: (() => void) | null
+  onreading: ((event: NdefReadingEvent) => void) | null
+}
+
 export function useNfcReader() {
   const isSupported = ref(false)
   const isScanning = ref(false)
@@ -19,14 +36,14 @@ export function useNfcReader() {
     abortController = new AbortController()
 
     try {
-      const ndef = new (window as any).NDEFReader()
+      const ndef = new (window as unknown as { NDEFReader: new () => NdefReader }).NDEFReader()
       await ndef.scan({ signal: abortController.signal })
 
       ndef.onreadingerror = () => {
         error.value = 'Cannot read data from NFC tag.'
       }
 
-      ndef.onreading = (event: any) => {
+      ndef.onreading = (event) => {
         const serial = event.serialNumber || ''
         let text = ''
 
@@ -47,14 +64,15 @@ export function useNfcReader() {
 
         onRead(serial, text || undefined)
       }
-    } catch (err: any) {
-      if (err.name === 'AbortError') return
-      if (err.name === 'NotAllowedError') {
+    } catch (err) {
+      const e = err as { name?: string, message?: string }
+      if (e.name === 'AbortError') return
+      if (e.name === 'NotAllowedError') {
         error.value = 'NFC permission denied. Please allow access.'
-      } else if (err.name === 'NotSupportedError') {
+      } else if (e.name === 'NotSupportedError') {
         error.value = 'NFC is not supported on this device.'
       } else {
-        error.value = `NFC error: ${err.message || err.name}`
+        error.value = `NFC error: ${e.message || e.name}`
       }
       isScanning.value = false
     }
@@ -75,6 +93,6 @@ export function useNfcReader() {
     isScanning,
     error,
     startScan,
-    stopScan,
+    stopScan
   }
 }

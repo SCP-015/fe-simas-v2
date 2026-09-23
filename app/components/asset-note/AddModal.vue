@@ -1,18 +1,29 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.assetNote.addModal.title')"
     :description="$t('component.assetNote.addModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
-      <UForm id="add-note-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="add-note-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Asset Field -->
-        <UFormField v-if="!lockAssetId" :label="$t('common.asset')" name="assetId" required>
+        <UFormField
+          v-if="!lockAssetId"
+          :label="$t('common.asset')"
+          name="assetId"
+          required
+        >
           <USelectMenu
             v-model="selectedAsset"
             :items="assetOptions"
@@ -25,11 +36,24 @@
         </UFormField>
 
         <!-- Date Field -->
-        <UFormField :label="$t('common.date')" name="date" required>
-          <UInputDate v-model="dateVal" class="w-full">
+        <UFormField
+          :label="$t('common.date')"
+          name="date"
+          required
+        >
+          <UInputDate
+            v-model="dateVal"
+            class="w-full"
+          >
             <template #trailing>
               <UPopover>
-                <UButton icon="i-lucide-calendar" color="neutral" variant="ghost" size="sm" square />
+                <UButton
+                  icon="i-lucide-calendar"
+                  color="neutral"
+                  variant="ghost"
+                  size="sm"
+                  square
+                />
                 <template #content>
                   <UCalendar v-model="dateVal" />
                 </template>
@@ -39,24 +63,66 @@
         </UFormField>
 
         <!-- Note Field -->
-        <UFormField :label="$t('common.note')" name="note" required>
-          <UTextarea v-model="form.note" :placeholder="$t('component.assetNote.addModal.notePlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('common.note')"
+          name="note"
+          required
+        >
+          <UTextarea
+            v-model="form.note"
+            :placeholder="$t('component.assetNote.addModal.notePlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Labels -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('common.labels') }}</label>
-            <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addLabel">{{ $t('common.add') }}</UButton>
+            <UButton
+              icon="i-lucide-plus"
+              color="primary"
+              variant="soft"
+              size="xs"
+              @click="addLabel"
+            >
+              {{ $t('common.add') }}
+            </UButton>
           </div>
-          <div v-if="formLabels.length === 0" class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg">
+          <div
+            v-if="formLabels.length === 0"
+            class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg"
+          >
             {{ $t('pages.asset.create.noLabels') }}
           </div>
-          <div v-else class="space-y-2">
-            <div v-for="(label, index) in formLabels" :key="index" class="flex items-center gap-2">
-              <UInput v-model="label.key" placeholder="Key" class="w-full" />
-              <UInput v-model="label.value" placeholder="Value" class="w-full" />
-              <UButton icon="i-lucide-trash" color="error" variant="soft" size="sm" square @click="() => { formLabels.splice(index, 1) }" />
+          <div
+            v-else
+            class="space-y-2"
+          >
+            <div
+              v-for="(label, index) in formLabels"
+              :key="index"
+              class="flex items-center gap-2"
+            >
+              <UInput
+                v-model="label.key"
+                placeholder="Key"
+                class="w-full"
+              />
+              <UInput
+                v-model="label.value"
+                placeholder="Value"
+                class="w-full"
+              />
+              <UButton
+                icon="i-lucide-trash"
+                color="error"
+                variant="soft"
+                size="sm"
+                square
+                @click="() => { formLabels.splice(index, 1) }"
+              />
             </div>
           </div>
         </div>
@@ -70,8 +136,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="add-note-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="add-note-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -95,26 +172,25 @@ const props = defineProps<{
 const emit = defineEmits<{ created: [] }>()
 const toast = useToast()
 
-// State
 const isSubmitting = ref(false)
 const isLoadingAssets = ref(false)
-const assetOptions = ref<{ label: string; value: number }[]>([])
-const selectedAsset = ref<{ label: string; value: number } | undefined>(undefined)
+const assetOptions = ref<{ label: string, value: number }[]>([])
+const selectedAsset = ref<{ label: string, value: number } | undefined>(undefined)
 const uploadedAttachments = ref<Attachment[]>([])
-const formLabels = ref<{ key: string; value: string }[]>([])
+const formLabels = ref<{ key: string, value: string }[]>([])
 const addLabel = () => { formLabels.value.push({ key: '', value: '' }) }
 
 const schema = z.object({
   assetId: z.number(),
   date: z.string().min(1, t('component.assetNote.addModal.dateRequired')),
-  note: z.string().min(1, t('component.assetNote.addModal.noteRequired')),
+  note: z.string().min(1, t('component.assetNote.addModal.noteRequired'))
 })
 
 const form = reactive<AssetNotePayload>({
   assetId: undefined as unknown as number,
   date: new Date().toISOString().split('T')[0] || '',
   note: '',
-  attachmentIds: [],
+  attachmentIds: []
 })
 
 const dateVal = computed({
@@ -127,7 +203,6 @@ const dateVal = computed({
   }
 })
 
-// Sync selectedAsset with form.assetId
 watch(selectedAsset, (val) => {
   if (val) form.assetId = val.value
 })

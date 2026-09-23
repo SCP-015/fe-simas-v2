@@ -1,87 +1,260 @@
 <template>
   <div class="space-y-6">
-    <Header :title="$t('pages.inventory.create.title')" :description="$t('pages.inventory.create.description')" />
+    <Header
+      :title="$t('pages.inventory.create.title')"
+      :description="$t('pages.inventory.create.description')"
+    />
 
     <UCard class="w-full">
       <div class="w-full mb-4">
-        <UButton :label="$t('common.back')" to="/inventory" color="neutral" icon="i-lucide-arrow-left" variant="link" />
+        <UButton
+          :label="$t('common.back')"
+          to="/inventory"
+          color="neutral"
+          icon="i-lucide-arrow-left"
+          variant="link"
+        />
       </div>
 
-      <UForm id="inv-create-form" :schema="schema" :state="form" @submit="onSubmit">
+      <UForm
+        id="inv-create-form"
+        :schema="schema"
+        :state="form"
+        @submit="onSubmit"
+      >
         <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
-
           <!-- ═══ Column 1: Photo ═══ -->
           <div class="space-y-4">
             <div>
               <div class="flex justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.inventory.item.photo') }}</label>
-                <UButton icon="i-lucide-camera" color="primary" variant="soft" size="xs" @click="() => { showCamera = true }">{{ $t('pages.asset.create.takePhoto') }}</UButton>
+                <UButton
+                  icon="i-lucide-camera"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="() => { showCamera = true }"
+                >
+                  {{ $t('pages.asset.create.takePhoto') }}
+                </UButton>
               </div>
-              <div v-if="previewUrl" class="relative inline-block w-full aspect-square">
-                <NuxtImg :src="previewUrl" class="w-full h-full rounded-lg object-cover border border-default" />
-                <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="removeImage" />
+              <div
+                v-if="previewUrl"
+                class="relative inline-block w-full aspect-square"
+              >
+                <NuxtImg
+                  :src="previewUrl"
+                  class="w-full h-full rounded-lg object-cover border border-default"
+                />
+                <UButton
+                  icon="i-lucide-x"
+                  color="error"
+                  variant="solid"
+                  size="xs"
+                  class="absolute top-1 right-1 rounded-full"
+                  @click="removeImage"
+                />
               </div>
-              <div v-else class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors" @click="triggerFileInput">
-                <UIcon name="i-lucide-upload" class="w-8 h-8 text-dimmed mb-2" />
+              <div
+                v-else
+                class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
+                @click="triggerFileInput"
+              >
+                <UIcon
+                  name="i-lucide-upload"
+                  class="w-8 h-8 text-dimmed mb-2"
+                />
                 <span class="text-sm text-muted">{{ $t('pages.asset.create.dropImage') }}</span>
                 <span class="text-xs text-dimmed mt-1">{{ $t('pages.asset.create.imageHint') }}</span>
               </div>
-              <div v-if="isUploading" class="mt-2 flex items-center gap-2 text-sm text-muted">
-                <UIcon name="i-lucide-loader-2" class="w-4 h-4 animate-spin" /> {{ $t('pages.asset.create.uploading') }}
+              <div
+                v-if="isUploading"
+                class="mt-2 flex items-center gap-2 text-sm text-muted"
+              >
+                <UIcon
+                  name="i-lucide-loader-2"
+                  class="w-4 h-4 animate-spin"
+                /> {{ $t('pages.asset.create.uploading') }}
               </div>
-              <input ref="fileInput" type="file" class="hidden" accept="image/*" @change="onFileChange">
-              <CameraModal v-model="showCamera" @captured="onCaptured" />
+              <input
+                ref="fileInput"
+                type="file"
+                class="hidden"
+                accept="image/*"
+                @change="onFileChange"
+              >
+              <CameraModal
+                v-model="showCamera"
+                @captured="onCaptured"
+              />
             </div>
 
-            <AttachmentManager v-model="attachments" @change="(ids) => { attachmentIds = ids }" />
+            <AttachmentManager
+              v-model="attachments"
+              @change="(ids) => { attachmentIds = ids }"
+            />
           </div>
 
           <!-- ═══ Column 2: Content ═══ -->
           <div class="space-y-4">
-            <UFormField :label="$t('common.name')" name="name" required>
-              <UInput v-model="form.name" :placeholder="$t('pages.inventory.create.namePlaceholder')" class="w-full" />
+            <UFormField
+              :label="$t('common.name')"
+              name="name"
+              required
+            >
+              <UInput
+                v-model="form.name"
+                :placeholder="$t('pages.inventory.create.namePlaceholder')"
+                class="w-full"
+              />
             </UFormField>
 
-            <UFormField :label="$t('common.code')" name="code">
+            <UFormField
+              :label="$t('common.code')"
+              name="code"
+            >
               <div class="flex items-center gap-2">
-                <UInput v-model="form.code" :placeholder="$t('common.autoGenerated')" class="w-full" />
-                <UButton icon="i-lucide-scan" size="sm" color="neutral" variant="soft" square :title="$t('pages.inventory.create.scan')" @click="() => { openScanner({ kind: 'item' }) }" />
+                <UInput
+                  v-model="form.code"
+                  :placeholder="$t('common.autoGenerated')"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-scan"
+                  size="sm"
+                  color="neutral"
+                  variant="soft"
+                  square
+                  :title="$t('pages.inventory.create.scan')"
+                  @click="() => { openScanner({ kind: 'item' }) }"
+                />
               </div>
             </UFormField>
 
-            <UFormField :label="$t('common.category')" name="categoryId" required>
+            <UFormField
+              :label="$t('common.category')"
+              name="categoryId"
+              required
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedCategory" :items="categoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectCategory')" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddCategory = true }" />
+                <USelectMenu
+                  v-model="selectedCategory"
+                  :items="categoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectCategory')"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddCategory = true }"
+                />
               </div>
             </UFormField>
 
-            <UFormField :label="$t('common.subCategory')" name="subCategoryId" required>
+            <UFormField
+              :label="$t('common.subCategory')"
+              name="subCategoryId"
+              required
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedSubCategory" :items="subCategoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectSubCategory')" :disabled="!form.categoryId" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddSubCategory = true }" />
+                <USelectMenu
+                  v-model="selectedSubCategory"
+                  :items="subCategoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectSubCategory')"
+                  :disabled="!form.categoryId"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddSubCategory = true }"
+                />
               </div>
             </UFormField>
 
-            <UFormField :label="$t('pages.inventory.unit.label')" name="unit" required>
-              <USelectMenu v-model="form.unit" :items="unitOptions" value-key="value" :placeholder="$t('pages.inventory.unit.placeholder')" class="w-full" />
+            <UFormField
+              :label="$t('pages.inventory.unit.label')"
+              name="unit"
+              required
+            >
+              <USelectMenu
+                v-model="form.unit"
+                :items="unitOptions"
+                value-key="value"
+                :placeholder="$t('pages.inventory.unit.placeholder')"
+                class="w-full"
+              />
             </UFormField>
 
-            <UFormField :label="$t('common.description')" name="description">
-              <UTextarea v-model="form.description" :placeholder="$t('common.enterDescription')" class="w-full" :rows="3" />
+            <UFormField
+              :label="$t('common.description')"
+              name="description"
+            >
+              <UTextarea
+                v-model="form.description"
+                :placeholder="$t('common.enterDescription')"
+                class="w-full"
+                :rows="3"
+              />
             </UFormField>
 
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.inventory.item.labels') }}</label>
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addLabel">{{ $t('common.add') }}</UButton>
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="addLabel"
+                >
+                  {{ $t('common.add') }}
+                </UButton>
               </div>
-              <div v-if="labels.length === 0" class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg">{{ $t('pages.inventory.create.noLabels') }}</div>
-              <div v-else class="space-y-2">
-                <div v-for="(label, i) in labels" :key="i" class="flex items-center gap-2">
-                  <UInputMenu v-model="label.key" :items="availableLabelKeys" placeholder="Key" class="w-full" />
-                  <UInput v-model="label.value" placeholder="Value" class="w-full" />
-                  <UButton icon="i-lucide-trash" color="error" variant="soft" size="sm" square @click="() => { labels.splice(i, 1) }" />
+              <div
+                v-if="labels.length === 0"
+                class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg"
+              >
+                {{ $t('pages.inventory.create.noLabels') }}
+              </div>
+              <div
+                v-else
+                class="space-y-2"
+              >
+                <div
+                  v-for="(label, i) in labels"
+                  :key="i"
+                  class="flex items-center gap-2"
+                >
+                  <UInputMenu
+                    v-model="label.key"
+                    :items="availableLabelKeys"
+                    placeholder="Key"
+                    class="w-full"
+                  />
+                  <UInput
+                    v-model="label.value"
+                    placeholder="Value"
+                    class="w-full"
+                  />
+                  <UButton
+                    icon="i-lucide-trash"
+                    color="error"
+                    variant="soft"
+                    size="sm"
+                    square
+                    @click="() => { labels.splice(i, 1) }"
+                  />
                 </div>
               </div>
             </div>
@@ -94,45 +267,142 @@
                 {{ $t('pages.inventory.variant.title') }}
               </label>
               <div class="flex items-center gap-1.5">
-                <UButton icon="i-lucide-scan" color="neutral" variant="soft" size="xs" @click="() => { openScanner({ kind: 'multi' }) }">{{ $t('pages.inventory.create.multiScan') }}</UButton>
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addVariant">{{ $t('pages.inventory.variant.add') }}</UButton>
+                <UButton
+                  icon="i-lucide-scan"
+                  color="neutral"
+                  variant="soft"
+                  size="xs"
+                  @click="() => { openScanner({ kind: 'multi' }) }"
+                >
+                  {{ $t('pages.inventory.create.multiScan') }}
+                </UButton>
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="addVariant"
+                >
+                  {{ $t('pages.inventory.variant.add') }}
+                </UButton>
               </div>
             </div>
-            <div v-if="form.variants.length === 0" class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg">{{ $t('pages.inventory.create.noVariants') }}</div>
-            <div v-else class="space-y-3">
-              <div v-for="(v, vi) in form.variants" :key="vi" class="p-3 rounded-lg border border-default space-y-2.5">
+            <div
+              v-if="form.variants.length === 0"
+              class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg"
+            >
+              {{ $t('pages.inventory.create.noVariants') }}
+            </div>
+            <div
+              v-else
+              class="space-y-3"
+            >
+              <div
+                v-for="(v, vi) in form.variants"
+                :key="vi"
+                class="p-3 rounded-lg border border-default space-y-2.5"
+              >
                 <div class="flex items-start gap-2">
                   <!-- Variant image -->
                   <div class="shrink-0">
-                    <div v-if="v.imagePreview || v.image" class="relative w-32 h-32">
-                      <NuxtImg :src="v.imagePreview || v.image || ''" class="w-full h-full rounded-md object-cover border border-default" />
-                      <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute -top-1.5 -right-1.5 rounded-full" @click="() => removeVariantImage(vi)" />
+                    <div
+                      v-if="v.imagePreview || v.image"
+                      class="relative w-32 h-32"
+                    >
+                      <NuxtImg
+                        :src="v.imagePreview || v.image || ''"
+                        class="w-full h-full rounded-md object-cover border border-default"
+                      />
+                      <UButton
+                        icon="i-lucide-x"
+                        color="error"
+                        variant="solid"
+                        size="xs"
+                        class="absolute -top-1.5 -right-1.5 rounded-full"
+                        @click="() => removeVariantImage(vi)"
+                      />
                     </div>
-                    <label v-else class="w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-default rounded-md cursor-pointer hover:border-primary transition-colors">
-                      <UIcon v-if="!v.uploading" name="i-lucide-image-plus" class="w-5 h-5 text-dimmed" />
-                      <UIcon v-else name="i-lucide-loader-2" class="w-5 h-5 text-dimmed animate-spin" />
-                      <input type="file" class="hidden" accept="image/*" @change="(e) => onVariantFile(vi, e)">
+                    <label
+                      v-else
+                      class="w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-default rounded-md cursor-pointer hover:border-primary transition-colors"
+                    >
+                      <UIcon
+                        v-if="!v.uploading"
+                        name="i-lucide-image-plus"
+                        class="w-5 h-5 text-dimmed"
+                      />
+                      <UIcon
+                        v-else
+                        name="i-lucide-loader-2"
+                        class="w-5 h-5 text-dimmed animate-spin"
+                      />
+                      <input
+                        type="file"
+                        class="hidden"
+                        accept="image/*"
+                        @change="(e) => onVariantFile(vi, e)"
+                      >
                     </label>
                   </div>
                   <div class="flex flex-col gap-2 flex-1">
                     <div class="flex items-center gap-2">
-                      <UFormField :label="$t('common.name')" :name="`variants.${vi}.name`" class="flex-1" required>
-                        <UInput v-model="v.name" :placeholder="$t('pages.inventory.create.variantName')" class="w-full" />
+                      <UFormField
+                        :label="$t('common.name')"
+                        :name="`variants.${vi}.name`"
+                        class="flex-1"
+                        required
+                      >
+                        <UInput
+                          v-model="v.name"
+                          :placeholder="$t('pages.inventory.create.variantName')"
+                          class="w-full"
+                        />
                       </UFormField>
-                      <UButton icon="i-lucide-trash" color="error" variant="soft" size="sm" square class="mt-6" @click="() => { form.variants.splice(vi, 1) }" />
+                      <UButton
+                        icon="i-lucide-trash"
+                        color="error"
+                        variant="soft"
+                        size="sm"
+                        square
+                        class="mt-6"
+                        @click="() => { form.variants.splice(vi, 1) }"
+                      />
                     </div>
                     <div>
-                      <UFormField :label="$t('common.code')" :name="`variants.${vi}.code`">
+                      <UFormField
+                        :label="$t('common.code')"
+                        :name="`variants.${vi}.code`"
+                      >
                         <div class="flex items-center gap-2">
-                          <UInput v-model="v.code" :placeholder="$t('pages.inventory.variant.codePlaceholder')" class="w-full" />
-                          <UButton icon="i-lucide-scan" size="sm" color="neutral" variant="soft" square :title="$t('pages.inventory.create.scan')" @click="() => { openScanner({ kind: 'variant', index: vi }) }" />
+                          <UInput
+                            v-model="v.code"
+                            :placeholder="$t('pages.inventory.variant.codePlaceholder')"
+                            class="w-full"
+                          />
+                          <UButton
+                            icon="i-lucide-scan"
+                            size="sm"
+                            color="neutral"
+                            variant="soft"
+                            square
+                            :title="$t('pages.inventory.create.scan')"
+                            @click="() => { openScanner({ kind: 'variant', index: vi }) }"
+                          />
                         </div>
                       </UFormField>
                     </div>
                   </div>
                 </div>
-                <UFormField :label="$t('common.description')" :name="`variants.${vi}.description`">
-                  <UTextarea v-model="v.description" :rows="2" :placeholder="$t('common.enterDescription')" class="w-full" />
+                <UFormField
+                  :label="$t('common.description')"
+                  :name="`variants.${vi}.description`"
+                >
+                  <UTextarea
+                    v-model="v.description"
+                    :rows="2"
+                    :placeholder="$t('common.enterDescription')"
+                    class="w-full"
+                  />
                 </UFormField>
               </div>
             </div>
@@ -140,16 +410,48 @@
         </div>
 
         <div class="flex justify-end gap-2 pt-4 mt-6 border-t border-muted">
-          <UButton type="button" color="neutral" variant="outline" to="/inventory">{{ $t('common.cancel') }}</UButton>
-          <UButton type="submit" color="primary" variant="outline" :loading="isSubmitting && submitMode === 'another'" @click="() => { submitMode = 'another' }">{{ $t('common.saveAndCreateAnother') }}</UButton>
-          <UButton type="submit" color="primary" :loading="isSubmitting && submitMode === 'save'" @click="() => { submitMode = 'save' }">{{ $t('common.save') }}</UButton>
+          <UButton
+            type="button"
+            color="neutral"
+            variant="outline"
+            to="/inventory"
+          >
+            {{ $t('common.cancel') }}
+          </UButton>
+          <UButton
+            type="submit"
+            color="primary"
+            variant="outline"
+            :loading="isSubmitting && submitMode === 'another'"
+            @click="() => { submitMode = 'another' }"
+          >
+            {{ $t('common.saveAndCreateAnother') }}
+          </UButton>
+          <UButton
+            type="submit"
+            color="primary"
+            :loading="isSubmitting && submitMode === 'save'"
+            @click="() => { submitMode = 'save' }"
+          >
+            {{ $t('common.save') }}
+          </UButton>
         </div>
       </UForm>
     </UCard>
 
-    <CategoryAddModal v-model="showAddCategory" @created="onCategoryCreated" />
-    <SubCategoryAddModal v-model="showAddSubCategory" @created="onSubCategoryCreated" />
-    <AssetScannerModal v-model="showScanner" :auto-close="scanAutoClose" @scanned="onScanned" />
+    <CategoryAddModal
+      v-model="showAddCategory"
+      @created="onCategoryCreated"
+    />
+    <SubCategoryAddModal
+      v-model="showAddSubCategory"
+      @created="onSubCategoryCreated"
+    />
+    <AssetScannerModal
+      v-model="showScanner"
+      :auto-close="scanAutoClose"
+      @scanned="onScanned"
+    />
   </div>
 </template>
 
@@ -182,7 +484,6 @@ const form = reactive<{ name: string, code: string, description: string, image: 
   name: '', code: '', description: '', image: null, unit: 'Pcs', categoryId: undefined, subCategoryId: undefined, variants: []
 })
 
-// ── Category / sub-category (with inline add, like asset) ──────────────
 const categoryOptions = ref<{ label: string, value: number }[]>([])
 const subCategoryOptions = ref<{ label: string, value: number }[]>([])
 const showAddCategory = ref(false)
@@ -235,7 +536,6 @@ const attachmentIds = ref<number[]>([])
 const newVariant = (name = '', code = ''): VariantRow => ({ name, code, image: null, description: '', imagePreview: null, uploading: false })
 const addVariant = () => { form.variants.push(newVariant()) }
 
-// Per-variant image upload.
 const onVariantFile = async (index: number, e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0]
   const v = form.variants[index]
@@ -244,8 +544,7 @@ const onVariantFile = async (index: number, e: Event) => {
   v.uploading = true
   try {
     const res = await inventoryService.uploadImage(file)
-    if (res.success && res.data) { v.image = res.data.path }
-    else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); v.imagePreview = null }
+    if (res.success && res.data) { v.image = res.data.path } else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); v.imagePreview = null }
   } finally {
     v.uploading = false
   }
@@ -255,7 +554,6 @@ const removeVariantImage = (index: number) => {
   if (v) { v.image = null; v.imagePreview = null }
 }
 
-// ── Barcode scanning (single for item/variant code, multi to add variants) ──
 type ScanTarget = { kind: 'item' } | { kind: 'variant', index: number } | { kind: 'multi' }
 const showScanner = ref(false)
 const scanAutoClose = ref(true)
@@ -278,12 +576,10 @@ const onScanned = (code: string) => {
   } else {
     // Multi-scan: fill the first variant with an empty code, otherwise add a new one.
     const empty = form.variants.find(v => !v.code.trim())
-    if (empty) { empty.code = trimmed; if (!empty.name.trim()) empty.name = trimmed }
-    else form.variants.push(newVariant(trimmed, trimmed))
+    if (empty) { empty.code = trimmed; if (!empty.name.trim()) empty.name = trimmed } else form.variants.push(newVariant(trimmed, trimmed))
   }
 }
 
-// ── Photo ─────────────────────────────────────────────────────────────
 const fileInput = ref<HTMLInputElement | null>(null)
 const previewUrl = ref<string | null>(null)
 const isUploading = ref(false)
@@ -295,8 +591,7 @@ const uploadFile = async (file: File) => {
   isUploading.value = true
   try {
     const res = await inventoryService.uploadImage(file)
-    if (res.success && res.data) { form.image = res.data.path }
-    else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); previewUrl.value = null }
+    if (res.success && res.data) { form.image = res.data.path } else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); previewUrl.value = null }
   } finally {
     isUploading.value = false
   }
@@ -310,7 +605,7 @@ const submitMode = ref<'save' | 'another'>('save')
 
 const resetForm = () => {
   Object.assign(form, {
-    name: '', code: '', description: '', image: null, unit: 'Pcs', categoryId: undefined, subCategoryId: undefined, variants: [],
+    name: '', code: '', description: '', image: null, unit: 'Pcs', categoryId: undefined, subCategoryId: undefined, variants: []
   })
   subCategoryOptions.value = []
   previewUrl.value = null
@@ -335,7 +630,7 @@ const onSubmit = async () => {
       subCategoryId: form.subCategoryId ?? null,
       labels: labels.value.filter(l => l.key.trim() && l.value.trim()),
       variants: payloadVariants,
-      attachmentIds: attachmentIds.value,
+      attachmentIds: attachmentIds.value
     })
     if (res.success) {
       toast.add({ title: t('pages.inventory.create.success'), color: 'success', icon: 'i-lucide-circle-check' })

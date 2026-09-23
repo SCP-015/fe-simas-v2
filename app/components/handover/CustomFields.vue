@@ -1,5 +1,8 @@
 <template>
-  <div v-if="fields.length" class="space-y-4">
+  <div
+    v-if="fields.length"
+    class="space-y-4"
+  >
     <UFormField
       v-for="field in fields"
       :key="field.id"

@@ -4,15 +4,17 @@
     <Header
       :title="$t('pages.asset.index.title')"
       :description="$t('pages.asset.index.description')"
-    >
-    </Header>
+    />
 
     <!-- Filter Sidebar is fixed to the right edge; this transitions padding to make room for it instead of overlaying it -->
-    <div class="transition-[padding] duration-200" :class="showFilterDrawer ? 'lg:pr-80 xl:pr-96' : ''">
+    <div
+      class="transition-[padding] duration-200"
+      :class="showFilterDrawer ? 'lg:pr-80 xl:pr-96' : ''"
+    >
       <DataTable
         v-model:search="search"
         v-model:page="page"
-        v-model:perPage="perPage"
+        v-model:per-page="perPage"
         :data="data"
         :columns="columns"
         :loading="isLoading"
@@ -24,7 +26,10 @@
         <template #actions>
           <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2">
             <!-- Import & Export -->
-            <div v-if="hasPermission('asset:import', 'asset:export')" class="flex items-center gap-2 w-full sm:w-auto">
+            <div
+              v-if="hasPermission('asset:import', 'asset:export')"
+              class="flex items-center gap-2 w-full sm:w-auto"
+            >
               <UButton
                 v-if="hasPermission('asset:import')"
                 color="primary"
@@ -76,36 +81,46 @@
                   variant="solid"
                 />
               </UButton>
-          
+
               <!-- Column Checklist Dropdown/Popover -->
               <UPopover>
-              <UButton
-                color="neutral"
-                variant="ghost"
-                icon="i-lucide-table-properties"
-              />
-            
-              <template #content>
-                <div class="p-3 w-48 space-y-2 select-none">
-                  <div class="text-sm font-semibold text-toned mb-1">
-                    {{ $t('pages.asset.index.customLabels') }}
-                  </div>
-                  <div v-if="availableLabelKeys.length === 0" class="text-xs text-dimmed italic">
-                    {{ $t('pages.asset.index.noCustomLabels') }}
-                  </div>
-                  <div v-else class="space-y-1.5 max-h-48 overflow-y-auto">
-                    <div v-for="key in availableLabelKeys" :key="key" class="flex items-center gap-2">
-                      <UCheckbox
-                        :id="`col-${key}`"
-                        :model-value="activeLabelColumns.includes(key)"
-                        :label="key"
-                        @update:model-value="(val: boolean) => toggleLabelColumn(key, val)"
-                      />
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  icon="i-lucide-table-properties"
+                />
+
+                <template #content>
+                  <div class="p-3 w-48 space-y-2 select-none">
+                    <div class="text-sm font-semibold text-toned mb-1">
+                      {{ $t('pages.asset.index.customLabels') }}
+                    </div>
+                    <div
+                      v-if="availableLabelKeys.length === 0"
+                      class="text-xs text-dimmed italic"
+                    >
+                      {{ $t('pages.asset.index.noCustomLabels') }}
+                    </div>
+                    <div
+                      v-else
+                      class="space-y-1.5 max-h-48 overflow-y-auto"
+                    >
+                      <div
+                        v-for="key in availableLabelKeys"
+                        :key="key"
+                        class="flex items-center gap-2"
+                      >
+                        <UCheckbox
+                          :id="`col-${key}`"
+                          :model-value="activeLabelColumns.includes(key)"
+                          :label="key"
+                          @update:model-value="(val: boolean) => toggleLabelColumn(key, val)"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </template>
-            </UPopover>
+                </template>
+              </UPopover>
             </div>
           </div>
         </template>
@@ -167,7 +182,7 @@
           icon="i-lucide-x"
           @click="() => { selectedIds = [] }"
         >
-        <span class="hidden sm:block">
+          <span class="hidden sm:block">
             {{ $t('pages.asset.index.clearSelection') }}
           </span>
         </UButton>
@@ -175,12 +190,12 @@
     </Transition>
 
     <!-- Delete Modal -->
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.asset.index.deleteTitle')" 
-      :item-name="selectedAsset?.name" 
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.asset.index.deleteTitle')"
+      :item-name="selectedAsset?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
 
     <!-- Change Status Modal -->
@@ -233,6 +248,7 @@ import type { TableColumn } from '@nuxt/ui'
 import type { Row } from '@tanstack/vue-table'
 import { assetService } from '~/services/asset-service'
 import type { Asset } from '~/types/asset'
+import type { FilterBag } from '~/types/api'
 
 const { t } = useI18n()
 
@@ -251,10 +267,9 @@ const UCheckbox = resolveComponent('UCheckbox')
 const UPopover = resolveComponent('UPopover')
 const AssetStatusBadge = resolveComponent('AssetStatusBadge')
 
-// State
 const data = ref<Asset[]>([])
 const isLoading = ref(false)
-const activeFilters = ref<Record<string, any>>({})
+const activeFilters = ref<FilterBag>({})
 const availableLabelKeys = ref<string[]>([])
 const activeLabelColumns = ref<string[]>([])
 
@@ -304,7 +319,6 @@ const selectedIds = ref<number[]>([])
 const activeFilterCount = computed(() => Object.keys(activeFilters.value).length)
 const selectedAssets = computed(() => data.value.filter(a => selectedIds.value.includes(a.id)))
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
@@ -313,7 +327,6 @@ const meta = reactive({
 
 const { openLightbox } = useLightbox()
 
-// Fetch assets from API
 const fetchAssets = async () => {
   isLoading.value = true
   try {
@@ -331,7 +344,7 @@ const fetchAssets = async () => {
   }
 }
 
-const onApplyFilters = (filters: Record<string, any>) => {
+const onApplyFilters = (filters: FilterBag) => {
   activeFilters.value = filters
 }
 
@@ -339,13 +352,12 @@ const handleExport = async () => {
   isExporting.value = true
   try {
     await assetService.exportExcel(search.value, sortBy.value, order.value, activeFilters.value, activeLabelColumns.value)
-    useToast().add({ title: t('pages.asset.index.exportSuccess'), icon:'i-lucide-check', color: 'success' })
+    useToast().add({ title: t('pages.asset.index.exportSuccess'), icon: 'i-lucide-check', color: 'success' })
   } finally {
     isExporting.value = false
   }
 }
 
-// Table columns
 const baseColumns: TableColumn<Asset>[] = [
   {
     id: 'select',
@@ -358,7 +370,7 @@ const baseColumns: TableColumn<Asset>[] = [
         'onUpdate:modelValue': (val: boolean) => {
           if (val) {
             const newIds = [...selectedIds.value]
-            data.value.forEach(a => {
+            data.value.forEach((a) => {
               if (!newIds.includes(a.id)) newIds.push(a.id)
             })
             selectedIds.value = newIds
@@ -446,7 +458,7 @@ const baseColumns: TableColumn<Asset>[] = [
         status: status.status,
         note: status.note,
         createdAt: status.createdAt,
-        createdBy: status.createdBy,
+        createdBy: status.createdBy
       })
     }
   },
@@ -584,17 +596,17 @@ const trailingColumns: TableColumn<Asset>[] = [
       return h(
         UDropdownMenu,
         {
-          content: {
+          'content': {
             align: 'end'
           },
-          items: items,
+          'items': items,
           'aria-label': 'Actions dropdown'
         },
         () =>
           h(UButton, {
-            icon: 'i-lucide-ellipsis-vertical',
-            color: 'neutral',
-            variant: 'ghost',
+            'icon': 'i-lucide-ellipsis-vertical',
+            'color': 'neutral',
+            'variant': 'ghost',
             'aria-label': 'Actions dropdown'
           })
       )
@@ -604,7 +616,7 @@ const trailingColumns: TableColumn<Asset>[] = [
 
 const columns = computed(() => {
   const list = [...baseColumns]
-  activeLabelColumns.value.forEach(key => {
+  activeLabelColumns.value.forEach((key) => {
     list.push({
       id: `label:${key}`,
       header: sortHeader(key, `label:${key}`),
@@ -720,7 +732,6 @@ const openBulkPrintCode = () => {
   showPrintCodeModal.value = true
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedAsset.value) return
@@ -781,14 +792,13 @@ const handleBulkDelete = async () => {
 
 // Save current query string when visiting the asset list page
 const route = useRoute()
-watch(() => route.fullPath, (newPath) => {
+watch(() => route.fullPath, () => {
   if (route.path === '/asset' || route.path === '/asset/') {
     const queryStr = route.fullPath.split('?')[1] || ''
     localStorage.setItem('last_asset_query', queryStr)
   }
 }, { immediate: true })
 
-// Initial fetch
 onMounted(() => {
   const saved = localStorage.getItem('active_label_columns')
   if (saved) {

@@ -7,8 +7,8 @@
       <!-- Top Section -->
       <div class="space-y-4">
         <!-- App/Brand Logo Header -->
-        <div 
-          class="flex border-b border-default pb-4" 
+        <div
+          class="flex border-b border-default pb-4"
           :class="[isCollapsed ? 'justify-center' : 'items-center justify-between']"
         >
           <BrandLogo :is-collapsed="isCollapsed" />
@@ -20,178 +20,200 @@
             variant="ghost"
             icon="i-lucide-panel-left-close"
             class="hidden lg:inline-flex text-dimmed hover:text-default"
-            @click="() => { isCollapsed = true }"
             aria-label="Collapse sidebar"
+            @click="() => { isCollapsed = true }"
           />
         </div>
 
-      <!-- Navigation Menus -->
-      <nav class="space-y-4">
-        <div :class="[isCollapsed ? 'flex justify-center' : '']">
-          <UTooltip
-            :text="$t('nav.searchAsset')"
-            :disabled="!isCollapsed"
-            :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-          >
-            <UButton
-              :label="isCollapsed ? undefined : $t('nav.searchAsset')"
-              color="primary"
-              :square="isCollapsed"
-              :class="[isCollapsed ? '' : 'w-full']"
-              icon="i-lucide-scan-qr-code"
-              variant="subtle"
-              @click="() => { showScanner = true }"
-            />
-          </UTooltip>
-        </div>
-        <ScanAssetModal v-model="showScanner" />
-        <div v-for="group in navGroups" :key="group.title" class="space-y-1">
-          <!-- Group Title -->
-          <h3
-            v-if="!isCollapsed"
-            class="px-1 text-sm font-medium text-toned"
-          >
-            {{ group.title }}
-          </h3>
-
-          <!-- Group Items -->
-          <div class="space-y-1">
-            <template v-for="item in group.items" :key="item.label">
-              <!-- Reusable NavLink with conditional tooltip wrapping -->
-              <UTooltip
-                :text="item.label"
-                :disabled="!isCollapsed"
-                :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-              >
-                <NuxtLink
-                  :to="item.to"
-                  class="flex items-center transition-colors group"
-                  :class="[
-                    isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
-                    isItemActive(item)
-                      ? 'bg-primary text-white'
-                      : 'text-toned hover:bg-muted hover:text-highlighted'
-                  ]"
-                >
-                  <UIcon
-                    :name="item.icon"
-                    class="w-5 h-5 shrink-0 transition-colors"
-                    :class="[
-                      isItemActive(item)
-                        ? 'text-white'
-                        : 'text-toned group-hover:text-highlighted'
-                    ]"
-                  />
-                  <span v-if="!isCollapsed" class="truncate">{{ item.label }}</span>
-                </NuxtLink>
-              </UTooltip>
-            </template>
+        <!-- Navigation Menus -->
+        <nav class="space-y-4">
+          <div :class="[isCollapsed ? 'flex justify-center' : '']">
+            <UTooltip
+              :text="$t('nav.searchAsset')"
+              :disabled="!isCollapsed"
+              :content="{ align: 'center', side: 'right', sideOffset: 8 }"
+            >
+              <UButton
+                :label="isCollapsed ? undefined : $t('nav.searchAsset')"
+                color="primary"
+                :square="isCollapsed"
+                :class="[isCollapsed ? '' : 'w-full']"
+                icon="i-lucide-scan-qr-code"
+                variant="subtle"
+                @click="() => { showScanner = true }"
+              />
+            </UTooltip>
           </div>
-        </div>
-      </nav>
-    </div>
+          <ScanAssetModal v-model="showScanner" />
+          <div
+            v-for="group in navGroups"
+            :key="group.title"
+            class="space-y-1"
+          >
+            <!-- Group Title -->
+            <h3
+              v-if="!isCollapsed"
+              class="px-1 text-sm font-medium text-toned"
+            >
+              {{ group.title }}
+            </h3>
 
-    <!-- Bottom Section -->
-    <div>
-      <!-- Bottom Nav Items -->
-      <div class="pb-2 space-y-1">
-        <template v-for="item in bottomNavItems" :key="item.label">
+            <!-- Group Items -->
+            <div class="space-y-1">
+              <template
+                v-for="item in group.items"
+                :key="item.label"
+              >
+                <!-- Reusable NavLink with conditional tooltip wrapping -->
+                <UTooltip
+                  :text="item.label"
+                  :disabled="!isCollapsed"
+                  :content="{ align: 'center', side: 'right', sideOffset: 8 }"
+                >
+                  <NuxtLink
+                    :to="item.to"
+                    class="flex items-center transition-colors group"
+                    :class="[
+                      isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
+                      isItemActive(item)
+                        ? 'bg-primary text-white'
+                        : 'text-toned hover:bg-muted hover:text-highlighted'
+                    ]"
+                  >
+                    <UIcon
+                      :name="item.icon"
+                      class="w-5 h-5 shrink-0 transition-colors"
+                      :class="[
+                        isItemActive(item)
+                          ? 'text-white'
+                          : 'text-toned group-hover:text-highlighted'
+                      ]"
+                    />
+                    <span
+                      v-if="!isCollapsed"
+                      class="truncate"
+                    >{{ item.label }}</span>
+                  </NuxtLink>
+                </UTooltip>
+              </template>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Bottom Section -->
+      <div>
+        <!-- Bottom Nav Items -->
+        <div class="pb-2 space-y-1">
+          <template
+            v-for="item in bottomNavItems"
+            :key="item.label"
+          >
+            <UTooltip
+              :text="item.label"
+              :disabled="!isCollapsed"
+              :content="{ align: 'center', side: 'right', sideOffset: 8 }"
+            >
+              <NuxtLink
+                :to="item.to"
+                class="flex items-center transition-colors group"
+                :class="[
+                  isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
+                  isItemActive(item)
+                    ? 'bg-primary text-white'
+                    : 'text-toned hover:bg-muted hover:text-highlighted'
+                ]"
+              >
+                <UIcon
+                  :name="item.icon"
+                  class="w-5 h-5 shrink-0 transition-colors"
+                  :class="[
+                    isItemActive(item)
+                      ? 'text-white'
+                      : 'text-toned group-hover:text-highlighted'
+                  ]"
+                />
+                <span
+                  v-if="!isCollapsed"
+                  class="truncate"
+                >{{ item.label }}</span>
+              </NuxtLink>
+            </UTooltip>
+          </template>
+
+          <!-- Static Feedback Button -->
           <UTooltip
-            :text="item.label"
+            :text="$t('nav.feedback')"
             :disabled="!isCollapsed"
             :content="{ align: 'center', side: 'right', sideOffset: 8 }"
           >
-            <NuxtLink
-              :to="item.to"
-              class="flex items-center transition-colors group"
+            <button
+              type="button"
+              class="flex items-center transition-colors group cursor-pointer text-left w-full focus:outline-none"
               :class="[
                 isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
-                isItemActive(item)
-                  ? 'bg-primary text-white'
-                  : 'text-toned hover:bg-muted hover:text-highlighted'
+                'text-toned hover:bg-muted hover:text-highlighted',
+                isCapturing ? 'opacity-60 cursor-not-allowed' : ''
               ]"
+              :disabled="isCapturing"
+              @click="triggerFeedback()"
             >
               <UIcon
-                :name="item.icon"
+                :name="isCapturing ? 'i-lucide-loader-2' : 'i-lucide-message-square-warning'"
                 class="w-5 h-5 shrink-0 transition-colors"
-                :class="[
-                  isItemActive(item)
-                    ? 'text-white'
-                    : 'text-toned group-hover:text-highlighted'
-                ]"
               />
-              <span v-if="!isCollapsed" class="truncate">{{ item.label }}</span>
-            </NuxtLink>
+              <span
+                v-if="!isCollapsed"
+                class="truncate"
+              >
+                {{ isCapturing ? $t('nav.capturing') : $t('nav.feedback') }}
+              </span>
+            </button>
           </UTooltip>
-        </template>
+        </div>
 
-        <!-- Static Feedback Button -->
-        <UTooltip
-          :text="$t('nav.feedback')"
-          :disabled="!isCollapsed"
-          :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-        >
-          <button
-            type="button"
-            class="flex items-center transition-colors group cursor-pointer text-left w-full focus:outline-none"
-            :class="[
-              isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
-              'text-toned hover:bg-muted hover:text-highlighted',
-              isCapturing ? 'opacity-60 cursor-not-allowed' : ''
-            ]"
-            :disabled="isCapturing"
-            @click="triggerFeedback()"
-          >
-            <UIcon
-              :name="isCapturing ? 'i-lucide-loader-2' : 'i-lucide-message-square-warning'"
-              class="w-5 h-5 shrink-0 transition-colors"
-            />
-            <span v-if="!isCollapsed" class="truncate">
-              {{ isCapturing ? $t('nav.capturing') : $t('nav.feedback') }}
-            </span>
-          </button>
-        </UTooltip>
+        <!-- User Profile with Popover -->
+        <div class="hidden lg:block pt-2 border-t border-default">
+          <UserPopover :popover-props="{ content: { side: 'right', sideOffset: 12, align: 'end' } }">
+            <button
+              class="flex w-full items-center cursor-pointer rounded-md transition-colors hover:bg-muted"
+              :class="[isCollapsed ? 'justify-center p-2' : 'gap-3 px-2 py-2']"
+            >
+              <UAvatar
+                :src="authState.user?.photo"
+                :alt="authState.user?.name"
+                size="sm"
+                class="ring-2 ring-primary/10 shrink-0"
+                loading="lazy"
+              />
+              <div
+                v-if="!isCollapsed"
+                class="min-w-0 flex-1 text-left"
+              >
+                <h2 class="text-sm font-medium truncate text-highlighted">
+                  {{ authState.user?.name }}
+                </h2>
+                <p class="text-xs text-muted truncate">
+                  {{ authState.user?.email }}
+                </p>
+              </div>
+              <UIcon
+                v-if="!isCollapsed"
+                name="i-lucide-chevrons-up-down"
+                class="w-4 h-4 text-dimmed shrink-0"
+              />
+            </button>
+          </UserPopover>
+        </div>
       </div>
-
-      <!-- User Profile with Popover -->
-      <div class="hidden lg:block pt-2 border-t border-default">
-      <UserPopover :popover-props="{ content: { side: 'right', sideOffset: 12, align: 'end' } }">
-        <button
-          class="flex w-full items-center cursor-pointer rounded-md transition-colors hover:bg-muted"
-          :class="[isCollapsed ? 'justify-center p-2' : 'gap-3 px-2 py-2']"
-        >
-          <UAvatar
-            :src="authState.user?.photo"
-            :alt="authState.user?.name"
-            size="sm"
-            class="ring-2 ring-primary/10 shrink-0"
-            loading="lazy"
-          />
-          <div v-if="!isCollapsed" class="min-w-0 flex-1 text-left">
-            <h2 class="text-sm font-medium truncate text-highlighted">
-              {{ authState.user?.name }}
-            </h2>
-            <p class="text-xs text-muted truncate">
-              {{ authState.user?.email }}
-            </p>
-          </div>
-          <UIcon
-            v-if="!isCollapsed"
-            name="i-lucide-chevrons-up-down"
-            class="w-4 h-4 text-dimmed shrink-0"
-          />
-        </button>
-      </UserPopover>
-      </div>
-    </div>
     </aside>
 
     <!-- Floating Toggle Sidebar Button on the Border (visible only when collapsed) -->
     <button
       v-if="isCollapsed"
       class="hidden lg:flex absolute top-4.5 -right-3 z-30 w-7 h-7 rounded-full border border-default bg-default shadow-sm items-center justify-center text-muted hover:text-highlighted hover:bg-muted transition-all cursor-pointer focus:outline-none"
-      @click="() => { isCollapsed = false }"
       aria-label="Expand sidebar"
+      @click="() => { isCollapsed = false }"
     >
       <UIcon
         name="i-lucide-panel-left-open"

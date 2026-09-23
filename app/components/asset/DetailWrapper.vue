@@ -1,8 +1,14 @@
 <template>
   <div class="space-y-6">
-    <Header :title="`${asset?.name || ''}`" :description="`${asset?.code || ''}`" />
+    <Header
+      :title="`${asset?.name || ''}`"
+      :description="`${asset?.code || ''}`"
+    />
 
-    <UCard v-if="isLoading" class="w-full">
+    <UCard
+      v-if="isLoading"
+      class="w-full"
+    >
       <div class="w-full mb-4">
         <USkeleton class="h-8 w-20" />
       </div>
@@ -10,7 +16,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start">
         <USkeleton class="w-full aspect-[8/5] rounded-lg sm:col-span-4" />
         <div class="min-w-0 w-full grid grid-cols-12 gap-6 sm:col-span-8">
-          <div v-for="i in 9" :key="i" class="col-span-12 sm:col-span-6 md:col-span-4 space-y-2">
+          <div
+            v-for="i in 9"
+            :key="i"
+            class="col-span-12 sm:col-span-6 md:col-span-4 space-y-2"
+          >
             <USkeleton class="h-3 w-1/4" />
             <USkeleton class="h-5 w-3/4" />
           </div>
@@ -23,9 +33,18 @@
       </div>
     </UCard>
 
-    <UCard v-else-if="asset" class="w-full">
+    <UCard
+      v-else-if="asset"
+      class="w-full"
+    >
       <div class="w-full mb-4 flex items-center justify-between">
-        <UButton :label="$t('common.back')" color="neutral" icon="i-lucide-arrow-left" variant="link" @click="goBack" />
+        <UButton
+          :label="$t('common.back')"
+          color="neutral"
+          icon="i-lucide-arrow-left"
+          variant="link"
+          @click="goBack"
+        />
         <div class="flex items-center gap-2">
           <UButton
             color="neutral"
@@ -66,13 +85,26 @@
 
       <!-- Grid: Image on Left, Content Grid on Right -->
       <div class="grid grid-cols-1 sm:grid-cols-12 gap-8 items-start">
-        
         <!-- Left: Image Thumbnail -->
-        <div v-if="asset.image" class="relative w-full aspect-[8/7] cursor-pointer overflow-hidden rounded-lg border border-default group sm:col-span-4" @click="openLightbox(asset.image)">
-          <NuxtImg :src="asset.image" :alt="asset.name" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+        <div
+          v-if="asset.image"
+          class="relative w-full aspect-[8/7] cursor-pointer overflow-hidden rounded-lg border border-default group sm:col-span-4"
+          @click="openLightbox(asset.image)"
+        >
+          <NuxtImg
+            :src="asset.image"
+            :alt="asset.name"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         </div>
-        <div v-else class="w-full aspect-[8/7] flex flex-col items-center justify-center bg-muted border border-default rounded-lg text-dimmed sm:col-span-4">
-          <UIcon name="i-lucide-package" class="w-8 h-8 text-dimmed mb-1" />
+        <div
+          v-else
+          class="w-full aspect-[8/7] flex flex-col items-center justify-center bg-muted border border-default rounded-lg text-dimmed sm:col-span-4"
+        >
+          <UIcon
+            name="i-lucide-package"
+            class="w-8 h-8 text-dimmed mb-1"
+          />
           <span class="text-xs text-muted font-medium">{{ $t('component.asset.detailWrapper.noImage') }}</span>
         </div>
 
@@ -81,36 +113,54 @@
           <div class="grid grid-cols-12 gap-x-8 gap-y-6">
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.code') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.code">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.code"
+              >
                 {{ asset.code }}
               </div>
             </div>
 
-            <div v-if="asset.bleTagMac" class="col-span-12 sm:col-span-6 md:col-span-4">
+            <div
+              v-if="asset.bleTagMac"
+              class="col-span-12 sm:col-span-6 md:col-span-4"
+            >
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('pages.asset.create.bleTagMacLabel') }}</span>
               <div class="flex items-center gap-1.5">
-                <UIcon name="i-lucide-bluetooth" class="w-4 h-4 text-primary shrink-0" />
+                <UIcon
+                  name="i-lucide-bluetooth"
+                  class="w-4 h-4 text-primary shrink-0"
+                />
                 <span class="text-sm text-highlighted font-medium">{{ asset.bleTagMac }}</span>
               </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.name') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.name">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.name"
+              >
                 {{ asset.name }}
               </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.category') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.subCategory?.category?.name || '-'">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.subCategory?.category?.name || '-'"
+              >
                 {{ asset.subCategory?.category?.name || '-' }}
               </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.subCategory') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.subCategory?.name || '-'">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.subCategory?.name || '-'"
+              >
                 {{ asset.subCategory?.name || '-' }}
               </div>
             </div>
@@ -124,20 +174,28 @@
                 :created-at="asset.lastStatus.createdAt"
                 :created-by="asset.lastStatus.createdBy"
               />
-              <span v-else class="text-sm text-muted">-</span>
+              <span
+                v-else
+                class="text-sm text-muted"
+              >-</span>
             </div>
-
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.brand') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.brand || '-'">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.brand || '-'"
+              >
                 {{ asset.brand || '-' }}
               </div>
             </div>
 
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.model') }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="asset.model || '-'">
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="asset.model || '-'"
+              >
                 {{ asset.model || '-' }}
               </div>
             </div>
@@ -145,8 +203,15 @@
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.lastLocation') }}</span>
               <div class="text-sm text-highlighted font-medium flex items-center gap-1.5 flex-wrap min-w-0">
-                <span class="truncate" :title="asset.lastLocation?.location ? asset.lastLocation.location.name : '-'">{{ asset.lastLocation?.location ? asset.lastLocation.location.name : '-' }}</span>
-                <span v-if="asset.lastLocation?.location?.branch" class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium shrink-0" :title="asset.lastLocation.location.branch.name">
+                <span
+                  class="truncate"
+                  :title="asset.lastLocation?.location ? asset.lastLocation.location.name : '-'"
+                >{{ asset.lastLocation?.location ? asset.lastLocation.location.name : '-' }}</span>
+                <span
+                  v-if="asset.lastLocation?.location?.branch"
+                  class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium shrink-0"
+                  :title="asset.lastLocation.location.branch.name"
+                >
                   {{ asset.lastLocation.location.branch.name }}
                 </span>
               </div>
@@ -155,7 +220,10 @@
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.activeHolder') }}</span>
               <div class="text-sm text-highlighted font-medium">
-                <div v-if="asset.activeHolder?.employee" class="flex items-center gap-2 min-w-0">
+                <div
+                  v-if="asset.activeHolder?.employee"
+                  class="flex items-center gap-2 min-w-0"
+                >
                   <UAvatar
                     :src="asset.activeHolder.employee.photo || undefined"
                     :alt="asset.activeHolder.employee.name"
@@ -163,13 +231,28 @@
                     loading="lazy"
                   />
                   <div class="flex flex-col min-w-0">
-                    <span class="text-sm text-highlighted leading-tight block truncate" :title="asset.activeHolder.employee.name">{{ asset.activeHolder.employee.name }}</span>
-                    <span class="text-xs text-muted leading-tight block truncate" :title="asset.activeHolder.employee.employeeId">{{ asset.activeHolder.employee.employeeId }}</span>
+                    <span
+                      class="text-sm text-highlighted leading-tight block truncate"
+                      :title="asset.activeHolder.employee.name"
+                    >{{ asset.activeHolder.employee.name }}</span>
+                    <span
+                      class="text-xs text-muted leading-tight block truncate"
+                      :title="asset.activeHolder.employee.employeeId"
+                    >{{ asset.activeHolder.employee.employeeId }}</span>
                   </div>
                 </div>
-                <div v-else-if="asset.activeHolder?.organization" class="flex flex-col min-w-0">
-                  <span class="text-sm text-highlighted leading-tight block truncate" :title="asset.activeHolder.organization.name">{{ asset.activeHolder.organization.name }}</span>
-                  <span class="text-xs text-muted leading-tight block truncate" :title="asset.activeHolder.organization.type">{{ asset.activeHolder.organization.type }}</span>
+                <div
+                  v-else-if="asset.activeHolder?.organization"
+                  class="flex flex-col min-w-0"
+                >
+                  <span
+                    class="text-sm text-highlighted leading-tight block truncate"
+                    :title="asset.activeHolder.organization.name"
+                  >{{ asset.activeHolder.organization.name }}</span>
+                  <span
+                    class="text-xs text-muted leading-tight block truncate"
+                    :title="asset.activeHolder.organization.type"
+                  >{{ asset.activeHolder.organization.type }}</span>
                 </div>
                 <span v-else>-</span>
               </div>
@@ -178,7 +261,10 @@
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.createdBy') }}</span>
               <div class="text-sm text-highlighted font-medium">
-                <div v-if="asset.createdBy" class="flex items-center gap-2 min-w-0">
+                <div
+                  v-if="asset.createdBy"
+                  class="flex items-center gap-2 min-w-0"
+                >
                   <UAvatar
                     :src="asset.createdBy.photo || undefined"
                     :alt="asset.createdBy.name"
@@ -186,7 +272,10 @@
                     size="md"
                     loading="lazy"
                   />
-                  <span class="text-sm text-highlighted truncate" :title="asset.createdBy.name">
+                  <span
+                    class="text-sm text-highlighted truncate"
+                    :title="asset.createdBy.name"
+                  >
                     {{ asset.createdBy.name }}
                   </span>
                 </div>
@@ -197,20 +286,32 @@
             <!-- Depreciation Section -->
             <div class="col-span-12 pt-4 border-t border-muted">
               <h4 class="text-xs font-semibold text-dimmed uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                <UIcon name="i-lucide-trending-down" class="w-3.5 h-3.5" />
+                <UIcon
+                  name="i-lucide-trending-down"
+                  class="w-3.5 h-3.5"
+                />
                 {{ $t('component.asset.detailWrapper.depreciationSection') }}
               </h4>
               <div class="grid grid-cols-12 gap-x-8 gap-y-6">
                 <div class="col-span-12 sm:col-span-6 md:col-span-4">
                   <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.purchaseDate') }}</span>
                   <div class="text-sm text-highlighted font-medium flex items-center gap-2 min-w-0">
-                    <span class="truncate" :title="asset.purchaseDate || '-'">{{ asset.purchaseDate || '-' }}</span>
-                    <span v-if="asset.age" class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium shrink-0">{{ asset.age }}</span>
+                    <span
+                      class="truncate"
+                      :title="asset.purchaseDate || '-'"
+                    >{{ asset.purchaseDate || '-' }}</span>
+                    <span
+                      v-if="asset.age"
+                      class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium shrink-0"
+                    >{{ asset.age }}</span>
                   </div>
                 </div>
                 <div class="col-span-12 sm:col-span-6 md:col-span-4">
                   <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.price') }}</span>
-                  <div class="text-sm text-highlighted font-medium truncate" :title="formatCurrency(asset.price)">
+                  <div
+                    class="text-sm text-highlighted font-medium truncate"
+                    :title="formatCurrency(asset.price)"
+                  >
                     {{ formatCurrency(asset.price) }}
                   </div>
                 </div>
@@ -228,13 +329,19 @@
                 </div>
                 <div class="col-span-12 sm:col-span-6 md:col-span-4">
                   <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.accumulatedDepreciation') }}</span>
-                  <div class="text-sm font-medium truncate" :class="asset.depreciation ? 'text-red-600' : 'text-highlighted'">
+                  <div
+                    class="text-sm font-medium truncate"
+                    :class="asset.depreciation ? 'text-red-600' : 'text-highlighted'"
+                  >
                     {{ asset.depreciation ? formatCurrency(asset.depreciation.accumulatedDepreciation) : '-' }}
                   </div>
                 </div>
                 <div class="col-span-12 sm:col-span-6 md:col-span-4">
                   <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('component.asset.detailWrapper.bookValue') }}</span>
-                  <div class="text-sm font-semibold truncate" :class="asset.depreciation ? 'text-green-600' : 'text-highlighted'">
+                  <div
+                    class="text-sm font-semibold truncate"
+                    :class="asset.depreciation ? 'text-green-600' : 'text-highlighted'"
+                  >
                     {{ asset.depreciation ? formatCurrency(asset.depreciation.bookValue) : '-' }}
                   </div>
                 </div>
@@ -242,9 +349,19 @@
             </div>
 
             <!-- Custom Specs / Labels inline in the grid -->
-            <div v-for="label in asset.labels" :key="label.id || label.key" class="col-span-12 sm:col-span-6 md:col-span-4">
-              <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1 truncate" :title="label.key">{{ label.key }}</span>
-              <div class="text-sm text-highlighted font-medium truncate" :title="label.value">
+            <div
+              v-for="label in asset.labels"
+              :key="label.id || label.key"
+              class="col-span-12 sm:col-span-6 md:col-span-4"
+            >
+              <span
+                class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1 truncate"
+                :title="label.key"
+              >{{ label.key }}</span>
+              <div
+                class="text-sm text-highlighted font-medium truncate"
+                :title="label.value"
+              >
                 {{ label.value }}
               </div>
             </div>
@@ -258,7 +375,10 @@
             </div>
 
             <!-- Attachments -->
-            <div v-if="asset.attachments && asset.attachments.length > 0" class="col-span-12 pt-4 border-t border-muted">
+            <div
+              v-if="asset.attachments && asset.attachments.length > 0"
+              class="col-span-12 pt-4 border-t border-muted"
+            >
               <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-2">{{ $t('pages.asset.create.attachments') }}</span>
               <div class="flex flex-wrap gap-2">
                 <a
@@ -268,37 +388,60 @@
                   target="_blank"
                   class="flex items-center gap-2 px-3 py-2 rounded-lg border border-default bg-muted hover:bg-elevated transition-colors text-sm text-default hover:text-highlighted no-underline"
                 >
-                  <UIcon :name="getFileIcon(att.mimeType)" class="w-4 h-4 text-primary shrink-0" />
+                  <UIcon
+                    :name="getFileIcon(att.mimeType)"
+                    class="w-4 h-4 text-primary shrink-0"
+                  />
                   <span class="truncate max-w-48">{{ att.originalName }}</span>
                   <span class="text-xs text-dimmed shrink-0">{{ formatFileSize(att.size) }}</span>
                 </a>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </UCard>
 
     <!-- Tabs Navigation -->
-    <UTabs v-model="activeTab" :items="items" variant="link" :ui="{  }" class="gap-4" />
+    <UTabs
+      v-model="activeTab"
+      :items="items"
+      variant="link"
+      :ui="{ }"
+      class="gap-4"
+    />
 
     <!-- Sub Page Content Slot -->
     <div class="w-full mt-4">
-      <slot :asset="asset" :is-loading="isLoading" />
+      <slot
+        :asset="asset"
+        :is-loading="isLoading"
+      />
     </div>
 
     <!-- Lightbox Modal -->
     <Lightbox />
 
     <!-- Activity Log Drawer -->
-    <AssetLogDrawer v-model:open="showLogDrawer" :asset-id="assetId" />
+    <AssetLogDrawer
+      v-model:open="showLogDrawer"
+      :asset-id="assetId"
+    />
 
     <!-- Status Update Modal -->
-    <AssetStatusUpdateModal v-if="asset" v-model="showStatusModal" :asset="asset" @created="onStatusCreated" />
+    <AssetStatusUpdateModal
+      v-if="asset"
+      v-model="showStatusModal"
+      :asset="asset"
+      @created="onStatusCreated"
+    />
 
     <!-- Print Code Modal -->
-    <AssetPrintCodeModal v-if="asset" v-model="showPrintCodeModal" :assets="[asset]" />
+    <AssetPrintCodeModal
+      v-if="asset"
+      v-model="showPrintCodeModal"
+      :assets="[asset]"
+    />
   </div>
 </template>
 
@@ -309,7 +452,6 @@ import type { Asset } from '~/types/asset'
 const { t } = useI18n()
 
 const route = useRoute()
-const router = useRouter()
 const assetId = Number(route.params.id)
 const { hasPermission } = useAuth()
 

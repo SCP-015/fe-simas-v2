@@ -1,5 +1,5 @@
 <template>
-  <AssetDetailWrapper v-slot="{ asset: parentAsset, isLoading: parentLoading }">
+  <AssetDetailWrapper>
     <div class="space-y-4">
       <DataTable
         v-model:search="search"
@@ -119,7 +119,6 @@ const NuxtLink = resolveComponent('NuxtLink')
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-// State
 const activeHolder = ref<AssetHolder | null>(null)
 const historyData = ref<AssetHolder[]>([])
 const isLoadingActive = ref(false)
@@ -141,14 +140,12 @@ const {
   sortHeader
 } = useTableQuery(() => fetchHistory(), { defaultSortBy: 'createdAt', defaultOrder: 'DESC' })
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch active holder
 const fetchActiveHolder = async () => {
   isLoadingActive.value = true
   try {
@@ -174,7 +171,6 @@ const fetchPendingHandover = async () => {
   }
 }
 
-// Fetch holder logs (history) for this asset
 const fetchHistory = async () => {
   isLoadingHistory.value = true
   try {
@@ -205,7 +201,6 @@ const handleReload = () => {
   fetchPendingHandover()
 }
 
-// Table columns
 const baseColumns: TableColumn<AssetHolder>[] = [
   {
     accessorKey: 'employee',
@@ -377,15 +372,15 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: { align: 'end' },
-            items: getRowItems(row),
+            'content': { align: 'end' },
+            'items': getRowItems(row),
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )

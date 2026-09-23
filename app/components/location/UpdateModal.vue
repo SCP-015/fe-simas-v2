@@ -1,17 +1,27 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.location.updateModal.title')"
     :description="$t('component.location.updateModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
-      <UForm id="update-location-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-3">
-        <UFormField :label="$t('common.branch')" name="branchId" required>
+      <UForm
+        id="update-location-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-3"
+        @submit="handleSubmit"
+      >
+        <UFormField
+          :label="$t('common.branch')"
+          name="branchId"
+          required
+        >
           <USelectMenu
             v-model="selectedBranch"
             :items="branchOptions"
@@ -21,21 +31,56 @@
             class="w-full"
           />
         </UFormField>
-        <UFormField :label="$t('common.name')" name="name" required>
-          <UInput v-model="form.name" :placeholder="$t('component.location.updateModal.namePlaceholder')" class="w-full" />
+        <UFormField
+          :label="$t('common.name')"
+          name="name"
+          required
+        >
+          <UInput
+            v-model="form.name"
+            :placeholder="$t('component.location.updateModal.namePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
-        <UFormField :label="$t('common.description')" name="description">
-          <UTextarea v-model="form.description" :placeholder="$t('common.enterDescription')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('common.description')"
+          name="description"
+        >
+          <UTextarea
+            v-model="form.description"
+            :placeholder="$t('common.enterDescription')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
-        <UFormField :label="$t('component.location.updateModal.mistZoneIdLabel')" name="mistZoneId">
-          <UInput :model-value="form.mistZoneId ?? undefined" @update:model-value="form.mistZoneId = $event || null" placeholder="Enter Mist Zone UUID" class="w-full" />
+        <UFormField
+          :label="$t('component.location.updateModal.mistZoneIdLabel')"
+          name="mistZoneId"
+        >
+          <UInput
+            :model-value="form.mistZoneId ?? undefined"
+            placeholder="Enter Mist Zone UUID"
+            class="w-full"
+            @update:model-value="form.mistZoneId = $event || null"
+          />
         </UFormField>
       </UForm>
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="update-location-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="update-location-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -59,10 +104,10 @@ const emit = defineEmits<{ updated: [] }>()
 const toast = useToast()
 const isSubmitting = ref(false)
 
-const branchOptions = ref<{ label: string; value: number }[]>([])
+const branchOptions = ref<{ label: string, value: number }[]>([])
 
 const selectedBranch = computed({
-  get: () => branchOptions.value.find((b) => b.value === form.branchId),
+  get: () => branchOptions.value.find(b => b.value === form.branchId),
   set: (val) => {
     form.branchId = val?.value as unknown as number
   }
@@ -71,22 +116,22 @@ const selectedBranch = computed({
 const schema = computed(() => z.object({
   branchId: z.number().int().positive(t('component.location.updateModal.branchRequired')),
   name: z.string().min(1, t('common.nameRequired')),
-  description: z.string().optional().or(z.literal('')),
+  description: z.string().optional().or(z.literal(''))
 }))
 
 const form = reactive<LocationPayload>({
   name: '',
   description: '',
   branchId: undefined as unknown as number,
-  mistZoneId: null,
+  mistZoneId: null
 })
 
 const fetchBranches = async () => {
   const response = await branchService.getList()
   if (response.success) {
-    branchOptions.value = response.data.map((b) => ({
+    branchOptions.value = response.data.map(b => ({
       label: b.name,
-      value: b.id,
+      value: b.id
     }))
   }
 }

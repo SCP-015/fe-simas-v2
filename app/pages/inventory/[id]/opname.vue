@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <DataTable
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       v-model:expanded="expanded"
       :data="data"
       :columns="columns"
@@ -14,7 +14,13 @@
       table-class="min-w-[860px]"
     >
       <template #actions>
-        <UButton v-if="canOpname" icon="i-lucide-clipboard-check" color="primary" :label="$t('pages.inventory.opname.button')" @click="() => { showOpnameModal = true }" />
+        <UButton
+          v-if="canOpname"
+          icon="i-lucide-clipboard-check"
+          color="primary"
+          :label="$t('pages.inventory.opname.button')"
+          @click="() => { showOpnameModal = true }"
+        />
       </template>
 
       <template #expanded="{ row }">
@@ -27,7 +33,11 @@
       </template>
     </DataTable>
 
-    <OpnameModal v-model="showOpnameModal" :inventory-id="inventoryId" @done="onSaved" />
+    <OpnameModal
+      v-model="showOpnameModal"
+      :inventory-id="inventoryId"
+      @done="onSaved"
+    />
   </div>
 </template>
 
@@ -93,7 +103,7 @@ const itemColumns: TableColumn<OpnameItem>[] = [
   { id: 'quantity', header: t('pages.inventory.opname.difference'), cell: ({ row }) => {
     const q = row.original.quantity
     return h('span', { class: `font-semibold text-sm ${q > 0 ? 'text-success' : 'text-error'}` }, q > 0 ? `+${q}` : `${q}`)
-  } },
+  } }
 ]
 
 const columns: TableColumn<InventoryStockOpname>[] = [

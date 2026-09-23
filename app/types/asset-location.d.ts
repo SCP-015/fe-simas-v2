@@ -1,4 +1,4 @@
-import type { Attachment } from "./attachment"
+import type { Attachment } from './attachment'
 
 export interface AssetLocation {
   id: number

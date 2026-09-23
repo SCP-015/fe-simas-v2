@@ -1,12 +1,10 @@
-import type { ApiResponse } from './api'
-
 export interface User {
   id: number
   name: string
   email: string
   photo: string | null
   isActive: boolean
-  role?: { id: number; name: string } | null
+  role?: { id: number, name: string } | null
   employee?: {
     id: number
     name: string
@@ -34,4 +32,3 @@ export interface UserOption {
   email: string
   photo: string | null
 }
-

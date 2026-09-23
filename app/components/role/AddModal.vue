@@ -1,18 +1,32 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.role.addModal.title')"
     :description="$t('component.role.addModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
-      <UForm id="add-role-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
-        <UFormField :label="$t('common.name')" name="name" required>
-          <UInput v-model="form.name" :placeholder="$t('component.role.addModal.namePlaceholder')" class="w-full" />
+      <UForm
+        id="add-role-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
+        <UFormField
+          :label="$t('common.name')"
+          name="name"
+          required
+        >
+          <UInput
+            v-model="form.name"
+            :placeholder="$t('component.role.addModal.namePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
 
         <div class="space-y-3">
@@ -29,15 +43,24 @@
           </div>
 
           <!-- Loading state -->
-          <div v-if="isLoadingPermissions" class="flex items-center justify-center py-8">
-            <UIcon name="i-lucide-loader-2" class="w-5 h-5 animate-spin text-dimmed" />
+          <div
+            v-if="isLoadingPermissions"
+            class="flex items-center justify-center py-8"
+          >
+            <UIcon
+              name="i-lucide-loader-2"
+              class="w-5 h-5 animate-spin text-dimmed"
+            />
             <span class="ml-2 text-sm text-muted">{{ $t('component.role.addModal.loadingPermissions') }}</span>
           </div>
 
           <!-- Permission Groups by Module -->
-          <div v-else class="space-y-3">
-            <div 
-              v-for="(perms, moduleName) in groupedPermissions" 
+          <div
+            v-else
+            class="space-y-3"
+          >
+            <div
+              v-for="(perms, moduleName) in groupedPermissions"
               :key="moduleName"
               class="border border-default rounded-lg p-3 space-y-2"
             >
@@ -47,8 +70,8 @@
                   :model-value="isModuleAllSelected(moduleName)"
                   :indeterminate="isModuleSomeSelected(moduleName) && !isModuleAllSelected(moduleName)"
                   :label="formatModuleName(moduleName)"
-                  @update:model-value="toggleModule(moduleName)"
                   :ui="{ label: 'font-semibold text-highlighted capitalize' }"
+                  @update:model-value="toggleModule(moduleName)"
                 />
               </div>
 
@@ -69,8 +92,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="add-role-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="add-role-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -106,7 +140,6 @@ const resetForm = () => {
   form.permissionIds = []
 }
 
-// Group permissions by module
 const groupedPermissions = computed(() => {
   const groups: Record<string, Permission[]> = {}
   for (const perm of permissions.value) {
@@ -118,12 +151,11 @@ const groupedPermissions = computed(() => {
   return groups
 })
 
-// Select all logic
 const allPermissionIds = computed(() => permissions.value.map(p => p.id))
-const isAllSelected = computed(() => 
+const isAllSelected = computed(() =>
   allPermissionIds.value.length > 0 && allPermissionIds.value.every(id => form.permissionIds.includes(id))
 )
-const isSomeSelected = computed(() => 
+const isSomeSelected = computed(() =>
   form.permissionIds.length > 0
 )
 
@@ -135,7 +167,6 @@ const toggleAll = (checked: boolean | 'indeterminate') => {
   }
 }
 
-// Module select all logic
 const isModuleAllSelected = (moduleName: string) => {
   const modulePerms = groupedPermissions.value[moduleName] || []
   return modulePerms.length > 0 && modulePerms.every(p => form.permissionIds.includes(p.id))
@@ -159,7 +190,6 @@ const toggleModule = (moduleName: string) => {
   }
 }
 
-// Single permission toggle
 const togglePermission = (id: number) => {
   const index = form.permissionIds.indexOf(id)
   if (index > -1) {
@@ -169,7 +199,6 @@ const togglePermission = (id: number) => {
   }
 }
 
-// Format helpers
 const formatModuleName = (name: string) => {
   return name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
@@ -178,7 +207,6 @@ const formatActionName = (action: string) => {
   return action.charAt(0).toUpperCase() + action.slice(1)
 }
 
-// Fetch permissions
 const fetchPermissions = async () => {
   isLoadingPermissions.value = true
   try {

@@ -1,10 +1,10 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.user.updateModal.title')"
     :description="$t('component.user.updateModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
@@ -12,31 +12,85 @@
     <template #body>
       <!-- Avatar Upload Section -->
       <div class="flex items-center gap-5 pb-4">
-        <div class="relative group cursor-pointer shrink-0" @click="triggerFileInput">
+        <div
+          class="relative group cursor-pointer shrink-0"
+          @click="triggerFileInput"
+        >
           <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-default hover:border-primary/50 transition-colors duration-200 flex items-center justify-center bg-muted relative">
-            <NuxtImg v-if="previewUrl" :src="previewUrl" class="w-full h-full object-cover" />
-            <UIcon v-else name="i-lucide-user" class="w-10 h-10 text-dimmed" />
+            <NuxtImg
+              v-if="previewUrl"
+              :src="previewUrl"
+              class="w-full h-full object-cover"
+            />
+            <UIcon
+              v-else
+              name="i-lucide-user"
+              class="w-10 h-10 text-dimmed"
+            />
             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <UIcon name="i-lucide-camera" class="w-5 h-5 text-white" />
+              <UIcon
+                name="i-lucide-camera"
+                class="w-5 h-5 text-white"
+              />
             </div>
-            <div v-if="isUploading" class="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <UIcon name="i-lucide-loader-2" class="w-5 h-5 text-white animate-spin" />
+            <div
+              v-if="isUploading"
+              class="absolute inset-0 bg-black/50 flex items-center justify-center"
+            >
+              <UIcon
+                name="i-lucide-loader-2"
+                class="w-5 h-5 text-white animate-spin"
+              />
             </div>
           </div>
         </div>
         <div class="flex flex-col">
           <span class="text-sm font-semibold text-highlighted">{{ $t('common.photo') }}</span>
-          <p class="text-xs text-dimmed">{{ $t('common.photoHint') }}</p>
+          <p class="text-xs text-dimmed">
+            {{ $t('common.photoHint') }}
+          </p>
           <div class="flex gap-2 mt-2">
-            <UButton size="xs" color="neutral" variant="outline" @click="triggerFileInput" icon="i-lucide-upload">{{ $t('common.choosePhoto') }}</UButton>
-            <UButton v-if="previewUrl || form.photo" size="xs" color="error" variant="outline" @click="removePhoto" icon="i-lucide-trash">{{ $t('common.remove') }}</UButton>
+            <UButton
+              size="xs"
+              color="neutral"
+              variant="outline"
+              icon="i-lucide-upload"
+              @click="triggerFileInput"
+            >
+              {{ $t('common.choosePhoto') }}
+            </UButton>
+            <UButton
+              v-if="previewUrl || form.photo"
+              size="xs"
+              color="error"
+              variant="outline"
+              icon="i-lucide-trash"
+              @click="removePhoto"
+            >
+              {{ $t('common.remove') }}
+            </UButton>
           </div>
         </div>
-        <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="onFileChange" />
+        <input
+          ref="fileInput"
+          type="file"
+          class="hidden"
+          accept="image/*"
+          @change="onFileChange"
+        >
       </div>
 
-      <UForm id="update-user-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-3">
-        <UFormField :label="$t('component.user.updateModal.linkEmployee')" name="employeeId">
+      <UForm
+        id="update-user-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-3"
+        @submit="handleSubmit"
+      >
+        <UFormField
+          :label="$t('component.user.updateModal.linkEmployee')"
+          name="employeeId"
+        >
           <USelectMenu
             v-model="selectedEmployee"
             :items="employeeOptions"
@@ -44,22 +98,45 @@
             class="w-full"
           />
         </UFormField>
-        <UFormField :label="$t('common.name')" name="name" required>
-          <UInput v-model="form.name" :placeholder="$t('component.user.updateModal.namePlaceholder')" class="w-full" />
+        <UFormField
+          :label="$t('common.name')"
+          name="name"
+          required
+        >
+          <UInput
+            v-model="form.name"
+            :placeholder="$t('component.user.updateModal.namePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
-        <UFormField :label="$t('common.email')" name="email" required>
-          <UInput v-model="form.email" type="email" :placeholder="$t('component.user.updateModal.emailPlaceholder')" class="w-full" />
+        <UFormField
+          :label="$t('common.email')"
+          name="email"
+          required
+        >
+          <UInput
+            v-model="form.email"
+            type="email"
+            :placeholder="$t('component.user.updateModal.emailPlaceholder')"
+            class="w-full"
+          />
         </UFormField>
         <!-- <UFormField :label="$t('component.user.updateModal.newPassword')" name="password">
           <UInput v-model="form.password" type="password" :placeholder="$t('component.user.updateModal.passwordPlaceholder')" class="w-full" />
         </UFormField> -->
-        <UFormField :label="$t('common.status')" name="isActive">
+        <UFormField
+          :label="$t('common.status')"
+          name="isActive"
+        >
           <div class="flex items-center gap-2">
             <USwitch v-model="form.isActive" />
             <span class="text-sm text-toned">{{ form.isActive ? $t('common.active') : $t('common.inactive') }}</span>
           </div>
         </UFormField>
-        <UFormField :label="$t('common.role')" name="roleId">
+        <UFormField
+          :label="$t('common.role')"
+          name="roleId"
+        >
           <USelectMenu
             v-model="selectedRole"
             :items="roleOptions"
@@ -71,8 +148,20 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="update-user-form" color="primary" :loading="isSubmitting" :disabled="isUploading" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="update-user-form"
+          color="primary"
+          :loading="isSubmitting"
+          :disabled="isUploading"
+        />
       </div>
     </template>
   </UModal>
@@ -115,12 +204,12 @@ const schema = computed(() => z.object({
 }))
 
 const roles = ref<Role[]>([])
-const roleOptions = computed(() => 
+const roleOptions = computed(() =>
   roles.value.map(r => ({ label: r.name, value: r.id }))
 )
 
 const employees = ref<Employee[]>([])
-const employeeOptions = computed(() => 
+const employeeOptions = computed(() =>
   employees.value.map(e => ({ label: `${e.name} (${e.employeeId})`, value: e.id }))
 )
 
@@ -144,7 +233,6 @@ const selectedEmployee = computed({
   set: (val) => {
     const prevId = form.employeeId
     form.employeeId = val?.value as unknown as number ?? null
-    // Auto-populate fields when an employee is newly selected
     if (form.employeeId && form.employeeId !== prevId) {
       const emp = employees.value.find(e => e.id === form.employeeId)
       if (emp) {
@@ -178,8 +266,7 @@ const fetchRoles = async () => {
     if (response.success) {
       roles.value = response.data
     }
-  } catch (error) {
-    // silently fail
+  } catch {
   }
 }
 
@@ -187,10 +274,9 @@ const fetchEmployees = async () => {
   try {
     const response = await employeeService.getList()
     if (response.success) {
-      employees.value = response.data as any
+      employees.value = response.data
     }
-  } catch (error) {
-    // silently fail
+  } catch {
   }
 }
 
@@ -199,10 +285,8 @@ const onFileChange = async (event: Event) => {
   const file = target.files?.[0]
   if (!file) return
 
-  // Show local preview immediately
   previewUrl.value = URL.createObjectURL(file)
 
-  // Upload to MinIO immediately
   isUploading.value = true
   try {
     const response = await userService.uploadPhoto(file)
@@ -220,7 +304,7 @@ const onFileChange = async (event: Event) => {
         icon: 'i-lucide-circle-alert'
       })
     }
-  } catch (error) {
+  } catch {
     toast.add({
       title: t('common.photoUploadFailed'),
       color: 'error',
@@ -240,7 +324,6 @@ const handleSubmit = async () => {
   if (!props.user) return
   isSubmitting.value = true
 
-  // Build payload
   const payload: UserPayload = {
     name: form.name,
     email: form.email,

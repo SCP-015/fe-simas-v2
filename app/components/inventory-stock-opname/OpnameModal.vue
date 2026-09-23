@@ -7,52 +7,116 @@
   >
     <template #body>
       <div class="space-y-4">
-        <UFormField :label="$t('common.branch')" required>
-          <USelectMenu v-model="branchId" :items="branchOptions" value-key="value" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.inventory.transfer.selectBranch')" class="w-full" />
+        <UFormField
+          :label="$t('common.branch')"
+          required
+        >
+          <USelectMenu
+            v-model="branchId"
+            :items="branchOptions"
+            value-key="value"
+            searchable
+            :searchable-placeholder="$t('common.search')"
+            :placeholder="$t('pages.inventory.transfer.selectBranch')"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Rows: variant × new/used, counted quantity with live difference -->
         <div class="space-y-1.5">
           <label class="text-sm font-medium text-default">{{ $t('pages.inventory.variant.title') }}</label>
 
-          <div v-if="isLoading" class="space-y-2">
-            <USkeleton v-for="i in 3" :key="i" class="h-9 w-full" />
+          <div
+            v-if="isLoading"
+            class="space-y-2"
+          >
+            <USkeleton
+              v-for="i in 3"
+              :key="i"
+              class="h-9 w-full"
+            />
           </div>
-          <div v-else-if="!branchId" class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg">
+          <div
+            v-else-if="!branchId"
+            class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg"
+          >
             {{ $t('pages.inventory.opname.pickBranchFirst') }}
           </div>
-          <div v-else-if="rows.length === 0" class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg">
+          <div
+            v-else-if="rows.length === 0"
+            class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg"
+          >
             {{ $t('pages.inventory.entry.noVariants') }}
           </div>
-          <div v-else class="overflow-x-auto">
+          <div
+            v-else
+            class="overflow-x-auto"
+          >
             <table class="w-full min-w-[480px] text-sm">
               <thead>
                 <tr class="text-left text-xs font-semibold text-dimmed uppercase tracking-wider border-b border-default">
-                  <th class="py-2 pr-3">{{ $t('pages.inventory.variant.title') }}</th>
-                  <th class="py-2 px-2">{{ $t('pages.inventory.condition.new') }}</th>
-                  <th class="py-2 px-2">{{ $t('pages.inventory.condition.used') }}</th>
+                  <th class="py-2 pr-3">
+                    {{ $t('pages.inventory.variant.title') }}
+                  </th>
+                  <th class="py-2 px-2">
+                    {{ $t('pages.inventory.condition.new') }}
+                  </th>
+                  <th class="py-2 px-2">
+                    {{ $t('pages.inventory.condition.used') }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row in rows" :key="row.variantId" class="border-b border-muted">
+                <tr
+                  v-for="row in rows"
+                  :key="row.variantId"
+                  class="border-b border-muted"
+                >
                   <td class="py-2 pr-3">
-                    <div class="font-medium text-highlighted">{{ row.name }}</div>
-                    <div v-if="row.code" class="text-xs text-muted">{{ row.code }}</div>
+                    <div class="font-medium text-highlighted">
+                      {{ row.name }}
+                    </div>
+                    <div
+                      v-if="row.code"
+                      class="text-xs text-muted"
+                    >
+                      {{ row.code }}
+                    </div>
                   </td>
                   <td class="py-2 px-2">
                     <div class="flex items-center gap-1.5">
-                      <UInput v-model.number="row.countedNew" type="number" :min="0" size="sm" class="w-20" />
+                      <UInput
+                        v-model.number="row.countedNew"
+                        type="number"
+                        :min="0"
+                        size="sm"
+                        class="w-20"
+                      />
                       <span class="text-xs text-dimmed">{{ $t('pages.inventory.opname.system') }}: {{ row.new }}</span>
-                      <span v-if="deltaOf(row.countedNew, row.new) !== 0" class="text-xs font-medium" :class="deltaOf(row.countedNew, row.new) > 0 ? 'text-success' : 'text-error'">
+                      <span
+                        v-if="deltaOf(row.countedNew, row.new) !== 0"
+                        class="text-xs font-medium"
+                        :class="deltaOf(row.countedNew, row.new) > 0 ? 'text-success' : 'text-error'"
+                      >
                         {{ deltaOf(row.countedNew, row.new) > 0 ? '+' : '' }}{{ deltaOf(row.countedNew, row.new) }}
                       </span>
                     </div>
                   </td>
                   <td class="py-2 px-2">
                     <div class="flex items-center gap-1.5">
-                      <UInput v-model.number="row.countedUsed" type="number" :min="0" size="sm" class="w-20" />
+                      <UInput
+                        v-model.number="row.countedUsed"
+                        type="number"
+                        :min="0"
+                        size="sm"
+                        class="w-20"
+                      />
                       <span class="text-xs text-dimmed">{{ $t('pages.inventory.opname.system') }}: {{ row.used }}</span>
-                      <span v-if="deltaOf(row.countedUsed, row.used) !== 0" class="text-xs font-medium" :class="deltaOf(row.countedUsed, row.used) > 0 ? 'text-success' : 'text-error'">
+                      <span
+                        v-if="deltaOf(row.countedUsed, row.used) !== 0"
+                        class="text-xs font-medium"
+                        :class="deltaOf(row.countedUsed, row.used) > 0 ? 'text-success' : 'text-error'"
+                      >
                         {{ deltaOf(row.countedUsed, row.used) > 0 ? '+' : '' }}{{ deltaOf(row.countedUsed, row.used) }}
                       </span>
                     </div>
@@ -64,16 +128,36 @@
         </div>
 
         <UFormField :label="$t('common.note')">
-          <UTextarea v-model="note" :placeholder="$t('pages.inventory.transfer.notePlaceholder')" :rows="2" class="w-full" />
+          <UTextarea
+            v-model="note"
+            :placeholder="$t('pages.inventory.transfer.notePlaceholder')"
+            :rows="2"
+            class="w-full"
+          />
         </UFormField>
 
-        <AttachmentManager v-model="attachments" @change="(ids) => { attachmentIds = ids }" />
+        <AttachmentManager
+          v-model="attachments"
+          @change="(ids) => { attachmentIds = ids }"
+        />
       </div>
     </template>
 
     <template #footer>
-      <UButton :label="$t('common.cancel')" color="neutral" variant="outline" :disabled="saving" @click="() => { open = false }" />
-      <UButton :label="$t('common.save')" color="primary" :loading="saving" :disabled="!canSubmit" @click="submit" />
+      <UButton
+        :label="$t('common.cancel')"
+        color="neutral"
+        variant="outline"
+        :disabled="saving"
+        @click="() => { open = false }"
+      />
+      <UButton
+        :label="$t('common.save')"
+        color="primary"
+        :loading="saving"
+        :disabled="!canSubmit"
+        @click="submit"
+      />
     </template>
   </UModal>
 </template>

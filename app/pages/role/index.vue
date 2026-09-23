@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.role.title')"
       :description="$t('pages.role.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -19,7 +18,10 @@
       :total="meta.total"
       table-class="min-w-[768px]"
     >
-      <template #actions v-if="hasPermission('role:create')">
+      <template
+        v-if="hasPermission('role:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -33,20 +35,27 @@
     </DataTable>
 
     <!-- Modals -->
-    <RoleAddModal v-model="showAddModal" @created="fetchRoles" />
-    <RoleUpdateModal v-model="showUpdateModal" :role="selectedRole" @updated="fetchRoles" />
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.role.deleteTitle')" 
-      :item-name="selectedRole?.name" 
+    <RoleAddModal
+      v-model="showAddModal"
+      @created="fetchRoles"
+    />
+    <RoleUpdateModal
+      v-model="showUpdateModal"
+      :role="selectedRole"
+      @updated="fetchRoles"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.role.deleteTitle')"
+      :item-name="selectedRole?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn, DropdownMenuItem } from '@nuxt/ui'
 import type { Row } from '@tanstack/vue-table'
 import { roleService } from '~/services/role-service'
 import type { Role } from '~/types/role'
@@ -63,7 +72,6 @@ const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
 
-// State
 const data = ref<Role[]>([])
 const isLoading = ref(false)
 
@@ -78,24 +86,21 @@ const {
 
 const selectedRole = ref<Role | null>(null)
 
-// Modal states
 const showAddModal = ref(false)
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch roles from API
 const fetchRoles = async () => {
   isLoading.value = true
   try {
-    const response = await roleService.getAll(page.value, perPage.value, search.value)
+    const response = await roleService.getAll(page.value, perPage.value, search.value, sortBy.value, order.value)
     if (response.success) {
       data.value = response.data
       if (response.meta) {
@@ -109,7 +114,6 @@ const fetchRoles = async () => {
   }
 }
 
-// Table columns
 const baseColumns: TableColumn<Role>[] = [
   {
     id: 'no',
@@ -177,17 +181,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -198,7 +202,7 @@ const columns = computed(() => {
 })
 
 function getRowItems(row: Row<Role>) {
-  const items: any[] = []
+  const items: DropdownMenuItem[] = []
 
   if (hasPermission('role:update')) {
     items.push({
@@ -226,7 +230,6 @@ function getRowItems(row: Row<Role>) {
   return items
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedRole.value) return
@@ -247,7 +250,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchRoles()
 })

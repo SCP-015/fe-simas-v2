@@ -13,17 +13,38 @@
       <!-- Camera / Preview -->
       <div class="w-full aspect-square bg-neutral-950 rounded-lg overflow-hidden relative flex items-center justify-center">
         <!-- Error State -->
-        <div v-if="error" class="p-6 text-center select-none flex flex-col items-center gap-3">
+        <div
+          v-if="error"
+          class="p-6 text-center select-none flex flex-col items-center gap-3"
+        >
           <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center">
-            <UIcon name="i-lucide-triangle-alert" class="w-6 h-6 text-error" />
+            <UIcon
+              name="i-lucide-triangle-alert"
+              class="w-6 h-6 text-error"
+            />
           </div>
-          <p class="text-sm font-medium text-neutral-300">{{ error }}</p>
-          <UButton :label="$t('common.tryAgain')" icon="i-lucide-refresh-cw" size="xs" color="neutral" variant="outline" @click="initCamera" />
+          <p class="text-sm font-medium text-neutral-300">
+            {{ error }}
+          </p>
+          <UButton
+            :label="$t('common.tryAgain')"
+            icon="i-lucide-refresh-cw"
+            size="xs"
+            color="neutral"
+            variant="outline"
+            @click="initCamera"
+          />
         </div>
 
         <!-- Loading -->
-        <div v-else-if="loading && !captured" class="absolute inset-0 flex flex-col items-center justify-center bg-neutral-900/80 gap-2 select-none z-10">
-          <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-primary" />
+        <div
+          v-else-if="loading && !captured"
+          class="absolute inset-0 flex flex-col items-center justify-center bg-neutral-900/80 gap-2 select-none z-10"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-8 h-8 animate-spin text-primary"
+          />
           <span class="text-sm text-white">{{ $t('component.camera.initializing') }}</span>
         </div>
 
@@ -38,7 +59,12 @@
         />
 
         <!-- Captured Preview -->
-        <img v-if="captured" :src="captured" class="w-full h-full object-cover" alt="Captured photo" />
+        <img
+          v-if="captured"
+          :src="captured"
+          class="w-full h-full object-cover"
+          alt="Captured photo"
+        >
 
         <!-- Switch Camera -->
         <UButton
@@ -55,12 +81,38 @@
     </template>
 
     <template #footer>
-      <div v-if="!captured && !error" class="flex justify-center w-full">
-        <UButton icon="i-lucide-camera" color="primary" :disabled="loading" :label="$t('component.camera.capture')" class="flex-1 justify-center" @click="capture" />
+      <div
+        v-if="!captured && !error"
+        class="flex justify-center w-full"
+      >
+        <UButton
+          icon="i-lucide-camera"
+          color="primary"
+          :disabled="loading"
+          :label="$t('component.camera.capture')"
+          class="flex-1 justify-center"
+          @click="capture"
+        />
       </div>
-      <div v-else-if="captured" class="flex items-center gap-3 w-full">
-        <UButton :label="$t('component.camera.retake')" icon="i-lucide-refresh-cw" color="neutral" variant="outline" class="flex-1 justify-center" @click="retake" />
-        <UButton :label="$t('component.camera.usePhoto')" icon="i-lucide-check" color="primary" class="flex-1 justify-center" @click="usePhoto" />
+      <div
+        v-else-if="captured"
+        class="flex items-center gap-3 w-full"
+      >
+        <UButton
+          :label="$t('component.camera.retake')"
+          icon="i-lucide-refresh-cw"
+          color="neutral"
+          variant="outline"
+          class="flex-1 justify-center"
+          @click="retake"
+        />
+        <UButton
+          :label="$t('component.camera.usePhoto')"
+          icon="i-lucide-check"
+          color="primary"
+          class="flex-1 justify-center"
+          @click="usePhoto"
+        />
       </div>
     </template>
   </UModal>
@@ -126,13 +178,14 @@ async function initCamera() {
       videoEl.value.srcObject = ms
       await videoEl.value.play().catch(() => {})
     }
-  } catch (err: any) {
-    if (err.name === 'NotAllowedError') {
+  } catch (err) {
+    const e = err as { name?: string, message?: string }
+    if (e.name === 'NotAllowedError') {
       error.value = t('component.camera.permissionDenied')
-    } else if (err.name === 'NotFoundError') {
+    } else if (e.name === 'NotFoundError') {
       error.value = t('component.camera.notFound')
     } else {
-      error.value = t('component.camera.error', { message: err.message || err.name })
+      error.value = t('component.camera.error', { message: e.message || e.name })
     }
   } finally {
     loading.value = false
@@ -168,7 +221,6 @@ function capture() {
   if (ctx) {
     ctx.drawImage(video, sx, sy, size, size, 0, 0, target, target)
 
-    // Add Watermark if enabled
     if (props.watermark) {
       const timestamp = new Date().toLocaleString('id-ID', {
         year: 'numeric',
@@ -184,13 +236,11 @@ function capture() {
       ctx.textAlign = 'right'
       ctx.textBaseline = 'bottom'
 
-      // Text Shadow for readability
       ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
       ctx.shadowBlur = 4
       ctx.shadowOffsetX = 2
       ctx.shadowOffsetY = 2
 
-      // Draw text
       ctx.fillStyle = 'white'
       ctx.fillText(timestamp, target - 20, target - 20)
     }

@@ -8,14 +8,14 @@ export const useFeedback = () => {
     isCapturing.value = true
     currentUrl.value = window.location.href
     screenshotFile.value = null // reset first
-    
+
     // Give the UI a moment to show the loader spinner
-    await new Promise((resolve) => setTimeout(resolve, 200))
-    
+    await new Promise(resolve => setTimeout(resolve, 200))
+
     try {
       const { domToBlob } = await import('modern-screenshot')
       const targetElement = document.getElementById('__nuxt') || document.body
-      
+
       const blob = await domToBlob(targetElement, {
         features: {
           restoreScrollPosition: true
@@ -23,9 +23,9 @@ export const useFeedback = () => {
         filter: (node) => {
           if (node instanceof HTMLElement) {
             if (
-              node.id === 'feedback-loader' || 
-              node.classList.contains('feedback-exclude') ||
-              node.classList.contains('u-toaster')
+              node.id === 'feedback-loader'
+              || node.classList.contains('feedback-exclude')
+              || node.classList.contains('u-toaster')
             ) {
               return false
             }
@@ -33,7 +33,7 @@ export const useFeedback = () => {
           return true
         }
       })
-      
+
       if (blob) {
         screenshotFile.value = new File([blob], `screenshot_${Date.now()}.png`, { type: 'image/png' })
       }

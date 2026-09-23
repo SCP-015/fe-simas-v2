@@ -1,13 +1,19 @@
 <template>
   <div class="flex items-center gap-2">
-    <UBadge :color="getStatusColor(status)" variant="subtle">
+    <UBadge
+      :color="getStatusColor(status)"
+      variant="subtle"
+    >
       {{ getStatusLabel(status) }}
     </UBadge>
     <UTooltip
       :text="tooltipText"
       :content="{ side: 'right', sideOffset: 4 }"
     >
-      <UIcon name="i-lucide-info" class="w-4 h-4 text-dimmed cursor-help" />
+      <UIcon
+        name="i-lucide-info"
+        class="w-4 h-4 text-dimmed cursor-help"
+      />
     </UTooltip>
   </div>
 </template>
@@ -17,7 +23,7 @@ const props = defineProps<{
   status: string
   note?: string | null
   createdAt?: string
-  createdBy?: { id: number; name: string; photo: string | null } | null
+  createdBy?: { id: number, name: string, photo: string | null } | null
 }>()
 
 const tooltipText = computed(() => {

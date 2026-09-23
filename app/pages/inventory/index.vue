@@ -1,11 +1,14 @@
 <template>
   <div class="space-y-6">
-    <Header :title="$t('pages.inventory.item.title')" :description="$t('pages.inventory.item.description')" />
+    <Header
+      :title="$t('pages.inventory.item.title')"
+      :description="$t('pages.inventory.item.description')"
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       v-model:expanded="expanded"
       :data="data"
       :columns="columns"
@@ -16,8 +19,14 @@
       table-class="min-w-[1000px]"
     >
       <template #expanded="{ row }">
-        <div v-if="loadingVariants[row.original.id]" class="p-4 flex items-center gap-2 text-sm text-muted">
-          <UIcon name="i-lucide-loader-2" class="w-4 h-4 animate-spin" /> {{ $t('common.loading') }}
+        <div
+          v-if="loadingVariants[row.original.id]"
+          class="p-4 flex items-center gap-2 text-sm text-muted"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-4 h-4 animate-spin"
+          /> {{ $t('common.loading') }}
         </div>
         <UTable
           v-else
@@ -52,22 +61,63 @@
           >
             {{ $t('pages.inventory.item.exportInventory') }}
           </UButton>
-          <UButton v-if="hasPermission('inventory:create')" color="primary" variant="solid" icon="i-lucide-plus" class="flex-1 sm:flex-none justify-center" @click="() => { navigateTo('/inventory/create') }">
+          <UButton
+            v-if="hasPermission('inventory:create')"
+            color="primary"
+            variant="solid"
+            icon="i-lucide-plus"
+            class="flex-1 sm:flex-none justify-center"
+            @click="() => { navigateTo('/inventory/create') }"
+          >
             {{ $t('pages.inventory.item.add') }}
           </UButton>
-          <UButton color="neutral" variant="soft" icon="i-lucide-filter" class="relative flex-1 sm:flex-none justify-center" @click="() => { showFilterDrawer = true }">
+          <UButton
+            color="neutral"
+            variant="soft"
+            icon="i-lucide-filter"
+            class="relative flex-1 sm:flex-none justify-center"
+            @click="() => { showFilterDrawer = true }"
+          >
             {{ $t('pages.inventory.item.filter') }}
-            <UBadge v-if="activeFilterCount > 0" :label="String(activeFilterCount)" color="primary" size="sm" variant="solid" />
+            <UBadge
+              v-if="activeFilterCount > 0"
+              :label="String(activeFilterCount)"
+              color="primary"
+              size="sm"
+              variant="solid"
+            />
           </UButton>
           <UPopover>
-            <UButton color="neutral" variant="ghost" icon="i-lucide-table-properties" />
+            <UButton
+              color="neutral"
+              variant="ghost"
+              icon="i-lucide-table-properties"
+            />
             <template #content>
               <div class="p-3 w-48 space-y-2 select-none">
-                <div class="text-sm font-semibold text-toned mb-1">{{ $t('pages.inventory.item.labels') }}</div>
-                <div v-if="availableLabelKeys.length === 0" class="text-xs text-dimmed italic">{{ $t('pages.inventory.item.noCustomLabels') }}</div>
-                <div v-else class="space-y-1.5 max-h-48 overflow-y-auto">
-                  <div v-for="key in availableLabelKeys" :key="key" class="flex items-center gap-2">
-                    <UCheckbox :model-value="activeLabelColumns.includes(key)" :label="key" @update:model-value="(v: boolean | 'indeterminate') => toggleLabelColumn(key, v === true)" />
+                <div class="text-sm font-semibold text-toned mb-1">
+                  {{ $t('pages.inventory.item.labels') }}
+                </div>
+                <div
+                  v-if="availableLabelKeys.length === 0"
+                  class="text-xs text-dimmed italic"
+                >
+                  {{ $t('pages.inventory.item.noCustomLabels') }}
+                </div>
+                <div
+                  v-else
+                  class="space-y-1.5 max-h-48 overflow-y-auto"
+                >
+                  <div
+                    v-for="key in availableLabelKeys"
+                    :key="key"
+                    class="flex items-center gap-2"
+                  >
+                    <UCheckbox
+                      :model-value="activeLabelColumns.includes(key)"
+                      :label="key"
+                      @update:model-value="(v: boolean | 'indeterminate') => toggleLabelColumn(key, v === true)"
+                    />
                   </div>
                 </div>
               </div>
@@ -77,8 +127,17 @@
       </template>
     </DataTable>
 
-    <InventoryVariantManagerModal v-model="showVariantModal" :inventory="selectedItem" @changed="fetchItems" />
-    <DeleteModal v-model="showDeleteModal" :item-name="selectedItem?.name" :loading="deleting" @confirm="confirmDelete" />
+    <InventoryVariantManagerModal
+      v-model="showVariantModal"
+      :inventory="selectedItem"
+      @changed="fetchItems"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :item-name="selectedItem?.name"
+      :loading="deleting"
+      @confirm="confirmDelete"
+    />
     <!-- Lightbox Modal -->
     <Lightbox />
 
@@ -92,9 +151,10 @@
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from '@nuxt/ui'
+import type { TableColumn, DropdownMenuItem } from '@nuxt/ui'
 import type { Row } from '@tanstack/vue-table'
 import { inventoryService } from '~/services/inventory-service'
+import type { FilterBag } from '~/types/api'
 import { inventoryVariantService } from '~/services/inventory-variant-service'
 import { inventoryStockService } from '~/services/inventory-stock-service'
 import type { Inventory, InventoryVariant } from '~/types/inventory'
@@ -166,13 +226,13 @@ const toggleVariantRow = async (row: Row<Inventory>) => {
           if (b.condition === 'new') branchEntry.newStock += b.quantity
           else branchEntry.usedStock += b.quantity
         }
-        variantsCache[id] = variantsRes.data.map(v => {
+        variantsCache[id] = variantsRes.data.map((v) => {
           const entry = stockByVariant.get(v.id)
           return {
             ...v,
             newStock: entry?.new ?? 0,
             usedStock: entry?.used ?? 0,
-            branches: entry ? Array.from(entry.branches.values()) : [],
+            branches: entry ? Array.from(entry.branches.values()) : []
           }
         })
       }
@@ -185,7 +245,7 @@ const toggleVariantRow = async (row: Row<Inventory>) => {
 const branchColumns: TableColumn<BranchStockRow>[] = [
   { accessorKey: 'name', header: t('common.branch'), cell: ({ row }) => h('span', { class: 'text-highlighted text-sm' }, row.original.name) },
   { accessorKey: 'newStock', header: t('pages.inventory.condition.new'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-emerald-600 text-sm font-medium' }, String(row.original.newStock)) },
-  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) },
+  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) }
 ]
 
 const variantColumns: TableColumn<VariantStockRow>[] = [
@@ -214,7 +274,7 @@ const variantColumns: TableColumn<VariantStockRow>[] = [
   } },
   { accessorKey: 'description', header: t('common.description'), cell: ({ row }) => h('span', { class: 'text-toned text-sm' }, row.original.description || '-') },
   { accessorKey: 'newStock', header: t('pages.inventory.condition.new'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-emerald-600 text-sm font-medium' }, String(row.original.newStock)) },
-  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) },
+  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) }
 ]
 
 const selectedItem = ref<Inventory | null>(null)
@@ -226,11 +286,11 @@ const availableLabelKeys = ref<string[]>([])
 const activeLabelColumns = ref<string[]>([])
 
 const showFilterDrawer = ref(false)
-const activeFilters = ref<Record<string, any>>({})
+const activeFilters = ref<FilterBag>({})
 const activeFilterCount = computed(() => Object.keys(activeFilters.value).length)
 const isExporting = ref(false)
 
-const onApplyFilters = (filters: Record<string, any>) => {
+const onApplyFilters = (filters: FilterBag) => {
   activeFilters.value = filters
 }
 
@@ -291,43 +351,43 @@ const columns = computed<TableColumn<Inventory>[]>(() => {
       cell: ({ row }) => h('span', { class: 'text-muted' }, (page.value - 1) * perPage.value + row.index + 1)
     },
     {
-    accessorKey: 'name',
-    header: sortHeader(t('common.name'), 'name'),
-    cell: ({ row }) => {
-      const img = row.original.image
-      const imageEl = img
-        ? h(NuxtImg, {
-            src: img,
-            alt: row.original.name,
-            class: 'w-10 h-10 object-cover rounded-md border border-default cursor-pointer hover:border-accented transition-colors shadow-2xs shrink-0',
+      accessorKey: 'name',
+      header: sortHeader(t('common.name'), 'name'),
+      cell: ({ row }) => {
+        const img = row.original.image
+        const imageEl = img
+          ? h(NuxtImg, {
+              src: img,
+              alt: row.original.name,
+              class: 'w-10 h-10 object-cover rounded-md border border-default cursor-pointer hover:border-accented transition-colors shadow-2xs shrink-0',
+              onClick: (e: Event) => {
+                e.stopPropagation()
+                openLightbox(img)
+              }
+            })
+          : h('div', { class: 'w-10 h-10 bg-elevated rounded-md flex items-center justify-center border border-default shrink-0' }, [
+              h('span', { class: 'text-dimmed text-xs' }, 'N/A')
+            ])
+
+        const textEl = h('div', { class: 'flex flex-col min-w-0' }, [
+          h('span', {
+            class: 'font-semibold cursor-pointer hover:underline truncate',
             onClick: (e: Event) => {
               e.stopPropagation()
-              openLightbox(img)
+              navigateTo(`/inventory/${row.original.id}`)
             }
-          })
-        : h('div', { class: 'w-10 h-10 bg-elevated rounded-md flex items-center justify-center border border-default shrink-0' }, [
-            h('span', { class: 'text-dimmed text-xs' }, 'N/A')
-          ])
+          }, row.original.name),
+          h('span', { class: 'text-xs text-muted' }, row.original.code || '-')
+        ])
 
-      const textEl = h('div', { class: 'flex flex-col min-w-0' }, [
-        h('span', { 
-          class: 'font-semibold cursor-pointer hover:underline truncate',
-          onClick: (e: Event) => {
-            e.stopPropagation()
-            navigateTo(`/inventory/${row.original.id}`)
-          }
-        }, row.original.name),
-        h('span', { class: 'text-xs text-muted' }, row.original.code || '-')
-      ])
-
-      return h('div', { class: 'flex items-center gap-3' }, [imageEl, textEl])
-    }
-  },
+        return h('div', { class: 'flex items-center gap-3' }, [imageEl, textEl])
+      }
+    },
     { accessorKey: 'category', header: sortHeader(t('common.category'), 'category'), cell: ({ row }) => h('span', { class: 'text-default' }, row.original.category?.name || '-') },
     { accessorKey: 'subCategory', header: sortHeader(t('common.subCategory'), 'subCategory'), cell: ({ row }) => h('span', { class: 'text-default' }, row.original.subCategory?.name || '-') },
     { accessorKey: 'unit', header: sortHeader(t('pages.inventory.unit.label'), 'unit', 'center'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h(UBadge, { color: 'neutral', variant: 'subtle' }, () => row.original.unit || '-') },
     { accessorKey: 'newCount', header: sortHeader(t('pages.inventory.condition.new'), 'newCount', 'center'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-emerald-600 text-sm font-medium' }, String(row.original.newCount ?? 0)) },
-    { accessorKey: 'usedCount', header: sortHeader(t('pages.inventory.condition.used'), 'usedCount', 'center'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedCount ?? 0)) },
+    { accessorKey: 'usedCount', header: sortHeader(t('pages.inventory.condition.used'), 'usedCount', 'center'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedCount ?? 0)) }
   ]
 
   for (const key of activeLabelColumns.value) {
@@ -342,7 +402,7 @@ const columns = computed<TableColumn<Inventory>[]>(() => {
     id: 'actions',
     header: t('common.actions'),
     meta: { class: { td: 'text-right', th: 'text-right' } },
-    cell: ({ row }) => h(UDropdownMenu, { content: { align: 'end' }, items: getRowItems(row), 'aria-label': 'Actions' },
+    cell: ({ row }) => h(UDropdownMenu, { 'content': { align: 'end' }, 'items': getRowItems(row), 'aria-label': 'Actions' },
       () => h(UButton, { icon: 'i-lucide-ellipsis-vertical', color: 'neutral', variant: 'ghost' }))
   })
   return list
@@ -350,7 +410,7 @@ const columns = computed<TableColumn<Inventory>[]>(() => {
 
 function getRowItems(row: Row<Inventory>) {
   const item = row.original
-  const items: any[] = [{
+  const items: DropdownMenuItem[] = [{
     label: t('pages.inventory.detail.open'),
     icon: 'i-lucide-eye',
     onSelect() { navigateTo(`/inventory/${item.id}`) }

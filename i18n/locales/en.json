@@ -86,6 +86,7 @@
     "feedback": "Feedback",
     "capturing": "Capturing...",
     "inventory": "Inventory",
+    "transfer": "Transfer",
     "calendar": "Calendar"
   },
   "component": {
@@ -1002,6 +1003,31 @@
       "deleteOrganization": "Delete Organization",
       "deleteTitle": "Delete Organization",
       "deleteSuccess": "Organization deleted successfully"
+    },
+    "transfer": {
+      "title": "Transfer",
+      "description": "Complete incoming item data and merge it into Assets",
+      "statusAll": "All Statuses",
+      "statusPending": "Pending",
+      "statusMerged": "Merged",
+      "noSerial": "No serial number yet",
+      "noSerialWithQuantity": "{quantity} unit(s), no serial yet",
+      "codeWithMore": "{codes} (+{more} more)",
+      "columnName": "Name",
+      "columnCode": "Serial Number",
+      "columnPrice": "Price",
+      "columnPurchaseDate": "Purchase Date",
+      "columnStatus": "Status",
+      "columnCreatedBy": "Created By",
+      "columnCreatedAt": "Created At",
+      "createdBySystem": "External System",
+      "columnAction": "Action",
+      "mergeToAsset": "Merge to Asset",
+      "mergeTitle": "Merge to Asset",
+      "mergeDescription": "Complete this data to merge the transfer item into an Asset",
+      "mergeSubmit": "Merge",
+      "mergeNotFound": "Transfer item not found",
+      "mergeAlreadyDone": "This transfer item has already been merged"
     },
     "subCategory": {
       "title": "Sub Category Management",

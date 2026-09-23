@@ -373,7 +373,6 @@ const canCancel = computed(() =>
   handover.value?.status === 'pending' && hasPermission('handover:cancel')
 )
 
-// Load document details
 const fetchDetail = async () => {
   const id = Number(route.params.id)
   if (isNaN(id)) return
@@ -390,7 +389,6 @@ const fetchDetail = async () => {
   }
 }
 
-// Status badge visual decorations
 const handoverStatusColor = computed<'warning' | 'success' | 'error' | 'neutral'>(() => {
   const s = handover.value?.status
   if (s === 'approve') return 'success'
@@ -407,7 +405,6 @@ const handoverStatusLabel = computed(() => {
   return t('pages.handover.statusPending')
 })
 
-// Cancel a pending handover
 const handleCancel = async () => {
   if (!handover.value) return
   isCancelling.value = true

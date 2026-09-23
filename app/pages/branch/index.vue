@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.branch.title')"
       :description="$t('pages.branch.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -18,7 +17,10 @@
       :to="meta.to"
       :total="meta.total"
     >
-      <template #actions v-if="hasPermission('branch:create')">
+      <template
+        v-if="hasPermission('branch:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -32,14 +34,21 @@
     </DataTable>
 
     <!-- Modals -->
-    <BranchAddModal v-model="showAddModal" @created="fetchBranches" />
-    <BranchUpdateModal v-model="showUpdateModal" :branch="selectedBranch" @updated="fetchBranches" />
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.branch.deleteTitle')" 
-      :item-name="selectedBranch?.name" 
+    <BranchAddModal
+      v-model="showAddModal"
+      @created="fetchBranches"
+    />
+    <BranchUpdateModal
+      v-model="showUpdateModal"
+      :branch="selectedBranch"
+      @updated="fetchBranches"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.branch.deleteTitle')"
+      :item-name="selectedBranch?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
   </div>
 </template>
@@ -61,7 +70,6 @@ const { hasPermission } = useAuth()
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-// State
 const data = ref<Branch[]>([])
 const isLoading = ref(false)
 
@@ -76,20 +84,17 @@ const {
 
 const selectedBranch = ref<Branch | null>(null)
 
-// Modal states
 const showAddModal = ref(false)
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch branches from API
 const fetchBranches = async () => {
   isLoading.value = true
   try {
@@ -107,9 +112,6 @@ const fetchBranches = async () => {
   }
 }
 
-
-
-// Table columns
 const baseColumns: TableColumn<Branch>[] = [
   {
     accessorKey: 'code',
@@ -188,17 +190,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -234,7 +236,6 @@ function getRowItems(row: Row<Branch>) {
   return actions
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedBranch.value) return
@@ -255,7 +256,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchBranches()
 })

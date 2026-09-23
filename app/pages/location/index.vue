@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.location.title')"
       :description="$t('pages.location.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -28,7 +27,10 @@
           class="w-full md:w-52"
         />
       </template>
-      <template #actions v-if="hasPermission('location:create')">
+      <template
+        v-if="hasPermission('location:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -42,14 +44,21 @@
     </DataTable>
 
     <!-- Modals -->
-    <LocationAddModal v-model="showAddModal" @created="fetchLocations" />
-    <LocationUpdateModal v-model="showUpdateModal" :location="selectedLocation" @updated="fetchLocations" />
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.location.deleteTitle')" 
-      :item-name="selectedLocation?.name" 
+    <LocationAddModal
+      v-model="showAddModal"
+      @created="fetchLocations"
+    />
+    <LocationUpdateModal
+      v-model="showUpdateModal"
+      :location="selectedLocation"
+      @updated="fetchLocations"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.location.deleteTitle')"
+      :item-name="selectedLocation?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
   </div>
 </template>
@@ -72,7 +81,6 @@ const { hasPermission } = useAuth()
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-// State
 const data = ref<Location[]>([])
 const isLoading = ref(false)
 
@@ -87,15 +95,13 @@ const {
 
 const selectedLocation = ref<Location | null>(null)
 
-// Modal states
 const showAddModal = ref(false)
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Branch filter
 const branchFilter = ref('all')
-const branchOptions = ref<{ label: string; value: string }[]>([{ label: t('common.all'), value: 'all' }])
+const branchOptions = ref<{ label: string, value: string }[]>([{ label: t('common.all'), value: 'all' }])
 
 const fetchBranches = async () => {
   const res = await branchService.getList()
@@ -112,14 +118,12 @@ watch(branchFilter, () => {
   fetchLocations()
 })
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch locations from API
 const fetchLocations = async () => {
   isLoading.value = true
   try {
@@ -138,9 +142,6 @@ const fetchLocations = async () => {
   }
 }
 
-
-
-// Table columns
 const baseColumns: TableColumn<Location>[] = [
   {
     accessorKey: 'name',
@@ -202,17 +203,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -248,7 +249,6 @@ function getRowItems(row: Row<Location>) {
   return actions
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedLocation.value) return
@@ -269,7 +269,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchLocations()
   fetchBranches()

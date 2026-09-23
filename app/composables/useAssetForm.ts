@@ -3,7 +3,7 @@ import { parseDate } from '@internationalized/date'
 import { assetService } from '~/services/asset-service'
 import { categoryService } from '~/services/category-service'
 import { subCategoryService } from '~/services/sub-category-service'
-import type { AssetPayload, AssetLabel } from '~/types/asset'
+import type { AssetLabel } from '~/types/asset'
 
 export const assetSchema = z.object({
   code: z.string().min(1, 'Code is required').optional(),
@@ -13,11 +13,11 @@ export const assetSchema = z.object({
   brand: z.string().optional().nullable().or(z.literal('')),
   model: z.string().optional().nullable().or(z.literal('')),
   price: z.preprocess(
-    (val) => (val === '' || val === null || val === undefined) ? null : Number(val),
+    val => (val === '' || val === null || val === undefined) ? null : Number(val),
     z.number().int().nullable().optional()
   ),
   purchaseDate: z.string().optional().nullable().or(z.literal('')),
-  description: z.string().optional().nullable().or(z.literal('')),
+  description: z.string().optional().nullable().or(z.literal(''))
 })
 
 export function useAssetForm() {
@@ -25,7 +25,6 @@ export function useAssetForm() {
   const isUploading = ref(false)
   const previewUrl = ref<string | null>(null)
 
-  // ── Labels ──────────────────────────────────────────────────────────────
   const labels = ref<AssetLabel[]>([])
   const addLabel = () => { labels.value.push({ key: '', value: '' }) }
   const removeLabel = (index: number) => { labels.value.splice(index, 1) }
@@ -45,10 +44,9 @@ export function useAssetForm() {
     return new Set(keys).size !== keys.length
   })
 
-  // ── Category & Sub Category ─────────────────────────────────────────────
   const selectedCategoryId = ref<number | undefined>(undefined)
-  const categoryOptions = ref<{ label: string; value: number }[]>([])
-  const subCategoryOptions = ref<{ label: string; value: number }[]>([])
+  const categoryOptions = ref<{ label: string, value: number }[]>([])
+  const subCategoryOptions = ref<{ label: string, value: number }[]>([])
   const isLoadingSubCategories = ref(false)
   const lastFetchedCategoryId = ref<number | undefined>(undefined)
   const showAddCategory = ref(false)
@@ -57,7 +55,7 @@ export function useAssetForm() {
   const fetchCategories = async () => {
     const res = await categoryService.getList()
     if (res.success) {
-      categoryOptions.value = res.data.map((c) => ({ label: c.name, value: c.id }))
+      categoryOptions.value = res.data.map(c => ({ label: c.name, value: c.id }))
     }
   }
 
@@ -66,7 +64,7 @@ export function useAssetForm() {
     try {
       const res = await subCategoryService.getByCategoryId(categoryId)
       if (res.success) {
-        subCategoryOptions.value = res.data.map((s) => ({ label: s.name, value: s.id }))
+        subCategoryOptions.value = res.data.map(s => ({ label: s.name, value: s.id }))
         lastFetchedCategoryId.value = categoryId
       }
     } finally {
@@ -87,7 +85,6 @@ export function useAssetForm() {
     if (last) form.subCategoryId = last.value
   }
 
-  // ── Image Upload ────────────────────────────────────────────────────────
   const fileInput = ref<HTMLInputElement | null>(null)
 
   const triggerFileInput = () => { fileInput.value?.click() }
@@ -118,7 +115,6 @@ export function useAssetForm() {
     if (fileInput.value) fileInput.value.value = ''
   }
 
-  // ── Computed Helpers ────────────────────────────────────────────────────
   const makePurchaseDateComputed = (form: { purchaseDate?: string }) => computed({
     get: () => {
       if (!form.purchaseDate) return undefined
@@ -129,7 +125,7 @@ export function useAssetForm() {
 
   const makePriceDisplayComputed = (form: { price?: number }) => computed({
     get: () => formatIndonesianNumber(form.price),
-    set: (val) => { form.price = parseIndonesianNumber(val) as any }
+    set: (val) => { form.price = parseIndonesianNumber(val) }
   })
 
   const availableLabelKeys = ref<string[]>([])
@@ -149,7 +145,6 @@ export function useAssetForm() {
     toast,
     isUploading,
     previewUrl,
-    // Labels
     labels,
     addLabel,
     removeLabel,
@@ -158,7 +153,6 @@ export function useAssetForm() {
     hasDuplicateLabelKeys,
     availableLabelKeys,
     fetchLabelKeys,
-    // Category
     selectedCategoryId,
     categoryOptions,
     subCategoryOptions,
@@ -170,15 +164,13 @@ export function useAssetForm() {
     fetchSubCategories,
     onCategoryCreated,
     onSubCategoryCreated,
-    // Image
     fileInput,
     triggerFileInput,
     onFileChange,
     handleUploadImageFile,
     removeImage,
-    // Helpers
     makePurchaseDateComputed,
     makePriceDisplayComputed,
-    formatMacAddress,
+    formatMacAddress
   }
 }

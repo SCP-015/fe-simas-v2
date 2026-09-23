@@ -4,7 +4,7 @@
       <DataTable
         v-model:search="search"
         v-model:page="page"
-        v-model:perPage="perPage"
+        v-model:per-page="perPage"
         :data="data"
         :columns="columns"
         :loading="isLoadingSchedules"
@@ -68,7 +68,6 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
 const UIcon = resolveComponent('UIcon')
 
-// State
 const data = ref<AssetSchedule[]>([])
 const isLoadingSchedules = ref(false)
 
@@ -87,14 +86,12 @@ const showFormModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch schedules that include this asset
 const fetchSchedules = async () => {
   isLoadingSchedules.value = true
   try {
@@ -136,7 +133,6 @@ const recurrenceSubtitle = (schedule: AssetSchedule): string => {
   return ''
 }
 
-// Table columns
 const columns = computed(() => {
   const list: TableColumn<AssetSchedule>[] = [
     {
@@ -203,15 +199,15 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: { align: 'end' },
-            items: getRowItems(row),
+            'content': { align: 'end' },
+            'items': getRowItems(row),
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )

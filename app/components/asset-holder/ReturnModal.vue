@@ -1,10 +1,10 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.assetHolder.returnModal.title')"
     :description="$t('component.assetHolder.returnModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
@@ -20,15 +20,37 @@
         class="mb-4"
       />
 
-      <UForm id="return-asset-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="return-asset-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Returned Date Field -->
-        <UFormField :label="$t('component.assetHolder.returnModal.returnDate')" name="returnedDate" required>
-          <UInput type="datetime-local" v-model="form.returnedDate" class="w-full" />
+        <UFormField
+          :label="$t('component.assetHolder.returnModal.returnDate')"
+          name="returnedDate"
+          required
+        >
+          <UInput
+            v-model="form.returnedDate"
+            type="datetime-local"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Note Field -->
-        <UFormField :label="$t('component.assetHolder.returnModal.returnNotes')" name="returnNote">
-          <UTextarea v-model="form.returnNote" :placeholder="$t('component.assetHolder.returnModal.notesPlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('component.assetHolder.returnModal.returnNotes')"
+          name="returnNote"
+        >
+          <UTextarea
+            v-model="form.returnNote"
+            :placeholder="$t('component.assetHolder.returnModal.notesPlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Attachment Manager -->
@@ -40,8 +62,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="return-asset-form" color="success" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="return-asset-form"
+          color="success"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -63,19 +96,18 @@ const props = defineProps<{
 const emit = defineEmits<{ returned: [] }>()
 const toast = useToast()
 
-// State
 const isSubmitting = ref(false)
 const uploadedAttachments = ref<Attachment[]>([])
 
 const schema = z.object({
   returnedDate: z.string().min(1, t('component.assetHolder.returnModal.dateRequired')),
-  returnNote: z.string().optional().or(z.literal('')),
+  returnNote: z.string().optional().or(z.literal(''))
 })
 
 const form = reactive({
   returnedDate: getLocalDatetimeString(), // Default to current date & time
   returnNote: '',
-  attachmentIds: [] as number[],
+  attachmentIds: [] as number[]
 })
 
 const onAttachmentsChanged = (ids: number[]) => {
@@ -104,7 +136,7 @@ const handleSubmit = async () => {
     const response = await assetHolderService.returnAsset(props.activeHolder.id, {
       returnedDate: form.returnedDate,
       returnNote: form.returnNote,
-      attachmentIds: form.attachmentIds,
+      attachmentIds: form.attachmentIds
     })
     if (response.success) {
       toast.add({

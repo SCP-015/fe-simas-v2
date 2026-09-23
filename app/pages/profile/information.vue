@@ -3,37 +3,104 @@
   <div class="p-6 space-y-6">
     <!-- Photo Upload Section -->
     <div class="flex items-center gap-5 pb-4 border-b border-muted">
-      <div class="relative group cursor-pointer shrink-0" @click="triggerFileInput">
+      <div
+        class="relative group cursor-pointer shrink-0"
+        @click="triggerFileInput"
+      >
         <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-default hover:border-primary/50 transition-colors duration-200 flex items-center justify-center bg-muted relative">
-          <NuxtImg v-if="previewUrl" :src="previewUrl" class="w-full h-full object-cover" />
-          <UIcon v-else name="i-lucide-user" class="w-10 h-10 text-dimmed" />
+          <NuxtImg
+            v-if="previewUrl"
+            :src="previewUrl"
+            class="w-full h-full object-cover"
+          />
+          <UIcon
+            v-else
+            name="i-lucide-user"
+            class="w-10 h-10 text-dimmed"
+          />
           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <UIcon name="i-lucide-camera" class="w-5 h-5 text-white" />
+            <UIcon
+              name="i-lucide-camera"
+              class="w-5 h-5 text-white"
+            />
           </div>
-          <div v-if="isUploading" class="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <UIcon name="i-lucide-loader-2" class="w-5 h-5 text-white animate-spin" />
+          <div
+            v-if="isUploading"
+            class="absolute inset-0 bg-black/50 flex items-center justify-center"
+          >
+            <UIcon
+              name="i-lucide-loader-2"
+              class="w-5 h-5 text-white animate-spin"
+            />
           </div>
         </div>
       </div>
       <div class="flex flex-col">
         <span class="text-sm font-semibold text-highlighted">{{ $t('common.photo') }}</span>
-        <p class="text-xs text-dimmed">{{ $t('common.photoHint') }}</p>
+        <p class="text-xs text-dimmed">
+          {{ $t('common.photoHint') }}
+        </p>
         <div class="flex gap-2 mt-2">
-          <UButton size="xs" color="neutral" variant="outline" @click="triggerFileInput" icon="i-lucide-upload">{{ $t('common.choosePhoto') }}</UButton>
-          <UButton v-if="previewUrl || formInfo.photo" size="xs" color="error" variant="outline" @click="removePhoto" icon="i-lucide-trash">{{ $t('common.remove') }}</UButton>
+          <UButton
+            size="xs"
+            color="neutral"
+            variant="outline"
+            icon="i-lucide-upload"
+            @click="triggerFileInput"
+          >
+            {{ $t('common.choosePhoto') }}
+          </UButton>
+          <UButton
+            v-if="previewUrl || formInfo.photo"
+            size="xs"
+            color="error"
+            variant="outline"
+            icon="i-lucide-trash"
+            @click="removePhoto"
+          >
+            {{ $t('common.remove') }}
+          </UButton>
         </div>
       </div>
-      <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="onFileChange" />
+      <input
+        ref="fileInput"
+        type="file"
+        class="hidden"
+        accept="image/*"
+        @change="onFileChange"
+      >
     </div>
 
-    <UForm :schema="infoSchema" :state="formInfo" @submit="handleInfoSubmit" class="space-y-4">
-      <UFormField :label="$t('pages.profile.informationPage.fullName')" name="name" required>
-        <UInput v-model="formInfo.name" :placeholder="$t('pages.profile.informationPage.fullNamePlaceholder')" class="w-full" />
+    <UForm
+      :schema="infoSchema"
+      :state="formInfo"
+      class="space-y-4"
+      @submit="handleInfoSubmit"
+    >
+      <UFormField
+        :label="$t('pages.profile.informationPage.fullName')"
+        name="name"
+        required
+      >
+        <UInput
+          v-model="formInfo.name"
+          :placeholder="$t('pages.profile.informationPage.fullNamePlaceholder')"
+          class="w-full"
+        />
       </UFormField>
-      <UFormField :label="$t('pages.profile.informationPage.emailAddress')" name="email" required>
-        <UInput v-model="formInfo.email" type="email" :placeholder="$t('pages.profile.informationPage.emailPlaceholder')" class="w-full" />
+      <UFormField
+        :label="$t('pages.profile.informationPage.emailAddress')"
+        name="email"
+        required
+      >
+        <UInput
+          v-model="formInfo.email"
+          type="email"
+          :placeholder="$t('pages.profile.informationPage.emailPlaceholder')"
+          class="w-full"
+        />
       </UFormField>
-      
+
       <div class="flex justify-end pt-2">
         <UButton
           type="submit"
@@ -58,7 +125,6 @@ const { t } = useI18n()
 const { state: authState, service: authService } = useAuth()
 const toast = useToast()
 
-// Upload state
 const isUploading = ref(false)
 
 const previewUrl = ref<string | null>(null)
@@ -67,23 +133,19 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
-// Saving state
 const isSavingInfo = ref(false)
 
-// Form - Information
 const formInfo = reactive<UpdateProfilePayload>({
   name: '',
   email: '',
   photo: null
 })
 
-// Validation Schemas
 const infoSchema = z.object({
   name: z.string().min(1, t('pages.profile.informationPage.nameRequired')),
   email: z.string().min(1, t('pages.profile.informationPage.emailRequired')).email(t('pages.profile.informationPage.emailInvalid'))
 })
 
-// Populate profile details
 const populateProfile = () => {
   if (authState.user) {
     formInfo.name = authState.user.name
@@ -93,14 +155,11 @@ const populateProfile = () => {
   }
 }
 
-
-
 const onFileChange = async (e: Event) => {
   const target = e.target as HTMLInputElement
   const file = target.files?.[0]
   if (!file) return
 
-  // Local preview URL
   previewUrl.value = URL.createObjectURL(file)
 
   isUploading.value = true
@@ -120,7 +179,7 @@ const onFileChange = async (e: Event) => {
         icon: 'i-lucide-circle-alert'
       })
     }
-  } catch (error) {
+  } catch {
     toast.add({
       title: t('common.photoUploadFailed'),
       color: 'error',
@@ -152,7 +211,6 @@ const handleInfoSubmit = async () => {
   }
 }
 
-// Watch session user changes
 watch(() => authState.user, () => {
   populateProfile()
 }, { immediate: true })

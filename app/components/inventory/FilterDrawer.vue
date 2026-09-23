@@ -7,12 +7,20 @@
   >
     <template #body>
       <div class="space-y-5">
-
         <!-- Category -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('common.category') }}</label>
-            <UButton v-if="filters.categoryIds?.length" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('categoryIds')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.categoryIds?.length"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('categoryIds')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <USelectMenu
             v-model="filters.categoryIds"
@@ -29,7 +37,16 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('common.subCategory') }}</label>
-            <UButton v-if="filters.subCategoryIds?.length" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('subCategoryIds')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.subCategoryIds?.length"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('subCategoryIds')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <USelectMenu
             v-model="filters.subCategoryIds"
@@ -46,7 +63,16 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('pages.inventory.unit.label') }}</label>
-            <UButton v-if="filters.units?.length" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('units')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.units?.length"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('units')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <USelectMenu
             v-model="filters.units"
@@ -64,7 +90,16 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.status') }}</label>
-            <UButton v-if="filters.isActive" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('isActive')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.isActive"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('isActive')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <URadioGroup
             v-model="filters.isActive"
@@ -77,7 +112,16 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.variantStatus') }}</label>
-            <UButton v-if="filters.variantStatus" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('variantStatus')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.variantStatus"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('variantStatus')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <URadioGroup
             v-model="filters.variantStatus"
@@ -92,12 +136,33 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.newStockRange') }}</label>
-            <UButton v-if="filters.newStockMin || filters.newStockMax" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('newStockMin'); clearField('newStockMax')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.newStockMin || filters.newStockMax"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('newStockMin'); clearField('newStockMax')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-            <UInput v-model.number="filters.newStockMin" type="number" min="0" :placeholder="$t('component.inventory.filterDrawer.min')" class="w-full sm:flex-1" />
+            <UInput
+              v-model.number="filters.newStockMin"
+              type="number"
+              min="0"
+              :placeholder="$t('component.inventory.filterDrawer.min')"
+              class="w-full sm:flex-1"
+            />
             <span class="text-dimmed text-sm hidden sm:inline">—</span>
-            <UInput v-model.number="filters.newStockMax" type="number" min="0" :placeholder="$t('component.inventory.filterDrawer.max')" class="w-full sm:flex-1" />
+            <UInput
+              v-model.number="filters.newStockMax"
+              type="number"
+              min="0"
+              :placeholder="$t('component.inventory.filterDrawer.max')"
+              class="w-full sm:flex-1"
+            />
           </div>
         </div>
 
@@ -105,12 +170,33 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.usedStockRange') }}</label>
-            <UButton v-if="filters.usedStockMin || filters.usedStockMax" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('usedStockMin'); clearField('usedStockMax')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.usedStockMin || filters.usedStockMax"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('usedStockMin'); clearField('usedStockMax')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-            <UInput v-model.number="filters.usedStockMin" type="number" min="0" :placeholder="$t('component.inventory.filterDrawer.min')" class="w-full sm:flex-1" />
+            <UInput
+              v-model.number="filters.usedStockMin"
+              type="number"
+              min="0"
+              :placeholder="$t('component.inventory.filterDrawer.min')"
+              class="w-full sm:flex-1"
+            />
             <span class="text-dimmed text-sm hidden sm:inline">—</span>
-            <UInput v-model.number="filters.usedStockMax" type="number" min="0" :placeholder="$t('component.inventory.filterDrawer.max')" class="w-full sm:flex-1" />
+            <UInput
+              v-model.number="filters.usedStockMax"
+              type="number"
+              min="0"
+              :placeholder="$t('component.inventory.filterDrawer.max')"
+              class="w-full sm:flex-1"
+            />
           </div>
         </div>
 
@@ -120,7 +206,16 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.dataQuality') }}</label>
-            <UButton v-if="filters.missingFields?.length" icon="i-lucide-x" size="xs" color="error" variant="ghost" @click="clearField('missingFields')">{{ $t('component.inventory.filterDrawer.clear') }}</UButton>
+            <UButton
+              v-if="filters.missingFields?.length"
+              icon="i-lucide-x"
+              size="xs"
+              color="error"
+              variant="ghost"
+              @click="clearField('missingFields')"
+            >
+              {{ $t('component.inventory.filterDrawer.clear') }}
+            </UButton>
           </div>
           <USelectMenu
             v-model="filters.missingFields"
@@ -138,25 +233,53 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-sm font-medium text-default">{{ $t('component.inventory.filterDrawer.labels') }}</label>
-            <UButton icon="i-lucide-plus" size="xs" color="primary" variant="soft" @click="addLabelFilter">{{ $t('common.add') }}</UButton>
+            <UButton
+              icon="i-lucide-plus"
+              size="xs"
+              color="primary"
+              variant="soft"
+              @click="addLabelFilter"
+            >
+              {{ $t('common.add') }}
+            </UButton>
           </div>
-          <div v-if="!labelFilters.length" class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg">
+          <div
+            v-if="!labelFilters.length"
+            class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg"
+          >
             {{ $t('component.inventory.filterDrawer.noLabels') }}
           </div>
-          <div v-else class="space-y-2">
-            <div v-for="(lf, index) in labelFilters" :key="index" class="flex items-center gap-2">
+          <div
+            v-else
+            class="space-y-2"
+          >
+            <div
+              v-for="(lf, index) in labelFilters"
+              :key="index"
+              class="flex items-center gap-2"
+            >
               <UInputMenu
                 v-model="lf.key"
                 :items="availableLabelKeys"
                 :placeholder="$t('component.inventory.filterDrawer.key')"
                 class="w-full"
               />
-              <UInput v-model="lf.value" :placeholder="$t('component.inventory.filterDrawer.value')" class="w-full" />
-              <UButton icon="i-lucide-trash" color="error" variant="ghost" size="sm" square @click="removeLabelFilter(index)" />
+              <UInput
+                v-model="lf.value"
+                :placeholder="$t('component.inventory.filterDrawer.value')"
+                class="w-full"
+              />
+              <UButton
+                icon="i-lucide-trash"
+                color="error"
+                variant="ghost"
+                size="sm"
+                square
+                @click="removeLabelFilter(index)"
+              />
             </div>
           </div>
         </div>
-
       </div>
     </template>
 
@@ -184,22 +307,23 @@
 
 <script setup lang="ts">
 import { categoryService } from '~/services/category-service'
+import type { FilterBag } from '~/types/api'
+import type { InventoryFilters } from '~/types/inventory'
 import { subCategoryService } from '~/services/sub-category-service'
 import { inventoryService } from '~/services/inventory-service'
 
 const { t } = useI18n()
 
 const props = defineProps<{
-  initialFilters?: Record<string, any>
+  initialFilters?: InventoryFilters
 }>()
 
 const open = defineModel<boolean>('open', { default: false })
 const emit = defineEmits<{
-  apply: [filters: Record<string, any>]
+  apply: [filters: FilterBag]
 }>()
 
-// Filter state
-const filters = reactive<Record<string, any>>({
+const filters = reactive<InventoryFilters>({
   categoryIds: [],
   subCategoryIds: [],
   units: [],
@@ -209,41 +333,39 @@ const filters = reactive<Record<string, any>>({
   newStockMax: undefined,
   usedStockMin: undefined,
   usedStockMax: undefined,
-  missingFields: [],
+  missingFields: []
 })
 
-// Label filters (separate from main filters, merged on apply)
-const labelFilters = ref<{ key: string; value: string }[]>([])
+const labelFilters = ref<{ key: string, value: string }[]>([])
 const addLabelFilter = () => { labelFilters.value.push({ key: '', value: '' }) }
 const removeLabelFilter = (index: number) => { labelFilters.value.splice(index, 1) }
 
-// Options
-const categoryOptions = ref<{ label: string; value: number }[]>([])
-const subCategoryOptions = ref<{ label: string; value: number }[]>([])
+const categoryOptions = ref<{ label: string, value: number }[]>([])
+const subCategoryOptions = ref<{ label: string, value: number }[]>([])
 const availableLabelKeys = ref<string[]>([])
 const unitOptions = INVENTORY_UNITS.map(u => ({ label: u as string, value: u as string }))
 
 const statusOptions = computed(() => [
   { label: t('common.active'), value: 'true' },
-  { label: t('common.inactive'), value: 'false' },
+  { label: t('common.inactive'), value: 'false' }
 ])
 
 const variantStatusOptions = computed(() => [
   { label: t('component.inventory.filterDrawer.hasVariants'), value: 'has_variants' },
-  { label: t('component.inventory.filterDrawer.noVariants'), value: 'no_variants' },
+  { label: t('component.inventory.filterDrawer.noVariants'), value: 'no_variants' }
 ])
 
 const missingFieldOptions = computed(() => [
   { label: t('component.inventory.filterDrawer.withoutImage'), value: 'image' },
   { label: t('component.inventory.filterDrawer.withoutDescription'), value: 'description' },
-  { label: t('component.inventory.filterDrawer.withoutSubCategory'), value: 'subCategory' },
+  { label: t('component.inventory.filterDrawer.withoutSubCategory'), value: 'subCategory' }
 ])
 
 // Cascading: category → sub category (fetch for all selected categories)
 const fetchSubCategoriesFor = async (categoryIds: number[]) => {
   subCategoryOptions.value = []
   if (categoryIds?.length) {
-    const allSubs: { label: string; value: number }[] = []
+    const allSubs: { label: string, value: number }[] = []
     for (const catId of categoryIds) {
       const res = await subCategoryService.getByCategoryId(catId)
       if (res.success) {
@@ -257,13 +379,13 @@ const fetchSubCategoriesFor = async (categoryIds: number[]) => {
 // User-driven category change: reset the now-possibly-invalid sub-category selection.
 const onCategoryChange = async () => {
   filters.subCategoryIds = []
-  await fetchSubCategoriesFor(filters.categoryIds)
+  await fetchSubCategoriesFor(filters.categoryIds || [])
 }
 
-// Clear single field
-const clearField = (field: string) => {
-  if (['categoryIds', 'subCategoryIds', 'units', 'missingFields'].includes(field)) {
-    filters[field] = []
+const arrayFields = ['categoryIds', 'subCategoryIds', 'units', 'missingFields'] as const
+const clearField = (field: keyof InventoryFilters) => {
+  if ((arrayFields as readonly string[]).includes(field)) {
+    (filters[field] as unknown[]) = []
   } else {
     filters[field] = undefined
   }
@@ -273,7 +395,6 @@ const clearField = (field: string) => {
   }
 }
 
-// Reset all
 const resetAll = () => {
   filters.categoryIds = []
   filters.subCategoryIds = []
@@ -290,9 +411,8 @@ const resetAll = () => {
   applyFilters()
 }
 
-// Apply
 const applyFilters = () => {
-  const cleanFilters: Record<string, any> = {}
+  const cleanFilters: FilterBag = {}
   for (const [key, value] of Object.entries(filters)) {
     if (Array.isArray(value)) {
       if (value.length > 0) cleanFilters[key] = value
@@ -300,7 +420,6 @@ const applyFilters = () => {
       cleanFilters[key] = value
     }
   }
-  // Merge label filters
   const validLabels = labelFilters.value.filter(l => l.key.trim() && l.value.trim())
   if (validLabels.length) {
     cleanFilters.labels = validLabels.map(l => ({ key: l.key.trim(), value: l.value.trim() }))
@@ -309,7 +428,6 @@ const applyFilters = () => {
   open.value = false
 }
 
-// Fetch options
 const fetchCategories = async () => {
   const res = await categoryService.getList()
   if (res.success) {
@@ -324,7 +442,6 @@ const fetchLabelKeys = async () => {
   }
 }
 
-// Fetch data when drawer opens
 watch(open, (isOpen) => {
   if (isOpen) {
     // Sync local filters with parent's activeFilters
@@ -339,7 +456,7 @@ watch(open, (isOpen) => {
     filters.usedStockMin = init.usedStockMin ?? undefined
     filters.usedStockMax = init.usedStockMax ?? undefined
     filters.missingFields = init.missingFields || []
-    labelFilters.value = init.labels ? init.labels.map((l: any) => ({ ...l })) : []
+    labelFilters.value = init.labels ? init.labels.map(l => ({ ...l })) : []
 
     fetchCategories()
     fetchLabelKeys()

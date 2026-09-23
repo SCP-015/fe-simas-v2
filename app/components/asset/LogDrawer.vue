@@ -12,8 +12,15 @@
         @scroll="handleScroll"
       >
         <!-- Skeleton Loading (initial) -->
-        <div v-if="isLoading && logs.length === 0" class="space-y-6">
-          <div v-for="i in 5" :key="i" class="flex gap-3">
+        <div
+          v-if="isLoading && logs.length === 0"
+          class="space-y-6"
+        >
+          <div
+            v-for="i in 5"
+            :key="i"
+            class="flex gap-3"
+          >
             <USkeleton class="w-7 h-7 rounded-full shrink-0" />
             <div class="flex-1 space-y-2">
               <USkeleton class="h-5 w-20" />
@@ -24,7 +31,10 @@
         </div>
 
         <!-- Timeline -->
-        <UTimeline v-else-if="logs.length > 0" :items="timelineItems">
+        <UTimeline
+          v-else-if="logs.length > 0"
+          :items="timelineItems"
+        >
           <template #indicator="{ item }">
             <UIcon :name="item.icon || 'i-lucide-info'" />
           </template>
@@ -34,7 +44,9 @@
             </div>
           </template>
           <template #description="{ item }">
-            <p class="text-default whitespace-pre-wrap">{{ item.description }}</p>
+            <p class="text-default whitespace-pre-wrap">
+              {{ item.description }}
+            </p>
             <UUser
               v-if="item.user"
               :name="item.user.name"
@@ -42,8 +54,14 @@
               size="xs"
               class="mt-1"
             />
-            <div v-else class="flex items-center gap-2 mt-1">
-              <UIcon name="i-lucide-monitor" class="w-4 h-4 text-dimmed" />
+            <div
+              v-else
+              class="flex items-center gap-2 mt-1"
+            >
+              <UIcon
+                name="i-lucide-monitor"
+                class="w-4 h-4 text-dimmed"
+              />
               <span class="text-xs text-dimmed italic">{{ $t('component.asset.logDrawer.system') }}</span>
             </div>
           </template>
@@ -58,8 +76,15 @@
         />
 
         <!-- Loading more skeleton (infinite scroll) -->
-        <div v-if="isLoading && logs.length > 0" class="space-y-6 mt-6">
-          <div v-for="i in 3" :key="i" class="flex gap-3">
+        <div
+          v-if="isLoading && logs.length > 0"
+          class="space-y-6 mt-6"
+        >
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="flex gap-3"
+          >
             <USkeleton class="w-7 h-7 rounded-full shrink-0" />
             <div class="flex-1 space-y-2">
               <USkeleton class="h-5 w-20" />
@@ -69,7 +94,10 @@
         </div>
 
         <!-- End of List -->
-        <p v-if="!isLoading && logs.length > 0 && logs.length >= meta.total" class="text-center py-4 text-xs text-dimmed">
+        <p
+          v-if="!isLoading && logs.length > 0 && logs.length >= meta.total"
+          class="text-center py-4 text-xs text-dimmed"
+        >
           {{ $t('component.asset.logDrawer.endOfHistory') }}
         </p>
       </div>
@@ -91,7 +119,7 @@ const titleClass = (color?: string) => {
     error: 'text-red-600',
     warning: 'text-amber-600',
     info: 'text-sky-600',
-    primary: 'text-primary',
+    primary: 'text-primary'
   }
   return `font-medium ${map[color || ''] || 'text-default'}`
 }
@@ -104,10 +132,9 @@ const meta = reactive({
   page: 1,
   perPage: 15,
   total: 0,
-  lastPage: 1,
+  lastPage: 1
 })
 
-// Map logs to UTimeline items format
 const timelineItems = computed(() =>
   logs.value.map((log) => {
     const theme = getActionTheme(log.module, log.action)
@@ -122,11 +149,11 @@ const timelineItems = computed(() =>
             name: log.createdBy.name,
             avatar: log.createdBy.photo
               ? { src: log.createdBy.photo, alt: log.createdBy.name }
-              : undefined,
+              : undefined
           }
-        : null,
+        : null
     }
-  }),
+  })
 )
 
 watch(open, (isOpen) => {
@@ -151,7 +178,7 @@ const fetchPage = async () => {
       '',
       'createdAt',
       'DESC',
-      props.assetId,
+      props.assetId
     )
     if (response.success && response.data) {
       if (meta.page === 1) {

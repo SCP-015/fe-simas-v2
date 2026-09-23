@@ -7,12 +7,12 @@
           icon="i-lucide-menu"
           color="neutral"
           variant="ghost"
-          @click="() => { isMobileMenuOpen = true }"
           aria-label="Open menu"
+          @click="() => { isMobileMenuOpen = true }"
         />
         <BrandLogo />
       </div>
-      
+
       <!-- Profile Avatar Popover -->
       <UserPopover />
     </header>
@@ -22,20 +22,29 @@
       <h2 class="text-xl md:text-2xl font-bold text-highlighted tracking-tight">
         {{ title }}
       </h2>
-      <p v-if="description" class="text-sm md:text-sm text-muted">
+      <p
+        v-if="description"
+        class="text-sm md:text-sm text-muted"
+      >
         {{ description }}
       </p>
     </div>
 
     <!-- Middle Row: Tab links -->
-    <div v-if="$slots.tabs" class="border-b border-default mt-7">
+    <div
+      v-if="$slots.tabs"
+      class="border-b border-default mt-7"
+    >
       <nav class="flex gap-6 -mb-px">
         <slot name="tabs" />
       </nav>
     </div>
 
     <!-- Bottom Row: Actions selectors placed BELOW the tabs, right-aligned -->
-    <div v-if="$slots.actions" class="flex justify-end items-center gap-3 pt-1">
+    <div
+      v-if="$slots.actions"
+      class="flex justify-end items-center gap-3 pt-1"
+    >
       <slot name="actions" />
     </div>
   </div>

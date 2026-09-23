@@ -1,7 +1,7 @@
-import { apiService } from "./api-service"
-import { handleServiceError } from "../composables/error-helper"
-import type { AssetSchedule, ScheduleOccurrence, AssetSchedulePayload } from "../types/asset-schedule"
-import type { ApiResponse } from "../types/api"
+import { apiService } from './api-service'
+import { handleServiceError } from '../composables/error-helper'
+import type { AssetSchedule, ScheduleOccurrence, AssetSchedulePayload } from '../types/asset-schedule'
+import type { ApiResponse } from '../types/api'
 
 export class AssetScheduleService {
   private get authHeaders() {
@@ -11,10 +11,10 @@ export class AssetScheduleService {
   async getAll(
     page = 1,
     perPage = 10,
-    q = "",
-    sortBy = "",
-    order = "",
-    filters: { assetId?: number; recurrence?: string } = {}
+    q = '',
+    sortBy = '',
+    order = '',
+    filters: { assetId?: number, recurrence?: string } = {}
   ): Promise<ApiResponse<AssetSchedule[]>> {
     try {
       let url = `/asset-schedule?page=${page}&limit=${perPage}&q=${encodeURIComponent(q)}`
@@ -25,7 +25,7 @@ export class AssetScheduleService {
 
       const response = await apiService.client.get<ApiResponse<AssetSchedule[]>>(url, this.authHeaders)
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -34,7 +34,7 @@ export class AssetScheduleService {
   async getCalendar(
     from: string,
     to: string,
-    filters: { assetId?: number; recurrence?: string } = {}
+    filters: { assetId?: number, recurrence?: string } = {}
   ): Promise<ApiResponse<ScheduleOccurrence[]>> {
     try {
       let url = `/asset-schedule/calendar?from=${from}&to=${to}`
@@ -43,7 +43,7 @@ export class AssetScheduleService {
 
       const response = await apiService.client.get<ApiResponse<ScheduleOccurrence[]>>(url, this.authHeaders)
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -55,7 +55,7 @@ export class AssetScheduleService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -68,7 +68,7 @@ export class AssetScheduleService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -81,7 +81,7 @@ export class AssetScheduleService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -93,7 +93,7 @@ export class AssetScheduleService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }

@@ -7,8 +7,14 @@
     >
       <template #breadcrumbs>
         <div class="flex items-center gap-2 text-xs text-muted mb-2 select-none">
-          <NuxtLink to="/" class="hover:text-primary transition-colors">Dashboard</NuxtLink>
-          <UIcon name="i-lucide-chevron-right" class="w-3.5 h-3.5 text-dimmed" />
+          <NuxtLink
+            to="/"
+            class="hover:text-primary transition-colors"
+          >Dashboard</NuxtLink>
+          <UIcon
+            name="i-lucide-chevron-right"
+            class="w-3.5 h-3.5 text-dimmed"
+          />
           <span class="font-medium text-default">{{ $t('nav.handover') }}</span>
         </div>
       </template>
@@ -18,7 +24,7 @@
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -47,9 +53,15 @@
       </template>
 
       <!-- Actions slot -->
-      <template #actions v-if="hasPermission('handover:create') || hasPermission('handover-field:manage')">
+      <template
+        v-if="hasPermission('handover:create') || hasPermission('handover-field:manage')"
+        #actions
+      >
         <div class="flex items-center gap-2 w-full sm:w-auto">
-          <UTooltip v-if="hasPermission('handover-field:manage')" :text="$t('pages.handover.fieldSettings.title')">
+          <UTooltip
+            v-if="hasPermission('handover-field:manage')"
+            :text="$t('pages.handover.fieldSettings.title')"
+          >
             <UButton
               color="neutral"
               variant="subtle"
@@ -105,7 +117,6 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UAvatar = resolveComponent('UAvatar')
 const UBadge = resolveComponent('UBadge')
 
-// Query & filter states
 const data = ref<Handover[]>([])
 const isLoading = ref(false)
 
@@ -130,7 +141,6 @@ const typeOptions = computed(() => [
   ...HANDOVER_TRANSACTION_TYPES.map(v => ({ label: t(`pages.handover.types.${v}`), value: v }))
 ])
 
-// Pagination metadata
 const meta = reactive({
   total: 0,
   from: 0,
@@ -147,7 +157,6 @@ const {
   sortHeader
 } = useTableQuery(() => fetchHandovers(), { defaultSortBy: 'createdAt', defaultOrder: 'DESC' })
 
-// Fetch handovers from service
 const fetchHandovers = async () => {
   isLoading.value = true
   try {
@@ -173,7 +182,6 @@ const fetchHandovers = async () => {
   }
 }
 
-// Columns definition
 const baseColumns: TableColumn<Handover>[] = [
   {
     accessorKey: 'id',
@@ -198,7 +206,6 @@ const baseColumns: TableColumn<Handover>[] = [
     header: sortHeader(t('pages.handover.columnDate'), 'createdAt'),
     cell: ({ row }) => {
       const d = row.original.createdAt
-      // Format simple local date
       const formatted = d ? d.replace('T', ' ').slice(0, 16) : '-'
       return h('span', { class: 'text-toned font-medium' }, formatted)
     }
@@ -315,15 +322,15 @@ const columns = computed(() => {
       return h(
         UDropdownMenu,
         {
-          content: { align: 'end' },
-          items: items,
+          'content': { align: 'end' },
+          'items': items,
           'aria-label': 'Actions dropdown'
         },
         () =>
           h(UButton, {
-            icon: 'i-lucide-ellipsis-vertical',
-            color: 'neutral',
-            variant: 'ghost',
+            'icon': 'i-lucide-ellipsis-vertical',
+            'color': 'neutral',
+            'variant': 'ghost',
             'aria-label': 'Actions dropdown'
           })
       )
@@ -336,7 +343,6 @@ function getRowItems(row: Row<Handover>) {
   const handover = row.original
   const actions = []
 
-  // Always can view
   actions.push({
     label: t('common.detail'),
     icon: 'i-lucide-eye',
@@ -361,7 +367,6 @@ function getRowItems(row: Row<Handover>) {
   return actions
 }
 
-// Cancel flow
 const selectedHandover = ref<Handover | null>(null)
 const showCancelModal = ref(false)
 const isCancelling = ref(false)

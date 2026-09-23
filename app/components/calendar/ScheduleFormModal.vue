@@ -6,9 +6,19 @@
     :ui="{ content: 'sm:max-w-lg', overlay: 'bg-black/40', footer: 'justify-end' }"
   >
     <template #body>
-      <UForm id="schedule-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="schedule-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Assets (multiple) -->
-        <UFormField :label="$t('pages.calendar.form.assets')" name="assetIds" required>
+        <UFormField
+          :label="$t('pages.calendar.form.assets')"
+          name="assetIds"
+          required
+        >
           <USelectMenu
             v-model="selectedAssets"
             v-model:search-term="assetSearchTerm"
@@ -24,21 +34,50 @@
         </UFormField>
 
         <!-- Title -->
-        <UFormField :label="$t('pages.calendar.form.titleLabel')" name="title" required>
-          <UInput v-model="form.title" :placeholder="$t('pages.calendar.form.titlePlaceholder')" class="w-full" />
+        <UFormField
+          :label="$t('pages.calendar.form.titleLabel')"
+          name="title"
+          required
+        >
+          <UInput
+            v-model="form.title"
+            :placeholder="$t('pages.calendar.form.titlePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Description -->
-        <UFormField :label="$t('common.description')" name="description">
-          <UTextarea v-model="form.description" :placeholder="$t('pages.calendar.form.descriptionPlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('common.description')"
+          name="description"
+        >
+          <UTextarea
+            v-model="form.description"
+            :placeholder="$t('pages.calendar.form.descriptionPlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Start date -->
-        <UFormField :label="$t('pages.calendar.form.startDate')" name="startDate" required>
-          <UInputDate v-model="startDateVal" class="w-full">
+        <UFormField
+          :label="$t('pages.calendar.form.startDate')"
+          name="startDate"
+          required
+        >
+          <UInputDate
+            v-model="startDateVal"
+            class="w-full"
+          >
             <template #trailing>
               <UPopover>
-                <UButton icon="i-lucide-calendar" color="neutral" variant="ghost" size="sm" square />
+                <UButton
+                  icon="i-lucide-calendar"
+                  color="neutral"
+                  variant="ghost"
+                  size="sm"
+                  square
+                />
                 <template #content>
                   <UCalendar v-model="startDateVal" />
                 </template>
@@ -48,7 +87,10 @@
         </UFormField>
 
         <!-- Assigned users (optional, multiple) -->
-        <UFormField :label="$t('pages.calendar.form.assignedUsers')" name="userIds">
+        <UFormField
+          :label="$t('pages.calendar.form.assignedUsers')"
+          name="userIds"
+        >
           <USelectMenu
             v-model="selectedUsers"
             v-model:search-term="userSearchTerm"
@@ -64,16 +106,30 @@
         </UFormField>
 
         <!-- Attachments -->
-        <AttachmentManager v-model="uploadedAttachments" @change="onAttachmentsChanged" />
+        <AttachmentManager
+          v-model="uploadedAttachments"
+          @change="onAttachmentsChanged"
+        />
 
         <!-- Recurrence (below attachments) -->
         <div class="rounded-lg border border-default p-3 space-y-3">
-          <UFormField :label="$t('pages.calendar.recurrence.label')" name="recurrence">
-            <USelectMenu v-model="selectedRecurrence" :items="recurrenceOptions" class="w-full" />
+          <UFormField
+            :label="$t('pages.calendar.recurrence.label')"
+            name="recurrence"
+          >
+            <USelectMenu
+              v-model="selectedRecurrence"
+              :items="recurrenceOptions"
+              class="w-full"
+            />
           </UFormField>
 
           <!-- weekly: weekday toggles -->
-          <UFormField v-if="form.recurrence === 'weekly'" :label="$t('pages.calendar.form.repeatOn')" name="daysOfWeek">
+          <UFormField
+            v-if="form.recurrence === 'weekly'"
+            :label="$t('pages.calendar.form.repeatOn')"
+            name="daysOfWeek"
+          >
             <div class="flex flex-wrap gap-1.5">
               <UButton
                 v-for="d in weekdayButtons"
@@ -90,17 +146,42 @@
           </UFormField>
 
           <!-- monthly: day-of-month -->
-          <UFormField v-if="form.recurrence === 'monthly'" :label="$t('pages.calendar.form.dayOfMonth')" name="dayOfMonth">
-            <USelectMenu v-model="selectedDayOfMonth" :items="dayOptions" class="w-full sm:w-40" />
+          <UFormField
+            v-if="form.recurrence === 'monthly'"
+            :label="$t('pages.calendar.form.dayOfMonth')"
+            name="dayOfMonth"
+          >
+            <USelectMenu
+              v-model="selectedDayOfMonth"
+              :items="dayOptions"
+              class="w-full sm:w-40"
+            />
           </UFormField>
 
           <!-- yearly: month + day-of-month -->
-          <div v-if="form.recurrence === 'yearly'" class="grid grid-cols-2 gap-3">
-            <UFormField :label="$t('pages.calendar.form.month')" name="month">
-              <USelectMenu v-model="selectedMonth" :items="monthOptions" class="w-full" />
+          <div
+            v-if="form.recurrence === 'yearly'"
+            class="grid grid-cols-2 gap-3"
+          >
+            <UFormField
+              :label="$t('pages.calendar.form.month')"
+              name="month"
+            >
+              <USelectMenu
+                v-model="selectedMonth"
+                :items="monthOptions"
+                class="w-full"
+              />
             </UFormField>
-            <UFormField :label="$t('pages.calendar.form.dayOfMonth')" name="dayOfMonth">
-              <USelectMenu v-model="selectedDayOfMonth" :items="dayOptions" class="w-full" />
+            <UFormField
+              :label="$t('pages.calendar.form.dayOfMonth')"
+              name="dayOfMonth"
+            >
+              <USelectMenu
+                v-model="selectedDayOfMonth"
+                :items="dayOptions"
+                class="w-full"
+              />
             </UFormField>
           </div>
 
@@ -111,10 +192,19 @@
             name="recurrenceEndDate"
             :help="$t('pages.calendar.form.recurrenceEndHint')"
           >
-            <UInputDate v-model="recurrenceEndVal" class="w-full">
+            <UInputDate
+              v-model="recurrenceEndVal"
+              class="w-full"
+            >
               <template #trailing>
                 <UPopover>
-                  <UButton icon="i-lucide-calendar" color="neutral" variant="ghost" size="sm" square />
+                  <UButton
+                    icon="i-lucide-calendar"
+                    color="neutral"
+                    variant="ghost"
+                    size="sm"
+                    square
+                  />
                   <template #content>
                     <UCalendar v-model="recurrenceEndVal" />
                   </template>
@@ -128,8 +218,19 @@
 
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" color="neutral" variant="outline" @click="() => { open = false }" />
-        <UButton :label="$t('common.save')" type="submit" form="schedule-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="schedule-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -159,24 +260,23 @@ const emit = defineEmits<{ saved: [] }>()
 
 const isEdit = computed(() => !!props.schedule)
 
-// State
 const isSubmitting = ref(false)
 const isLoadingAssets = ref(false)
-const assetOptions = ref<{ label: string; value: number }[]>([])
-const selectedAssets = ref<{ label: string; value: number }[]>([])
+const assetOptions = ref<{ label: string, value: number }[]>([])
+const selectedAssets = ref<{ label: string, value: number }[]>([])
 const assetSearchTerm = ref('')
 const isLoadingUsers = ref(false)
-const userOptions = ref<{ label: string; value: number }[]>([])
-const selectedUsers = ref<{ label: string; value: number }[]>([])
+const userOptions = ref<{ label: string, value: number }[]>([])
+const selectedUsers = ref<{ label: string, value: number }[]>([])
 const userSearchTerm = ref('')
 const uploadedAttachments = ref<Attachment[]>([])
 
-type RecOption = { label: string; value: ScheduleRecurrence }
+type RecOption = { label: string, value: ScheduleRecurrence }
 const recurrenceOptions = computed<RecOption[]>(() => [
   { label: t('pages.calendar.recurrence.none'), value: 'none' },
   { label: t('pages.calendar.recurrence.weekly'), value: 'weekly' },
   { label: t('pages.calendar.recurrence.monthly'), value: 'monthly' },
-  { label: t('pages.calendar.recurrence.yearly'), value: 'yearly' },
+  { label: t('pages.calendar.recurrence.yearly'), value: 'yearly' }
 ])
 const selectedRecurrence = ref<RecOption>(recurrenceOptions.value[0]!)
 
@@ -187,13 +287,13 @@ const dayOptions = Array.from({ length: 31 }, (_, i) => ({ label: String(i + 1),
 const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 const monthOptions = computed(() => monthKeys.map((k, i) => ({ label: t(`pages.calendar.months.${k}`), value: i + 1 })))
 
-const selectedDayOfMonth = ref<{ label: string; value: number }>(dayOptions[0]!)
-const selectedMonth = ref<{ label: string; value: number }>(monthOptions.value[0]!)
+const selectedDayOfMonth = ref<{ label: string, value: number }>(dayOptions[0]!)
+const selectedMonth = ref<{ label: string, value: number }>(monthOptions.value[0]!)
 
 const schema = z.object({
   assetIds: z.array(z.number()).min(1, t('pages.calendar.form.assetRequired')),
   title: z.string().min(1, t('pages.calendar.form.titleRequired')),
-  startDate: z.string().min(1, t('pages.calendar.form.startDateRequired')),
+  startDate: z.string().min(1, t('pages.calendar.form.startDateRequired'))
 })
 
 interface ScheduleFormState {
@@ -221,7 +321,7 @@ const form = reactive<ScheduleFormState>({
   month: null,
   recurrenceEndDate: null,
   attachmentIds: [],
-  userIds: [],
+  userIds: []
 })
 
 // Date <-> CalendarDate bridges
@@ -231,11 +331,11 @@ const toCalendar = (val: string | null | undefined) => {
 }
 const startDateVal = computed({
   get: () => toCalendar(form.startDate),
-  set: (val) => { form.startDate = val ? val.toString() : '' },
+  set: (val) => { form.startDate = val ? val.toString() : '' }
 })
 const recurrenceEndVal = computed({
   get: () => toCalendar(form.recurrenceEndDate),
-  set: (val) => { form.recurrenceEndDate = val ? val.toString() : null },
+  set: (val) => { form.recurrenceEndDate = val ? val.toString() : null }
 })
 
 const toggleWeekday = (day: number) => {
@@ -253,7 +353,7 @@ watch(selectedMonth, (val) => { if (val) form.month = val.value })
 
 const onAttachmentsChanged = (ids: number[]) => { form.attachmentIds = ids }
 
-const toAssetOption = (a: { id: number; code: string; name: string }) => ({ label: `${a.code} - ${a.name}`, value: a.id })
+const toAssetOption = (a: { id: number, code: string, name: string }) => ({ label: `${a.code} - ${a.name}`, value: a.id })
 
 // Asset select is search-as-you-type against the lightweight /asset/options endpoint
 // (not the full paginated list, which doesn't scale to very large asset tables).
@@ -278,7 +378,7 @@ watch(assetSearchTerm, (term) => {
   assetSearchTimeout = setTimeout(() => { searchAssets(term) }, 300)
 })
 
-const toUserOption = (u: { id: number; name: string; email: string }) => ({ label: `${u.name} (${u.email})`, value: u.id })
+const toUserOption = (u: { id: number, name: string, email: string }) => ({ label: `${u.name} (${u.email})`, value: u.id })
 
 // User assignment is optional and search-as-you-type against the lightweight /user/options
 // endpoint (no `user:read` permission required, so any user who can create schedules can pick assignees).
@@ -372,7 +472,7 @@ const handleSubmit = async () => {
       month: r === 'yearly' ? form.month : null,
       recurrenceEndDate: r === 'none' ? null : (form.recurrenceEndDate || null),
       attachmentIds: form.attachmentIds || [],
-      userIds: form.userIds || [],
+      userIds: form.userIds || []
     }
 
     const res = props.schedule
@@ -383,7 +483,7 @@ const handleSubmit = async () => {
       toast.add({
         title: props.schedule ? t('pages.calendar.form.updateSuccess') : t('pages.calendar.form.createSuccess'),
         color: 'success',
-        icon: 'i-lucide-circle-check',
+        icon: 'i-lucide-circle-check'
       })
       emit('saved')
       open.value = false
