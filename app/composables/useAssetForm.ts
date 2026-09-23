@@ -6,7 +6,7 @@ import { subCategoryService } from '~/services/sub-category-service'
 import type { AssetLabel } from '~/types/asset'
 
 export const assetSchema = z.object({
-  code: z.string().min(1, 'Code is required').optional(),
+  code: z.string().min(1, 'Serial number is required').optional(),
   categoryId: z.number().int().positive('Category is required').optional(),
   name: z.string().min(1, 'Name is required'),
   subCategoryId: z.number().int().positive('Sub category is required'),

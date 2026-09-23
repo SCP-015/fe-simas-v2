@@ -112,7 +112,7 @@
         <div class="min-w-0 w-full sm:col-span-8">
           <div class="grid grid-cols-12 gap-x-8 gap-y-6">
             <div class="col-span-12 sm:col-span-6 md:col-span-4">
-              <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.code') }}</span>
+              <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('pages.asset.create.codeLabel') }}</span>
               <div
                 class="text-sm text-highlighted font-medium truncate"
                 :title="asset.code"

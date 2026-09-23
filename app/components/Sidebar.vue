@@ -1,147 +1,147 @@
 <template>
   <div class="relative h-full shrink-0">
     <aside
-      class="flex flex-col h-full bg-default border-r border-default shrink-0 justify-between select-none transition-all duration-300"
+      class="flex flex-col h-full bg-default border-r border-default shrink-0 select-none transition-all duration-300"
       :class="[isCollapsed ? 'w-20 p-3' : 'w-68 p-4']"
     >
-      <!-- Top Section -->
-      <div class="space-y-4">
-        <!-- App/Brand Logo Header -->
-        <div
-          class="flex border-b border-default pb-4"
-          :class="[isCollapsed ? 'justify-center' : 'items-center justify-between']"
-        >
-          <BrandLogo :is-collapsed="isCollapsed" />
+      <!-- App/Brand Logo Header (Fixed Top) -->
+      <div
+        class="flex border-b border-default pb-4 shrink-0"
+        :class="[isCollapsed ? 'justify-center' : 'items-center justify-between']"
+      >
+        <BrandLogo :is-collapsed="isCollapsed" />
 
-          <!-- Inline Toggle Button (visible only when expanded) -->
-          <UButton
-            v-if="!isCollapsed"
-            color="neutral"
-            variant="ghost"
-            icon="i-lucide-panel-left-close"
-            class="hidden lg:inline-flex text-dimmed hover:text-default"
-            aria-label="Collapse sidebar"
-            @click="() => { isCollapsed = true }"
-          />
-        </div>
-
-        <!-- Navigation Menus -->
-        <nav class="space-y-4">
-          <div :class="[isCollapsed ? 'flex justify-center' : '']">
-            <UTooltip
-              :text="$t('nav.searchAsset')"
-              :disabled="!isCollapsed"
-              :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-            >
-              <UButton
-                :label="isCollapsed ? undefined : $t('nav.searchAsset')"
-                color="primary"
-                :square="isCollapsed"
-                :class="[isCollapsed ? '' : 'w-full']"
-                icon="i-lucide-scan-qr-code"
-                variant="subtle"
-                @click="() => { showScanner = true }"
-              />
-            </UTooltip>
-          </div>
-          <ScanAssetModal v-model="showScanner" />
-          <div
-            v-for="group in navGroups"
-            :key="group.title"
-            class="space-y-1"
-          >
-            <!-- Group Title -->
-            <h3
-              v-if="!isCollapsed"
-              class="px-1 text-sm font-medium text-toned"
-            >
-              {{ group.title }}
-            </h3>
-
-            <!-- Group Items -->
-            <div class="space-y-1">
-              <template
-                v-for="item in group.items"
-                :key="item.label"
-              >
-                <!-- Reusable NavLink with conditional tooltip wrapping -->
-                <UTooltip
-                  :text="item.label"
-                  :disabled="!isCollapsed"
-                  :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-                >
-                  <NuxtLink
-                    :to="item.to"
-                    class="flex items-center transition-colors group"
-                    :class="[
-                      isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
-                      isItemActive(item)
-                        ? 'bg-primary text-white'
-                        : 'text-toned hover:bg-muted hover:text-highlighted'
-                    ]"
-                  >
-                    <UIcon
-                      :name="item.icon"
-                      class="w-5 h-5 shrink-0 transition-colors"
-                      :class="[
-                        isItemActive(item)
-                          ? 'text-white'
-                          : 'text-toned group-hover:text-highlighted'
-                      ]"
-                    />
-                    <span
-                      v-if="!isCollapsed"
-                      class="truncate"
-                    >{{ item.label }}</span>
-                  </NuxtLink>
-                </UTooltip>
-              </template>
-            </div>
-          </div>
-        </nav>
+        <!-- Inline Toggle Button (visible only when expanded) -->
+        <UButton
+          v-if="!isCollapsed"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-panel-left-close"
+          class="hidden lg:inline-flex text-dimmed hover:text-default"
+          aria-label="Collapse sidebar"
+          @click="() => { isCollapsed = true }"
+        />
       </div>
 
-      <!-- Bottom Section -->
-      <div>
-        <!-- Bottom Nav Items -->
-        <div class="pb-2 space-y-1">
-          <template
-            v-for="item in bottomNavItems"
-            :key="item.label"
+      <!-- Navigation Menus (Scrollable) -->
+      <nav class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden py-3 space-y-4 -mr-1.5 pr-1.5">
+        <div :class="[isCollapsed ? 'flex justify-center' : '']">
+          <UTooltip
+            :text="$t('nav.searchAsset')"
+            :disabled="!isCollapsed"
+            :content="{ align: 'center', side: 'right', sideOffset: 8 }"
           >
-            <UTooltip
-              :text="item.label"
-              :disabled="!isCollapsed"
-              :content="{ align: 'center', side: 'right', sideOffset: 8 }"
-            >
-              <NuxtLink
-                :to="item.to"
-                class="flex items-center transition-colors group"
-                :class="[
-                  isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
-                  isItemActive(item)
-                    ? 'bg-primary text-white'
-                    : 'text-toned hover:bg-muted hover:text-highlighted'
-                ]"
-              >
-                <UIcon
-                  :name="item.icon"
-                  class="w-5 h-5 shrink-0 transition-colors"
-                  :class="[
-                    isItemActive(item)
-                      ? 'text-white'
-                      : 'text-toned group-hover:text-highlighted'
-                  ]"
-                />
-                <span
-                  v-if="!isCollapsed"
-                  class="truncate"
-                >{{ item.label }}</span>
-              </NuxtLink>
-            </UTooltip>
-          </template>
+            <UButton
+              :label="isCollapsed ? undefined : $t('nav.searchAsset')"
+              color="primary"
+              :square="isCollapsed"
+              :class="[isCollapsed ? '' : 'w-full']"
+              icon="i-lucide-scan-qr-code"
+              variant="subtle"
+              @click="() => { showScanner = true }"
+            />
+          </UTooltip>
+        </div>
+        <ScanAssetModal v-model="showScanner" />
+        <div
+          v-for="group in navGroups"
+          :key="group.title"
+          class="space-y-1"
+        >
+          <!-- Group Title -->
+          <h3
+            v-if="!isCollapsed"
+            class="px-1 text-sm font-medium text-toned"
+          >
+            {{ group.title }}
+          </h3>
 
-          <!-- Static Feedback Button -->
+          <!-- Group Items -->
+          <div class="space-y-1">
+            <template
+              v-for="item in group.items"
+              :key="item.label"
+            >
+              <!-- Reusable NavLink with conditional tooltip wrapping -->
+              <UTooltip
+                :text="item.label"
+                :disabled="!isCollapsed"
+                :content="{ align: 'center', side: 'right', sideOffset: 8 }"
+              >
+                <NuxtLink
+                  :to="item.to"
+                  class="flex items-center transition-colors group"
+                  :class="[
+                    isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
+                    isItemActive(item)
+                      ? 'bg-primary text-white'
+                      : 'text-toned hover:bg-muted hover:text-highlighted'
+                  ]"
+                >
+                  <UIcon
+                    :name="item.icon"
+                    class="w-5 h-5 shrink-0 transition-colors"
+                    :class="[
+                      isItemActive(item)
+                        ? 'text-white'
+                        : 'text-toned group-hover:text-highlighted'
+                    ]"
+                  />
+                  <span
+                    v-if="!isCollapsed"
+                    class="truncate"
+                  >{{ item.label }}</span>
+                </NuxtLink>
+              </UTooltip>
+            </template>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Bottom Section (Fixed at bottom on desktop, mobile has feedback & user in header) -->
+      <div
+        class="shrink-0 pt-2 border-t border-default space-y-1"
+        :class="{ 'hidden lg:block': bottomNavItems.length === 0 }"
+      >
+        <!-- Bottom Nav Items (if any) -->
+        <template
+          v-for="item in bottomNavItems"
+          :key="item.label"
+        >
+          <UTooltip
+            :text="item.label"
+            :disabled="!isCollapsed"
+            :content="{ align: 'center', side: 'right', sideOffset: 8 }"
+          >
+            <NuxtLink
+              :to="item.to"
+              class="flex items-center transition-colors group"
+              :class="[
+                isCollapsed ? 'w-10 h-10 mx-auto justify-center rounded-md' : 'w-full gap-3 px-3 py-2 text-sm rounded-md font-medium',
+                isItemActive(item)
+                  ? 'bg-primary text-white'
+                  : 'text-toned hover:bg-muted hover:text-highlighted'
+              ]"
+            >
+              <UIcon
+                :name="item.icon"
+                class="w-5 h-5 shrink-0 transition-colors"
+                :class="[
+                  isItemActive(item)
+                    ? 'text-white'
+                    : 'text-toned group-hover:text-highlighted'
+                ]"
+              />
+              <span
+                v-if="!isCollapsed"
+                class="truncate"
+              >{{ item.label }}</span>
+            </NuxtLink>
+          </UTooltip>
+        </template>
+
+        <!-- Static Feedback Button -->
+        <div class="hidden lg:block">
           <UTooltip
             :text="$t('nav.feedback')"
             :disabled="!isCollapsed"
@@ -173,7 +173,7 @@
         </div>
 
         <!-- User Profile with Popover -->
-        <div class="hidden lg:block pt-2 border-t border-default">
+        <div class="hidden lg:block pt-1 border-t border-default">
           <UserPopover :popover-props="{ content: { side: 'right', sideOffset: 12, align: 'end' } }">
             <button
               class="flex w-full items-center cursor-pointer rounded-md transition-colors hover:bg-muted"

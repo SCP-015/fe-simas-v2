@@ -412,6 +412,6 @@ const scrollToPage = (page: number) => {
 
 const handleDownload = () => {
   if (!currentPdf) return
-  currentPdf.save(`asset-codes-${new Date().toISOString().slice(0, 10)}.pdf`)
+  currentPdf.save(`asset-serial-numbers-${new Date().toISOString().slice(0, 10)}.pdf`)
 }
 </script>
