@@ -20,7 +20,10 @@
             : 'border-transparent text-muted hover:text-toned'"
           @click="switchTab(tab.key)"
         >
-          <UIcon :name="tab.icon" class="w-4 h-4" />
+          <UIcon
+            :name="tab.icon"
+            class="w-4 h-4"
+          />
           {{ tab.label }}
         </button>
       </div>
@@ -38,7 +41,10 @@
               : 'text-muted hover:text-toned'"
             @click="() => { scanMode = mode.key }"
           >
-            <UIcon :name="mode.icon" class="w-3.5 h-3.5" />
+            <UIcon
+              :name="mode.icon"
+              class="w-3.5 h-3.5"
+            />
             {{ mode.label }}
           </button>
         </div>
@@ -46,12 +52,27 @@
         <div class="w-full aspect-square bg-neutral-950 rounded-lg overflow-hidden relative flex items-center justify-center">
           <!-- Conventional Mode -->
           <template v-if="scanMode === 'conventional'">
-            <div v-if="barcode.error.value" class="p-6 text-center select-none flex flex-col items-center gap-3">
+            <div
+              v-if="barcode.error.value"
+              class="p-6 text-center select-none flex flex-col items-center gap-3"
+            >
               <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center">
-                <UIcon name="i-lucide-triangle-alert" class="w-6 h-6 text-error" />
+                <UIcon
+                  name="i-lucide-triangle-alert"
+                  class="w-6 h-6 text-error"
+                />
               </div>
-              <p class="text-sm font-medium text-neutral-300">{{ barcode.error.value }}</p>
-              <UButton :label="$t('common.tryAgain')" icon="i-lucide-refresh-cw" size="xs" color="neutral" variant="outline" @click="barcode.reset()" />
+              <p class="text-sm font-medium text-neutral-300">
+                {{ barcode.error.value }}
+              </p>
+              <UButton
+                :label="$t('common.tryAgain')"
+                icon="i-lucide-refresh-cw"
+                size="xs"
+                color="neutral"
+                variant="outline"
+                @click="barcode.reset()"
+              />
             </div>
 
             <component
@@ -60,12 +81,15 @@
               :constraints="{ facingMode: 'environment' }"
               :formats="barcode.formats"
               :track="barcode.paintBoundingBox"
+              class="w-full h-full"
               @detect="onDetect"
               @error="barcode.onCameraError"
-              class="w-full h-full"
             />
 
-            <div v-if="!barcode.error.value" class="absolute inset-0 pointer-events-none">
+            <div
+              v-if="!barcode.error.value"
+              class="absolute inset-0 pointer-events-none"
+            >
               <div class="absolute left-0 right-0 h-0.5 bg-[#009838] animate-[scanline_2s_ease-in-out_infinite]" />
             </div>
           </template>
@@ -73,13 +97,26 @@
           <!-- AI Mode -->
           <template v-if="scanMode === 'ai'">
             <!-- AI Processing -->
-            <div v-if="isAiProcessing" class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 z-10">
-              <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-primary" />
-              <p class="text-sm text-white">{{ $t('component.scanAsset.aiProcessing') }}</p>
+            <div
+              v-if="isAiProcessing"
+              class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 z-10"
+            >
+              <UIcon
+                name="i-lucide-loader-2"
+                class="w-8 h-8 animate-spin text-primary"
+              />
+              <p class="text-sm text-white">
+                {{ $t('component.scanAsset.aiProcessing') }}
+              </p>
             </div>
 
             <!-- Captured Preview -->
-            <img v-if="aiCaptured" :src="aiCaptured" class="w-full h-full object-cover" alt="Captured" />
+            <img
+              v-if="aiCaptured"
+              :src="aiCaptured"
+              class="w-full h-full object-cover"
+              alt="Captured"
+            >
 
             <!-- Live Camera -->
             <template v-if="!aiCaptured">
@@ -107,28 +144,60 @@
       <!-- NFC Tab -->
       <div v-if="activeTab === 'nfc'">
         <div class="w-full aspect-square bg-neutral-950 rounded-lg overflow-hidden relative flex flex-col items-center justify-center">
-          <div v-if="!nfc.isSupported.value" class="p-6 text-center select-none flex flex-col items-center gap-3">
+          <div
+            v-if="!nfc.isSupported.value"
+            class="p-6 text-center select-none flex flex-col items-center gap-3"
+          >
             <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center">
-              <UIcon name="i-lucide-smartphone-nfc" class="w-6 h-6 text-amber-400" />
+              <UIcon
+                name="i-lucide-smartphone-nfc"
+                class="w-6 h-6 text-amber-400"
+              />
             </div>
-            <p class="text-sm font-medium text-neutral-300">{{ $t('component.asset.scannerModal.nfcNotSupported') }}</p>
-            <p class="text-xs text-neutral-500">{{ $t('component.asset.scannerModal.nfcNotSupportedDesc') }}</p>
+            <p class="text-sm font-medium text-neutral-300">
+              {{ $t('component.asset.scannerModal.nfcNotSupported') }}
+            </p>
+            <p class="text-xs text-neutral-500">
+              {{ $t('component.asset.scannerModal.nfcNotSupportedDesc') }}
+            </p>
           </div>
 
-          <div v-else-if="nfc.error.value" class="p-6 text-center select-none flex flex-col items-center gap-3">
+          <div
+            v-else-if="nfc.error.value"
+            class="p-6 text-center select-none flex flex-col items-center gap-3"
+          >
             <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center">
-              <UIcon name="i-lucide-triangle-alert" class="w-6 h-6 text-error" />
+              <UIcon
+                name="i-lucide-triangle-alert"
+                class="w-6 h-6 text-error"
+              />
             </div>
-            <p class="text-sm font-medium text-neutral-300">{{ nfc.error.value }}</p>
-            <UButton :label="$t('common.tryAgain')" icon="i-lucide-refresh-cw" size="xs" color="neutral" variant="outline" @click="startNfc" />
+            <p class="text-sm font-medium text-neutral-300">
+              {{ nfc.error.value }}
+            </p>
+            <UButton
+              :label="$t('common.tryAgain')"
+              icon="i-lucide-refresh-cw"
+              size="xs"
+              color="neutral"
+              variant="outline"
+              @click="startNfc"
+            />
           </div>
 
           <template v-else>
             <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4 animate-pulse">
-              <UIcon name="i-lucide-smartphone-nfc" class="w-10 h-10 text-primary" />
+              <UIcon
+                name="i-lucide-smartphone-nfc"
+                class="w-10 h-10 text-primary"
+              />
             </div>
-            <p class="text-sm font-medium text-white">{{ $t('component.asset.scannerModal.readyToScan') }}</p>
-            <p class="text-xs text-neutral-400 mt-1">{{ $t('component.asset.scannerModal.holdNfc') }}</p>
+            <p class="text-sm font-medium text-white">
+              {{ $t('component.asset.scannerModal.readyToScan') }}
+            </p>
+            <p class="text-xs text-neutral-400 mt-1">
+              {{ $t('component.asset.scannerModal.holdNfc') }}
+            </p>
           </template>
         </div>
       </div>
@@ -138,18 +207,32 @@
         <div class="space-y-4">
           <div class="flex flex-col items-center gap-3 py-4">
             <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <UIcon name="i-lucide-keyboard" class="w-6 h-6 text-primary" />
+              <UIcon
+                name="i-lucide-keyboard"
+                class="w-6 h-6 text-primary"
+              />
             </div>
-            <p class="text-sm text-neutral-500">{{ $t('component.asset.scannerModal.manualDesc') }}</p>
+            <p class="text-sm text-neutral-500">
+              {{ $t('component.asset.scannerModal.manualDesc') }}
+            </p>
           </div>
 
           <!-- Error Message -->
-          <div v-if="manualError" class="flex items-center gap-2 p-3 rounded-lg bg-error/10 text-error text-sm">
-            <UIcon name="i-lucide-circle-x" class="w-4 h-4 shrink-0" />
+          <div
+            v-if="manualError"
+            class="flex items-center gap-2 p-3 rounded-lg bg-error/10 text-error text-sm"
+          >
+            <UIcon
+              name="i-lucide-circle-x"
+              class="w-4 h-4 shrink-0"
+            />
             <span>{{ manualError }}</span>
           </div>
 
-          <form @submit.prevent="onManualSubmit" class="flex gap-2">
+          <form
+            class="flex gap-2"
+            @submit.prevent="onManualSubmit"
+          >
             <UInput
               ref="manualInputRef"
               v-model="manualCode"
@@ -171,7 +254,13 @@
     </template>
 
     <template #footer>
-      <UButton :label="$t('common.close')" color="neutral" variant="outline" class="w-full justify-center" @click="() => { open = false }" />
+      <UButton
+        :label="$t('common.close')"
+        color="neutral"
+        variant="outline"
+        class="w-full justify-center"
+        @click="() => { open = false }"
+      />
     </template>
   </UModal>
 </template>
@@ -196,26 +285,25 @@ const props = withDefaults(defineProps<{
 const tabs = computed(() => [
   { key: 'barcode', label: t('component.asset.scannerModal.barcode'), icon: 'i-lucide-scan' },
   { key: 'nfc', label: t('component.asset.scannerModal.nfc'), icon: 'i-lucide-smartphone-nfc' },
-  { key: 'manual', label: t('component.asset.scannerModal.manual'), icon: 'i-lucide-keyboard' },
+  { key: 'manual', label: t('component.asset.scannerModal.manual'), icon: 'i-lucide-keyboard' }
 ])
 const activeTab = ref('barcode')
 
 const scanModes = computed(() => [
   { key: 'conventional', label: t('component.scanAsset.conventional'), icon: 'i-lucide-scan-line' },
-  { key: 'ai', label: t('component.scanAsset.withAi'), icon: 'i-lucide-sparkles' },
+  { key: 'ai', label: t('component.scanAsset.withAi'), icon: 'i-lucide-sparkles' }
 ])
 const scanMode = ref('conventional')
 
 const manualCode = ref('')
 const manualError = ref<string | null>(null)
-const manualInputRef = ref<any>(null)
+const manualInputRef = ref<{ inputRef?: HTMLInputElement } | null>(null)
 
 const barcode = useBarcodeScanner()
 const nfc = useNfcReader()
 const { playBeep } = useBeep()
 const toast = useToast()
 
-// AI Mode state
 const aiVideoEl = ref<HTMLVideoElement | null>(null)
 const aiStream = ref<MediaStream | null>(null)
 const aiCaptured = ref('')
@@ -254,7 +342,6 @@ function startNfc() {
   })
 }
 
-// AI Camera
 watch(scanMode, (mode) => {
   if (mode === 'ai') {
     initAiCamera()
@@ -282,8 +369,9 @@ async function initAiCamera() {
       aiVideoEl.value.srcObject = ms
       await aiVideoEl.value.play().catch(() => {})
     }
-  } catch (err: any) {
-    const msg = err.name === 'NotAllowedError' ? 'Camera permission denied' : `Camera error: ${err.message || err.name}`
+  } catch (err) {
+    const e = err as { name?: string, message?: string }
+    const msg = e.name === 'NotAllowedError' ? 'Camera permission denied' : `Camera error: ${e.message || e.name}`
     toast.add({ title: msg, color: 'error', icon: 'i-lucide-circle-x' })
   }
 }
@@ -313,7 +401,6 @@ function captureAi() {
     aiCaptured.value = URL.createObjectURL(blob)
     stopAiStream()
 
-    // Auto-process with AI
     await processAiScan(file)
   }, 'image/jpeg', 0.9)
 }
@@ -332,7 +419,6 @@ async function processAiScan(file: File) {
     }
   } finally {
     isAiProcessing.value = false
-    // Always reopen camera for next scan
     if (aiCaptured.value) URL.revokeObjectURL(aiCaptured.value)
     aiCaptured.value = ''
     aiCapturedFile.value = null

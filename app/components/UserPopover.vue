@@ -1,5 +1,8 @@
 <template>
-  <UPopover v-model:open="popoverOpen" v-bind="popoverProps">
+  <UPopover
+    v-model:open="popoverOpen"
+    v-bind="popoverProps"
+  >
     <!-- Trigger: use slot or default avatar -->
     <slot>
       <UAvatar
@@ -33,11 +36,13 @@
 
         <!-- Actions -->
         <div class="pt-2 border-t border-default space-y-0.5">
-
           <!-- Dark Mode / Theme Toggle -->
           <div class="flex items-center justify-between px-2.5 py-1.5 rounded-md">
             <span class="flex items-center gap-2 text-sm text-default font-medium">
-              <UIcon name="i-lucide-sun-moon" class="size-4 shrink-0" />
+              <UIcon
+                name="i-lucide-sun-moon"
+                class="size-4 shrink-0"
+              />
               {{ $t('component.userPopover.theme') }}
             </span>
             <UColorModeSwitch />
@@ -73,7 +78,7 @@
           >
             {{ $t('component.userPopover.profile') }}
           </UButton>
-          
+
           <UButton
             color="neutral"
             variant="ghost"
@@ -105,7 +110,7 @@ const { state: authState, service: authService } = useAuth()
 const toast = useToast()
 const popoverOpen = ref(false)
 
-const localeOptions: { label: string; value: 'en' | 'id'; flag: string }[] = [
+const localeOptions: { label: string, value: 'en' | 'id', flag: string }[] = [
   { label: 'English', value: 'en', flag: 'circle-flags:us' },
   { label: 'Bahasa Indonesia', value: 'id', flag: 'circle-flags:id' }
 ]
@@ -128,7 +133,7 @@ const langMenuItems = computed(() =>
 )
 
 interface Props {
-  popoverProps?: Record<string, any>
+  popoverProps?: Record<string, unknown>
 }
 
 withDefaults(defineProps<Props>(), {

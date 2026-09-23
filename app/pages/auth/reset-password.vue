@@ -1,13 +1,24 @@
 <template>
   <div class="w-full max-w-[420px] mx-auto">
     <!-- Loading: Validating Token -->
-    <div v-if="isValidating" class="flex flex-col items-center gap-4 py-12">
-      <UIcon name="i-lucide-loader-circle" class="w-8 h-8 text-primary animate-spin" />
-      <p class="text-muted">{{ $t('common.loading') }}</p>
+    <div
+      v-if="isValidating"
+      class="flex flex-col items-center gap-4 py-12"
+    >
+      <UIcon
+        name="i-lucide-loader-circle"
+        class="w-8 h-8 text-primary animate-spin"
+      />
+      <p class="text-muted">
+        {{ $t('common.loading') }}
+      </p>
     </div>
 
     <!-- Success State -->
-    <div v-else-if="isSuccess" class="flex flex-col gap-5 mb-6">
+    <div
+      v-else-if="isSuccess"
+      class="flex flex-col gap-5 mb-6"
+    >
       <BrandLogo class="lg:hidden" />
       <div class="space-y-4">
         <h1 class="text-3xl font-bold text-highlighted">
@@ -21,7 +32,7 @@
           variant="subtle"
         />
         <UButton
-          
+
           block
           color="primary"
           to="/auth/sign-in"
@@ -45,14 +56,24 @@
         </div>
       </div>
 
-      <UForm :state="state" :schema="resetSchema" @submit="handleReset" class="space-y-4">
-        <UFormField :label="$t('pages.auth.resetPassword.newPassword')" name="password" class="w-full" :ui="{ label: 'text-sm font-medium text-highlighted' }">
+      <UForm
+        :state="state"
+        :schema="resetSchema"
+        class="space-y-4"
+        @submit="handleReset"
+      >
+        <UFormField
+          :label="$t('pages.auth.resetPassword.newPassword')"
+          name="password"
+          class="w-full"
+          :ui="{ label: 'text-sm font-medium text-highlighted' }"
+        >
           <UInput
             id="new-password"
             v-model="state.password"
             :type="showPassword ? 'text' : 'password'"
             :placeholder="$t('pages.auth.resetPassword.newPasswordPlaceholder')"
-            
+
             class="w-full"
           >
             <template #trailing>
@@ -61,20 +82,25 @@
                 variant="ghost"
                 :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                 class="text-dimmed hover:text-toned p-1 hover:bg-transparent cursor-pointer"
-                @click="() => { showPassword = !showPassword }"
                 aria-label="Toggle Password Visibility"
+                @click="() => { showPassword = !showPassword }"
               />
             </template>
           </UInput>
         </UFormField>
 
-        <UFormField :label="$t('pages.auth.resetPassword.confirmPassword')" name="confirmPassword" class="w-full" :ui="{ label: 'text-sm font-medium text-highlighted' }">
+        <UFormField
+          :label="$t('pages.auth.resetPassword.confirmPassword')"
+          name="confirmPassword"
+          class="w-full"
+          :ui="{ label: 'text-sm font-medium text-highlighted' }"
+        >
           <UInput
             id="confirm-password"
             v-model="state.confirmPassword"
             :type="showConfirmPassword ? 'text' : 'password'"
             :placeholder="$t('pages.auth.resetPassword.confirmPasswordPlaceholder')"
-            
+
             class="w-full"
           >
             <template #trailing>
@@ -83,8 +109,8 @@
                 variant="ghost"
                 :icon="showConfirmPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                 class="text-dimmed hover:text-toned p-1 hover:bg-transparent cursor-pointer"
-                @click="() => { showConfirmPassword = !showConfirmPassword }"
                 aria-label="Toggle Confirm Password Visibility"
+                @click="() => { showConfirmPassword = !showConfirmPassword }"
               />
             </template>
           </UInput>
@@ -93,7 +119,7 @@
         <div class="flex flex-col gap-3 pt-2">
           <UButton
             type="submit"
-            
+
             block
             color="primary"
             :loading="loading"
@@ -105,7 +131,10 @@
             to="/auth/sign-in"
             class="flex items-center justify-center gap-2 text-sm font-medium text-toned hover:text-highlighted transition-colors"
           >
-            <UIcon name="i-lucide-arrow-left" class="w-4 h-4" />
+            <UIcon
+              name="i-lucide-arrow-left"
+              class="w-4 h-4"
+            />
             {{ $t('pages.auth.resetPassword.backToLogin') }}
           </NuxtLink>
         </div>
@@ -132,9 +161,7 @@ useHead({
 const route = useRoute()
 const toast = useToast()
 
-// Query params from reset link
 const token = computed(() => route.query.token as string || '')
-const email = computed(() => route.query.email as string || '')
 
 const state = reactive({
   password: '',
@@ -150,12 +177,11 @@ const isSuccess = ref(false)
 const resetSchema = z.object({
   password: z.string().min(8, t('pages.auth.resetPassword.passwordMin')),
   confirmPassword: z.string().min(1, t('pages.auth.resetPassword.passwordRequired'))
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine(data => data.password === data.confirmPassword, {
   message: t('pages.auth.resetPassword.passwordMismatch'),
   path: ['confirmPassword']
 })
 
-// Validate token on mount
 onMounted(async () => {
   if (!token.value) {
     toast.add({

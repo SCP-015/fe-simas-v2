@@ -30,7 +30,11 @@
       <!-- Brand content -->
       <div class="relative z-10 flex flex-col justify-between w-full h-full px-14 py-14">
         <div>
-          <img src="/logo_text_light.png" alt="SIMAS" class="w-32">
+          <img
+            src="/logo_text_light.png"
+            alt="SIMAS"
+            class="w-32"
+          >
         </div>
 
         <div class="max-w-md">
@@ -42,9 +46,16 @@
           </p>
 
           <div class="mt-10 space-y-6">
-            <div v-for="feature in features" :key="feature.title" class="flex items-start gap-4">
+            <div
+              v-for="feature in features"
+              :key="feature.title"
+              class="flex items-start gap-4"
+            >
               <div class="flex items-center justify-center rounded-xl w-11 h-11 shrink-0 bg-white/10 backdrop-blur-sm">
-                <UIcon :name="feature.icon" class="text-white size-5" />
+                <UIcon
+                  :name="feature.icon"
+                  class="text-white size-5"
+                />
               </div>
               <div>
                 <p class="font-semibold text-white">

@@ -15,10 +15,10 @@
           />
 
           <!-- Items per page -->
-          <USelect 
-            v-model="perPage" 
-            :items="limitOptions" 
-            class="w-20" 
+          <USelect
+            v-model="perPage"
+            :items="limitOptions"
+            class="w-20"
           />
         </div>
 
@@ -49,7 +49,10 @@
         :class="['border border-default rounded-md', tableClass]"
       >
         <template #expanded="{ row }">
-          <slot name="expanded" :row="row" />
+          <slot
+            name="expanded"
+            :row="row"
+          />
         </template>
       </UTable>
     </div>
@@ -59,14 +62,17 @@
       <span class="text-sm text-muted">
         {{ $t('component.dataTable.showing', { from: from || 0, to: to || 0, total }) }}
       </span>
-      <UPagination v-slot="{ page: activePage }" v-model:page="page" size="md" :total="total" :items-per-page="perPage">
-        <!-- Optional custom pagination slots can be added here if needed, default is fine -->
-      </UPagination>
+      <UPagination
+        v-model:page="page"
+        size="md"
+        :total="total"
+        :items-per-page="perPage"
+      />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import type { TableColumn } from '@nuxt/ui'
 
 const search = defineModel<string>('search', { default: '' })
@@ -75,8 +81,8 @@ const perPage = defineModel<number>('perPage', { default: 10 })
 const expanded = defineModel<Record<string, boolean>>('expanded', { default: () => ({}) })
 
 withDefaults(defineProps<{
-  columns: TableColumn<any>[]
-  data: any[]
+  columns: TableColumn<T>[]
+  data: T[]
   loading?: boolean
   total?: number
   from?: number

@@ -6,16 +6,41 @@
     :ui="{ content: 'sm:max-w-md', overlay: 'bg-black/40', footer: 'justify-end' }"
   >
     <template #body>
-      <UForm id="organization-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-3">
-        <UFormField :label="$t('common.name')" name="name" required>
-          <UInput v-model="form.name" :placeholder="$t('component.organization.formModal.namePlaceholder')" class="w-full" />
+      <UForm
+        id="organization-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-3"
+        @submit="handleSubmit"
+      >
+        <UFormField
+          :label="$t('common.name')"
+          name="name"
+          required
+        >
+          <UInput
+            v-model="form.name"
+            :placeholder="$t('component.organization.formModal.namePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
 
-        <UFormField :label="$t('pages.organization.type')" name="type" required>
-          <UInput v-model="form.type" :placeholder="$t('component.organization.formModal.typePlaceholder')" class="w-full" />
+        <UFormField
+          :label="$t('pages.organization.type')"
+          name="type"
+          required
+        >
+          <UInput
+            v-model="form.type"
+            :placeholder="$t('component.organization.formModal.typePlaceholder')"
+            class="w-full"
+          />
         </UFormField>
 
-        <UFormField :label="$t('pages.organization.parent')" name="parentId">
+        <UFormField
+          :label="$t('pages.organization.parent')"
+          name="parentId"
+        >
           <USelectMenu
             v-model="selectedParent"
             :items="parentOptions"
@@ -27,11 +52,22 @@
           />
         </UFormField>
 
-        <UFormField :label="$t('common.description')" name="description">
-          <UTextarea v-model="form.description" :placeholder="$t('common.enterDescription')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('common.description')"
+          name="description"
+        >
+          <UTextarea
+            v-model="form.description"
+            :placeholder="$t('common.enterDescription')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
-        <UFormField :label="$t('pages.organization.active')" name="isActive">
+        <UFormField
+          :label="$t('pages.organization.active')"
+          name="isActive"
+        >
           <USwitch v-model="form.isActive" />
         </UFormField>
       </UForm>
@@ -39,8 +75,19 @@
 
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" color="neutral" variant="outline" @click="() => { open = false }" />
-        <UButton :label="$t('common.save')" type="submit" form="organization-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="organization-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -67,14 +114,14 @@ const isEdit = computed(() => !!props.organization)
 const isSubmitting = ref(false)
 const isLoadingParents = ref(false)
 
-type ParentOption = { label: string; value: number | null }
+type ParentOption = { label: string, value: number | null }
 const noParentOption: ParentOption = { label: t('component.organization.formModal.noParent'), value: null }
 const parentOptions = ref<ParentOption[]>([noParentOption])
 const selectedParent = ref<ParentOption>(noParentOption)
 
 const schema = z.object({
   name: z.string().min(1, t('common.nameRequired')),
-  type: z.string().min(1, t('component.organization.formModal.typeRequired')),
+  type: z.string().min(1, t('component.organization.formModal.typeRequired'))
 })
 
 interface OrganizationFormState {
@@ -90,7 +137,7 @@ const form = reactive<OrganizationFormState>({
   type: '',
   description: '',
   parentId: null,
-  isActive: true,
+  isActive: true
 })
 
 watch(selectedParent, (val) => { form.parentId = val?.value ?? null })
@@ -126,8 +173,8 @@ const loadParentOptions = async () => {
         excluded.add(props.organization.id)
       }
       const options = res.data
-        .filter((o) => !excluded.has(o.id))
-        .map((o) => ({ label: o.name, value: o.id }))
+        .filter(o => !excluded.has(o.id))
+        .map(o => ({ label: o.name, value: o.id }))
       parentOptions.value = [noParentOption, ...options]
     }
   } finally {
@@ -160,7 +207,7 @@ const handleSubmit = async () => {
       type: form.type,
       description: form.description || null,
       parentId: form.parentId,
-      isActive: form.isActive,
+      isActive: form.isActive
     }
 
     const res = props.organization
@@ -171,7 +218,7 @@ const handleSubmit = async () => {
       toast.add({
         title: props.organization ? t('component.organization.formModal.updateSuccess') : t('component.organization.formModal.createSuccess'),
         color: 'success',
-        icon: 'i-lucide-circle-check',
+        icon: 'i-lucide-circle-check'
       })
       emit('saved')
       open.value = false
@@ -186,10 +233,10 @@ watch(open, async (val) => {
   await loadParentOptions()
   if (props.organization) {
     hydrateFromOrganization(props.organization)
-    selectedParent.value = parentOptions.value.find((o) => o.value === props.organization!.parentId) || noParentOption
+    selectedParent.value = parentOptions.value.find(o => o.value === props.organization!.parentId) || noParentOption
   } else {
     resetForm()
-    selectedParent.value = parentOptions.value.find((o) => o.value === form.parentId) || noParentOption
+    selectedParent.value = parentOptions.value.find(o => o.value === form.parentId) || noParentOption
   }
 })
 </script>

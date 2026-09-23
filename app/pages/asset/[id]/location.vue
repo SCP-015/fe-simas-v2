@@ -1,10 +1,10 @@
 <template>
-  <AssetDetailWrapper v-slot="{ asset, isLoading }">
+  <AssetDetailWrapper v-slot="{ asset }">
     <div class="space-y-4">
       <DataTable
         v-model:search="search"
         v-model:page="page"
-        v-model:perPage="perPage"
+        v-model:per-page="perPage"
         :data="data"
         :columns="columns"
         :loading="isLoadingLogs"
@@ -13,7 +13,10 @@
         :total="meta.total"
         table-class="min-w-[600px]"
       >
-        <template #actions v-if="hasPermission('asset-location:create')">
+        <template
+          v-if="hasPermission('asset-location:create')"
+          #actions
+        >
           <UTooltip
             :text="isAssetNotActive ? $t('component.assetStatus.notActiveWarning.relocate') : ''"
             :prevent="!isAssetNotActive"
@@ -69,7 +72,6 @@ const UButton = resolveComponent('UButton')
 const UAvatar = resolveComponent('UAvatar')
 const UBadge = resolveComponent('UBadge')
 
-// State
 const data = ref<AssetLocation[]>([])
 const isLoadingLogs = ref(false)
 
@@ -84,14 +86,12 @@ const {
 
 const showAddModal = ref(false)
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch relocation logs for this specific asset
 const fetchLocations = async () => {
   isLoadingLogs.value = true
   try {
@@ -116,7 +116,6 @@ const fetchLocations = async () => {
   }
 }
 
-// Table columns
 const columns: TableColumn<AssetLocation>[] = [
   {
     accessorKey: 'date',
@@ -167,11 +166,10 @@ const columns: TableColumn<AssetLocation>[] = [
       const attachments = row.original.attachments || []
       if (attachments.length === 0) return h('span', { class: 'text-dimmed text-xs' }, '-')
 
-      // Render clickable mini badges for each attachment
       return h(
         'div',
         { class: 'flex flex-wrap gap-2 max-w-sm' },
-        attachments.map(att => {
+        attachments.map((att) => {
           const theme = getAttachmentBadgeTheme(att.mimeType)
           return h(
             'a',

@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.user.title')"
       :description="$t('pages.user.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -26,7 +25,10 @@
           class="w-full md:w-28"
         />
       </template>
-      <template #actions v-if="hasPermission('user:create')">
+      <template
+        v-if="hasPermission('user:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -40,14 +42,21 @@
     </DataTable>
 
     <!-- Modals -->
-    <UserAddModal v-model="showAddModal" @created="fetchUsers" />
-    <UserUpdateModal v-model="showUpdateModal" :user="selectedUser" @updated="fetchUsers" />
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.user.deleteTitle')" 
-      :item-name="selectedUser?.name" 
+    <UserAddModal
+      v-model="showAddModal"
+      @created="fetchUsers"
+    />
+    <UserUpdateModal
+      v-model="showUpdateModal"
+      :user="selectedUser"
+      @updated="fetchUsers"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.user.deleteTitle')"
+      :item-name="selectedUser?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
   </div>
 </template>
@@ -71,7 +80,6 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UAvatar = resolveComponent('UAvatar')
 const UBadge = resolveComponent('UBadge')
 
-// State
 const data = ref<User[]>([])
 const isLoading = ref(false)
 
@@ -86,18 +94,16 @@ const {
 
 const selectedUser = ref<User | null>(null)
 
-// Modal states
 const showAddModal = ref(false)
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Status filter
 const statusFilter = ref('true')
 const statusOptions = computed(() => [
   { label: t('common.all'), value: 'all' },
   { label: t('common.active'), value: 'true' },
-  { label: t('common.inactive'), value: 'false' },
+  { label: t('common.inactive'), value: 'false' }
 ])
 
 watch(statusFilter, () => {
@@ -105,14 +111,12 @@ watch(statusFilter, () => {
   fetchUsers()
 })
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch users from API
 const fetchUsers = async () => {
   isLoading.value = true
   try {
@@ -130,9 +134,6 @@ const fetchUsers = async () => {
   }
 }
 
-
-
-// Table columns
 const baseColumns: TableColumn<User>[] = [
   {
     accessorKey: 'name',
@@ -142,9 +143,9 @@ const baseColumns: TableColumn<User>[] = [
       const email = row.original.email
       const photo = row.original.photo
       return h('div', { class: 'flex items-center gap-3' }, [
-        h(UAvatar, { 
-          src: photo || undefined, 
-          alt: name, 
+        h(UAvatar, {
+          src: photo || undefined,
+          alt: name,
           size: 'lg',
           class: 'bg-primary-50 text-primary-700',
           loading: 'lazy'
@@ -165,7 +166,7 @@ const baseColumns: TableColumn<User>[] = [
         UBadge,
         {
           color: isActive ? 'primary' : 'error',
-          variant: 'subtle',
+          variant: 'subtle'
         },
         () => (isActive ? t('common.active') : t('common.inactive'))
       )
@@ -213,17 +214,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -259,7 +260,6 @@ function getRowItems(row: Row<User>) {
   return actions
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedUser.value) return
@@ -280,7 +280,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchUsers()
 })

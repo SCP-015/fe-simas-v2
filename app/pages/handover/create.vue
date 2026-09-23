@@ -446,8 +446,10 @@ import { handoverFieldService } from '~/services/handover-field-service'
 import { assetService } from '~/services/asset-service'
 import { employeeService } from '~/services/employee-service'
 import type { HandoverField } from '~/types/handover-field'
+import type { CreateHandoverPayload } from '~/types/handover'
 import type { HandoverStockRow } from '~/components/handover/StockItems.vue'
 import type { Attachment } from '~/types/attachment'
+import type { EmployeePickerOption } from '~/types/employee'
 
 definePageMeta({
   layout: 'dashboard'
@@ -457,12 +459,10 @@ const { t } = useI18n()
 const toast = useToast()
 const { openLightbox } = useLightbox()
 
-// Options structures
 const transactionTypeOptions = computed(() =>
   HANDOVER_TRANSACTION_TYPES.map(v => ({ label: t(`pages.handover.types.${v}`), value: v }))
 )
 
-// Form state
 const form = reactive({
   transactionType: 'assign' as TransactionType,
   date: getLocalDatetimeString(),
@@ -486,19 +486,18 @@ const fetchCustomFields = async (type: TransactionType) => {
 }
 
 // Visual bindings for select menu states
-const selectedEmployee = ref<{ label: string, value: number, avatar?: any } | undefined>(undefined)
-const selectedHandingOverEmployee = ref<{ label: string, value: number, avatar?: any } | undefined>(undefined)
+const selectedEmployee = ref<EmployeePickerOption | undefined>(undefined)
+const selectedHandingOverEmployee = ref<EmployeePickerOption | undefined>(undefined)
 
 // Monitor employee selections and sync
 watch(selectedEmployee, (val) => {
-  form.receivedById = val?.value ?? (undefined as any)
+  form.receivedById = val?.value ?? (undefined as unknown as number)
 })
 
 watch(selectedHandingOverEmployee, (val) => {
-  form.handedOverById = val?.value ?? (undefined as any)
+  form.handedOverById = val?.value ?? (undefined as unknown as number)
 })
 
-// ── Scan flow ─────────────────────────────────────────────────────────────
 const showScanner = ref(false)
 const showAssetPicker = ref(false)
 const showStockModal = ref(false)
@@ -549,14 +548,12 @@ const lookupAndAddAsset = async (rawCode: string) => {
   lookupError.value = null
 
   try {
-    // Step 1: Check code exists & get ID
     const checkRes = await assetService.checkCode(serial)
     if (!checkRes.success || !checkRes.data?.exists || !checkRes.data?.id) {
       lookupError.value = t('pages.handover.scan.notFound')
       return
     }
 
-    // Step 2: Get full asset details
     const assetRes = await assetService.getById(checkRes.data.id)
     if (!assetRes.success || !assetRes.data) {
       lookupError.value = t('pages.handover.scan.notFound')
@@ -565,7 +562,6 @@ const lookupAndAddAsset = async (rawCode: string) => {
 
     const asset = assetRes.data
 
-    // Validate: holder feature must be enabled
     if (!asset.hasHolder) {
       lookupError.value = t('pages.handover.scan.holderNotEnabled')
       return
@@ -597,13 +593,11 @@ const lookupAndAddAsset = async (rawCode: string) => {
       }
     }
 
-    // Validate: not already added in this form
     if (form.items.some(i => i.assetId === asset.id)) {
       lookupError.value = t('pages.handover.scan.alreadyAdded')
       return
     }
 
-    // Validate: not tied to a pending handover
     if (pendingHandoverAssetIds.value.has(asset.id)) {
       lookupError.value = t('pages.handover.scan.inPendingHandover')
       return
@@ -635,7 +629,6 @@ const removeStockRow = (index: number) => {
   form.stockItems.splice(index, 1)
 }
 
-// Zod schema for form validation
 const schema = z.object({
   transactionType: z.enum(HANDOVER_TRANSACTION_TYPES),
   date: z.string().min(1, t('pages.handover.form.validation.dateRequired')),
@@ -650,18 +643,15 @@ const schema = z.object({
   }
 })
 
-// Dropdown data sourcing
-const employeeOptions = ref<{ label: string, value: number, avatar?: any }[]>([])
+const employeeOptions = ref<EmployeePickerOption[]>([])
 const pendingHandoverAssetIds = ref<Set<number>>(new Set())
 
 const isLoadingEmployees = ref(false)
 const isSubmitting = ref(false)
 
-// Fetch master options
 const loadMasterData = async () => {
   isLoadingEmployees.value = true
   try {
-    // 1. Fetch pending handover asset IDs to block them
     const pendingHandoversRes = await handoverService.getAll(1, 200, '', '', '', 'pending')
     if (pendingHandoversRes.success && pendingHandoversRes.data) {
       const ids = new Set<number>()
@@ -673,7 +663,6 @@ const loadMasterData = async () => {
       pendingHandoverAssetIds.value = ids
     }
 
-    // 2. Fetch active employees
     const empRes = await employeeService.getList(true)
     if (empRes.success && empRes.data) {
       employeeOptions.value = empRes.data.map(e => ({
@@ -693,7 +682,6 @@ const loadMasterData = async () => {
   }
 }
 
-// Handle form submit
 const handleSubmit = async () => {
   // Client-side check for required custom fields (server enforces too).
   const missing = customFieldDefs.value.find(f => f.required && !form.customFields[f.key])
@@ -704,7 +692,7 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true
   try {
-    const payload: any = {
+    const payload: CreateHandoverPayload = {
       receivedById: form.receivedById,
       handedOverById: form.handedOverById,
       transactionType: form.transactionType,
@@ -735,7 +723,7 @@ const handleSubmit = async () => {
         icon: 'i-lucide-circle-alert'
       })
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Handover creation error:', error)
   } finally {
     isSubmitting.value = false

@@ -8,6 +8,20 @@ export interface InventoryLabelItem {
   value: string
 }
 
+export interface InventoryFilters {
+  categoryIds?: number[]
+  subCategoryIds?: number[]
+  units?: string[]
+  isActive?: string
+  variantStatus?: string
+  newStockMin?: number
+  newStockMax?: number
+  usedStockMin?: number
+  usedStockMax?: number
+  missingFields?: string[]
+  labels?: InventoryLabelItem[]
+}
+
 export interface Inventory {
   id: number
   code: string | null
@@ -16,8 +30,8 @@ export interface Inventory {
   image: string | null
   unit: string
   isActive: boolean
-  category: { id: number; name: string } | null
-  subCategory: { id: number; name: string } | null
+  category: { id: number, name: string } | null
+  subCategory: { id: number, name: string } | null
   labels: InventoryLabelItem[]
   attachments: Attachment[]
   variantCount?: number
@@ -25,7 +39,7 @@ export interface Inventory {
   usedCount?: number
   createdAt: string
   updatedAt: string
-  createdBy: { id: number; name: string; photo: string | null } | null
+  createdBy: { id: number, name: string, photo: string | null } | null
 }
 
 export interface InventoryInitialStock {
@@ -50,7 +64,7 @@ export interface InventoryPayload {
   unit?: string | null
   subCategoryId?: number | null
   isActive?: boolean
-  labels?: { key: string; value: string }[]
+  labels?: { key: string, value: string }[]
   variants?: InventoryVariantInput[]
   attachmentIds?: number[]
 }
@@ -63,7 +77,7 @@ export interface InventoryVariant {
   image: string | null
   description: string | null
   isActive: boolean
-  inventory?: { id: number; name: string; code: string | null } | null
+  inventory?: { id: number, name: string, code: string | null } | null
 }
 
 export interface InventoryVariantPayload {
@@ -91,13 +105,13 @@ export interface InventoryStockBalance {
   condition: StockCondition
   quantity: number
   updatedAt: string
-  branch: { id: number; name: string } | null
+  branch: { id: number, name: string } | null
   variant: {
     id: number
     name: string
     code: string | null
     unit: string
-    inventory: { id: number; name: string; code: string | null } | null
+    inventory: { id: number, name: string, code: string | null } | null
   } | null
 }
 
@@ -112,14 +126,14 @@ export interface InventoryStockTransfer {
   id: number
   note: string | null
   createdAt: string
-  fromBranch: { id: number; name: string } | null
-  toBranch: { id: number; name: string } | null
-  createdBy: { id: number; name: string; photo: string | null } | null
+  fromBranch: { id: number, name: string } | null
+  toBranch: { id: number, name: string } | null
+  createdBy: { id: number, name: string, photo: string | null } | null
   items: {
     id: number
     condition: StockCondition
     quantity: number
-    variant: { id: number; name: string; code: string | null; inventory: { id: number; name: string } | null } | null
+    variant: { id: number, name: string, code: string | null, inventory: { id: number, name: string } | null } | null
   }[]
   attachments: Attachment[]
 }
@@ -129,14 +143,14 @@ export interface InventoryStockIn {
   id: number
   note: string | null
   createdAt: string
-  createdBy: { id: number; name: string; photo: string | null } | null
+  createdBy: { id: number, name: string, photo: string | null } | null
   items: {
     id: number
     condition: StockCondition
     quantity: number
     balanceAfter: number | null
-    branch: { id: number; name: string } | null
-    variant: { id: number; name: string; code: string | null; inventory: { id: number; name: string } | null } | null
+    branch: { id: number, name: string } | null
+    variant: { id: number, name: string, code: string | null, inventory: { id: number, name: string } | null } | null
   }[]
   attachments: Attachment[]
 }
@@ -144,17 +158,17 @@ export interface InventoryStockIn {
 /** A stock opname (physical count) document — header + line items, like a stock-in document. Only variants/conditions whose count differed from the recorded balance appear as items. */
 export interface InventoryStockOpname {
   id: number
-  branch: { id: number; name: string } | null
+  branch: { id: number, name: string } | null
   note: string | null
   createdAt: string
-  createdBy: { id: number; name: string; photo: string | null } | null
+  createdBy: { id: number, name: string, photo: string | null } | null
   items: {
     id: number
     condition: StockCondition
     systemQuantity: number
     countedQuantity: number
     quantity: number
-    variant: { id: number; name: string; code: string | null; inventory: { id: number; name: string } | null } | null
+    variant: { id: number, name: string, code: string | null, inventory: { id: number, name: string } | null } | null
   }[]
   attachments: Attachment[]
 }
@@ -168,14 +182,14 @@ export interface InventoryStockOutLineItem {
   returnedDate: string | null
   returnNote: string | null
   returnHandoverId: number | null
-  branch: { id: number; name: string } | null
+  branch: { id: number, name: string } | null
   variant: {
     id: number
     name: string
     code: string | null
     unit: string
     image: string | null
-    inventory: { id: number; name: string; code: string | null } | null
+    inventory: { id: number, name: string, code: string | null } | null
   } | null
 }
 
@@ -186,9 +200,9 @@ export interface InventoryStockOut {
   assignedDate: string
   assignNote: string | null
   assignHandoverId: number | null
-  employee: { id: number; name: string; employeeId: string } | null
+  employee: { id: number, name: string, employeeId: string } | null
   createdAt: string
-  createdBy: { id: number; name: string; photo: string | null } | null
+  createdBy: { id: number, name: string, photo: string | null } | null
   items: InventoryStockOutLineItem[]
   attachments: Attachment[]
 }

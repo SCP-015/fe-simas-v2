@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
 
   modules: [
     '@nuxt/eslint',
@@ -11,6 +10,45 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxtjs/i18n'
   ],
+  ssr: false,
+
+  devtools: {
+    enabled: true
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
+    componentName: 'ColorScheme',
+    classSuffix: ''
+  },
+
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.API_BASE_URL
+    }
+  },
+
+  routeRules: {
+    '/': { prerender: true }
+  },
+
+  compatibilityDate: '2025-01-15',
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  },
+
+  googleSignIn: {
+    clientId: process.env.GOOGLE_CLIENT_ID
+  },
 
   i18n: {
     locales: [
@@ -28,44 +66,6 @@ export default defineNuxtConfig({
     }
   },
 
-  devtools: {
-    enabled: true
-  },
-
-  colorMode: {
-    preference: 'system',
-    fallback: 'light',
-    componentName: 'ColorScheme',
-    classSuffix: ''
-  },
-
-  css: ['~/assets/css/main.css'],
-
-  routeRules: {
-    '/': { prerender: true }
-  },
-
-  compatibilityDate: '2025-01-15',
-
-  runtimeConfig: {
-    public: {
-      apiUrl: process.env.API_BASE_URL,
-    }
-  },
-
-  googleSignIn: {
-    clientId: process.env.GOOGLE_CLIENT_ID
-  },
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
-  },
-
   pwa: {
     registerType: 'autoUpdate',
     workbox: {
@@ -76,12 +76,12 @@ export default defineNuxtConfig({
       // NavigationRoute to a URL that was never cached. Explicitly
       // disabling it (rather than leaving it unset, which re-triggers the
       // same default) avoids registering that broken route.
-      navigateFallback: undefined,
+      navigateFallback: undefined
     },
     manifest: {
-      name: "SIMAS",
-      short_name: "SIMAS",
-      description: "Asset Management System",
+      name: 'SIMAS',
+      short_name: 'SIMAS',
+      description: 'Asset Management System',
       lang: 'id',
       display: 'standalone',
       background_color: '#ffffff',
@@ -90,30 +90,30 @@ export default defineNuxtConfig({
         {
           src: '/icons/icon_64x64.png',
           sizes: '64x64',
-          type: 'image/png',
+          type: 'image/png'
         },
         {
           src: '/icons/icon_144x144.png',
           sizes: '144x144',
-          type: 'image/png',
+          type: 'image/png'
         },
         {
           src: '/icons/icon_192x192.png',
           sizes: '192x192',
-          type: 'image/png',
+          type: 'image/png'
         },
         {
 
           src: '/icons/icon_384x384.png',
           sizes: '384x384',
-          type: 'image/png',
+          type: 'image/png'
         },
         {
           src: '/icons/icon_512x512.png',
           sizes: '512x512',
-          type: 'image/png',
-        },
-      ],
+          type: 'image/png'
+        }
+      ]
     }
   }
 })

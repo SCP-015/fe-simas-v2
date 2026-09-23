@@ -1,10 +1,10 @@
-import { apiService } from "./api-service"
-import { handleServiceError } from "../composables/error-helper"
-import type { 
-  Handover, 
-  CreateHandoverPayload, 
-} from "../types/handover"
-import type { ApiResponse } from "../types/api"
+import { apiService } from './api-service'
+import { handleServiceError } from '../composables/error-helper'
+import type {
+  Handover,
+  CreateHandoverPayload
+} from '../types/handover'
+import type { ApiResponse } from '../types/api'
 
 export class HandoverService {
   private get authHeaders() {
@@ -32,7 +32,7 @@ export class HandoverService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -45,7 +45,7 @@ export class HandoverService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -57,7 +57,7 @@ export class HandoverService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -70,7 +70,7 @@ export class HandoverService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -83,7 +83,7 @@ export class HandoverService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }

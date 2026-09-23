@@ -7,14 +7,28 @@
           icon="i-lucide-menu"
           color="neutral"
           variant="ghost"
-          @click="() => { isMobileMenuOpen = true }"
           aria-label="Open menu"
+          @click="() => { isMobileMenuOpen = true }"
         />
         <BrandLogo />
       </div>
-      
-      <!-- Profile Avatar Popover -->
-      <UserPopover />
+
+      <!-- Right side: Mobile Feedback Button & Profile Avatar Popover -->
+      <div class="flex items-center gap-1">
+        <UTooltip :text="$t('nav.feedback')">
+          <UButton
+            :icon="isCapturing ? 'i-lucide-loader-2' : 'i-lucide-message-square-warning'"
+            color="neutral"
+            variant="ghost"
+            class="text-toned hover:text-highlighted"
+            :loading="isCapturing"
+            :disabled="isCapturing"
+            :aria-label="$t('nav.feedback')"
+            @click="triggerFeedback()"
+          />
+        </UTooltip>
+        <UserPopover />
+      </div>
     </header>
 
     <!-- Top Row: Page Title & Description -->
@@ -22,26 +36,37 @@
       <h2 class="text-xl md:text-2xl font-bold text-highlighted tracking-tight">
         {{ title }}
       </h2>
-      <p v-if="description" class="text-sm md:text-sm text-muted">
+      <p
+        v-if="description"
+        class="text-sm md:text-sm text-muted"
+      >
         {{ description }}
       </p>
     </div>
 
     <!-- Middle Row: Tab links -->
-    <div v-if="$slots.tabs" class="border-b border-default mt-7">
+    <div
+      v-if="$slots.tabs"
+      class="border-b border-default mt-7"
+    >
       <nav class="flex gap-6 -mb-px">
         <slot name="tabs" />
       </nav>
     </div>
 
     <!-- Bottom Row: Actions selectors placed BELOW the tabs, right-aligned -->
-    <div v-if="$slots.actions" class="flex justify-end items-center gap-3 pt-1">
+    <div
+      v-if="$slots.actions"
+      class="flex justify-end items-center gap-3 pt-1"
+    >
       <slot name="actions" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useFeedback } from '~/composables/useFeedback'
+
 interface Props {
   title: string
   description?: string
@@ -51,4 +76,6 @@ defineProps<Props>()
 
 // Share mobile sidebar menu open state globally across layout and headers
 const isMobileMenuOpen = useState('isMobileMenuOpen', () => false)
+
+const { triggerFeedback, isCapturing } = useFeedback()
 </script>

@@ -7,12 +7,24 @@
   >
     <template #body>
       <div class="space-y-4">
-        <UFormField :label="$t('pages.inventory.stockOut.type')" required>
-          <USwitch v-model="isEmployee" :label="$t('pages.inventory.stockOut.typeEmployee')" />
-          <p class="text-xs text-muted mt-1">{{ $t('pages.inventory.stockOut.typeHint') }}</p>
+        <UFormField
+          :label="$t('pages.inventory.stockOut.type')"
+          required
+        >
+          <USwitch
+            v-model="isEmployee"
+            :label="$t('pages.inventory.stockOut.typeEmployee')"
+          />
+          <p class="text-xs text-muted mt-1">
+            {{ $t('pages.inventory.stockOut.typeHint') }}
+          </p>
         </UFormField>
 
-        <UFormField v-if="isEmployee" :label="$t('common.employee')" required>
+        <UFormField
+          v-if="isEmployee"
+          :label="$t('common.employee')"
+          required
+        >
           <USelectMenu
             v-model="selectedEmployee"
             :items="employeeOptions"
@@ -35,47 +47,107 @@
           </USelectMenu>
         </UFormField>
 
-        <UFormField :label="$t('common.branch')" required>
-          <USelectMenu v-model="branchId" :items="branchOptions" value-key="value" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.inventory.transfer.selectBranch')" class="w-full" />
+        <UFormField
+          :label="$t('common.branch')"
+          required
+        >
+          <USelectMenu
+            v-model="branchId"
+            :items="branchOptions"
+            value-key="value"
+            searchable
+            :searchable-placeholder="$t('common.search')"
+            :placeholder="$t('pages.inventory.transfer.selectBranch')"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Rows: variant × new/used (capped at available) -->
         <div class="space-y-1.5">
           <label class="text-sm font-medium text-default">{{ $t('pages.inventory.variant.title') }}</label>
 
-          <div v-if="isLoading" class="space-y-2">
-            <USkeleton v-for="i in 3" :key="i" class="h-9 w-full" />
+          <div
+            v-if="isLoading"
+            class="space-y-2"
+          >
+            <USkeleton
+              v-for="i in 3"
+              :key="i"
+              class="h-9 w-full"
+            />
           </div>
-          <div v-else-if="!branchId" class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg">
+          <div
+            v-else-if="!branchId"
+            class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg"
+          >
             {{ $t('pages.inventory.transfer.pickFirst') }}
           </div>
-          <div v-else-if="rows.length === 0" class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg">
+          <div
+            v-else-if="rows.length === 0"
+            class="text-sm text-dimmed py-6 text-center border-2 border-dashed border-default rounded-lg"
+          >
             {{ $t('pages.inventory.entry.noVariants') }}
           </div>
-          <div v-else class="overflow-x-auto">
+          <div
+            v-else
+            class="overflow-x-auto"
+          >
             <table class="w-full min-w-[420px] text-sm">
               <thead>
                 <tr class="text-left text-xs font-semibold text-dimmed uppercase tracking-wider border-b border-default">
-                  <th class="py-2 pr-3">{{ $t('pages.inventory.variant.title') }}</th>
-                  <th class="py-2 px-2">{{ $t('pages.inventory.condition.new') }}</th>
-                  <th class="py-2 px-2">{{ $t('pages.inventory.condition.used') }}</th>
+                  <th class="py-2 pr-3">
+                    {{ $t('pages.inventory.variant.title') }}
+                  </th>
+                  <th class="py-2 px-2">
+                    {{ $t('pages.inventory.condition.new') }}
+                  </th>
+                  <th class="py-2 px-2">
+                    {{ $t('pages.inventory.condition.used') }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row in rows" :key="row.variantId" class="border-b border-muted">
+                <tr
+                  v-for="row in rows"
+                  :key="row.variantId"
+                  class="border-b border-muted"
+                >
                   <td class="py-2 pr-3">
-                    <div class="font-medium text-highlighted">{{ row.name }}</div>
-                    <div v-if="row.code" class="text-xs text-muted">{{ row.code }}</div>
+                    <div class="font-medium text-highlighted">
+                      {{ row.name }}
+                    </div>
+                    <div
+                      v-if="row.code"
+                      class="text-xs text-muted"
+                    >
+                      {{ row.code }}
+                    </div>
                   </td>
                   <td class="py-2 px-2">
                     <div class="flex items-center gap-1.5">
-                      <UInput v-model.number="row.assignNew" type="number" :min="0" :max="row.new" size="sm" class="w-20" :disabled="row.new === 0" />
+                      <UInput
+                        v-model.number="row.assignNew"
+                        type="number"
+                        :min="0"
+                        :max="row.new"
+                        size="sm"
+                        class="w-20"
+                        :disabled="row.new === 0"
+                      />
                       <span class="text-xs text-dimmed">/ {{ row.new }}</span>
                     </div>
                   </td>
                   <td class="py-2 px-2">
                     <div class="flex items-center gap-1.5">
-                      <UInput v-model.number="row.assignUsed" type="number" :min="0" :max="row.used" size="sm" class="w-20" :disabled="row.used === 0" />
+                      <UInput
+                        v-model.number="row.assignUsed"
+                        type="number"
+                        :min="0"
+                        :max="row.used"
+                        size="sm"
+                        class="w-20"
+                        :disabled="row.used === 0"
+                      />
                       <span class="text-xs text-dimmed">/ {{ row.used }}</span>
                     </div>
                   </td>
@@ -86,16 +158,36 @@
         </div>
 
         <UFormField :label="$t('common.note')">
-          <UTextarea v-model="note" :placeholder="$t('pages.inventory.transfer.notePlaceholder')" class="w-full" :rows="2" />
+          <UTextarea
+            v-model="note"
+            :placeholder="$t('pages.inventory.transfer.notePlaceholder')"
+            class="w-full"
+            :rows="2"
+          />
         </UFormField>
 
-        <AttachmentManager v-model="attachments" @change="(ids) => { attachmentIds = ids }" />
+        <AttachmentManager
+          v-model="attachments"
+          @change="(ids) => { attachmentIds = ids }"
+        />
       </div>
     </template>
 
     <template #footer>
-      <UButton :label="$t('common.cancel')" color="neutral" variant="outline" :disabled="saving" @click="() => { open = false }" />
-      <UButton :label="$t('common.save')" color="primary" :loading="saving" :disabled="!canSubmit" @click="submit" />
+      <UButton
+        :label="$t('common.cancel')"
+        color="neutral"
+        variant="outline"
+        :disabled="saving"
+        @click="() => { open = false }"
+      />
+      <UButton
+        :label="$t('common.save')"
+        color="primary"
+        :loading="saving"
+        :disabled="!canSubmit"
+        @click="submit"
+      />
     </template>
   </UModal>
 </template>
@@ -108,6 +200,7 @@ import { branchService } from '~/services/branch-service'
 import { employeeService } from '~/services/employee-service'
 import type { Attachment } from '~/types/attachment'
 import type { InventoryStockAssignItem } from '~/types/inventory'
+import type { EmployeePickerOption as EmployeeOption } from '~/types/employee'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -117,15 +210,6 @@ const open = defineModel<boolean>({ default: false })
 const emit = defineEmits<{ done: [] }>()
 
 interface Row { variantId: number, name: string, code: string | null, new: number, used: number, assignNew: number, assignUsed: number }
-interface EmployeeOption {
-  label: string
-  value: number
-  avatar?: {
-    src: string
-    alt: string
-    loading?: 'lazy' | 'eager'
-  }
-}
 
 const saving = ref(false)
 const isLoading = ref(false)

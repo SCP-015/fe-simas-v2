@@ -10,20 +10,34 @@
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-xl bg-[#e6f7ec] flex items-center justify-center">
-            <UIcon name="i-lucide-book-open" class="w-6 h-6 text-[#009838]" />
+            <UIcon
+              name="i-lucide-book-open"
+              class="w-6 h-6 text-[#009838]"
+            />
           </div>
           <div class="text-left">
-            <h1 class="text-md font-bold text-highlighted">{{ $t('pages.book.title') }}</h1>
-            <p class="text-sm text-muted">{{ $t('pages.book.description') }}</p>
+            <h1 class="text-md font-bold text-highlighted">
+              {{ $t('pages.book.title') }}
+            </h1>
+            <p class="text-sm text-muted">
+              {{ $t('pages.book.description') }}
+            </p>
           </div>
         </div>
 
         <!-- Tabs: Pinjam / Kembalikan -->
-        <UTabs v-model="activeTab" :items="tabs" class="w-full mt-4" />
+        <UTabs
+          v-model="activeTab"
+          :items="tabs"
+          class="w-full mt-4"
+        />
       </div>
 
       <!-- ═══ Tab: Pinjam (Borrow) ═══ -->
-      <div v-if="activeTab === 'borrow'" class="space-y-5">
+      <div
+        v-if="activeTab === 'borrow'"
+        class="space-y-5"
+      >
         <!-- Serial Number -->
         <div>
           <label class="text-sm font-medium text-default block mb-1.5">
@@ -38,11 +52,27 @@
               @keyup.enter="lookupAsset"
             >
               <template #leading>
-                <UIcon name="i-lucide-hash" class="w-4 h-4 text-dimmed" />
+                <UIcon
+                  name="i-lucide-hash"
+                  class="w-4 h-4 text-dimmed"
+                />
               </template>
             </UInput>
-            <UButton icon="i-lucide-search" color="primary" variant="soft" square :loading="isLookingUp" @click="lookupAsset" />
-            <UButton icon="i-lucide-scan" color="neutral" variant="soft" square @click="() => { showScanner = true }" />
+            <UButton
+              icon="i-lucide-search"
+              color="primary"
+              variant="soft"
+              square
+              :loading="isLookingUp"
+              @click="lookupAsset"
+            />
+            <UButton
+              icon="i-lucide-scan"
+              color="neutral"
+              variant="soft"
+              square
+              @click="() => { showScanner = true }"
+            />
           </div>
         </div>
 
@@ -57,19 +87,44 @@
         />
 
         <!-- Asset info (auto-filled after lookup) -->
-        <div v-if="foundAsset" class="space-y-4">
-          <UFormField :label="$t('pages.book.bookTitle')" required>
-            <UInput :model-value="foundAsset.name" :placeholder="$t('pages.book.bookTitlePlaceholder')" class="w-full" disabled>
+        <div
+          v-if="foundAsset"
+          class="space-y-4"
+        >
+          <UFormField
+            :label="$t('pages.book.bookTitle')"
+            required
+          >
+            <UInput
+              :model-value="foundAsset.name"
+              :placeholder="$t('pages.book.bookTitlePlaceholder')"
+              class="w-full"
+              disabled
+            >
               <template #leading>
-                <UIcon name="i-lucide-book-open" class="w-4 h-4 text-dimmed" />
+                <UIcon
+                  name="i-lucide-book-open"
+                  class="w-4 h-4 text-dimmed"
+                />
               </template>
             </UInput>
           </UFormField>
 
-          <UFormField :label="$t('pages.book.category')" required>
-            <UInput :model-value="foundAsset.subCategory?.name || '-'" :placeholder="$t('pages.book.categoryPlaceholder')" class="w-full" disabled>
+          <UFormField
+            :label="$t('pages.book.category')"
+            required
+          >
+            <UInput
+              :model-value="foundAsset.subCategory?.name || '-'"
+              :placeholder="$t('pages.book.categoryPlaceholder')"
+              class="w-full"
+              disabled
+            >
               <template #leading>
-                <UIcon name="i-lucide-tag" class="w-4 h-4 text-dimmed" />
+                <UIcon
+                  name="i-lucide-tag"
+                  class="w-4 h-4 text-dimmed"
+                />
               </template>
             </UInput>
           </UFormField>
@@ -89,18 +144,42 @@
             <label class="text-sm font-medium text-default block mb-1.5">
               {{ $t('pages.book.borrowPhoto') }} <span class="text-red-500">*</span>
             </label>
-            <div v-if="borrowPhotoPreview" class="relative w-full">
-              <img :src="borrowPhotoPreview" class="w-full rounded-lg object-cover border border-default" alt="Borrow photo" />
-              <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="removeBorrowPhoto" />
+            <div
+              v-if="borrowPhotoPreview"
+              class="relative w-full"
+            >
+              <img
+                :src="borrowPhotoPreview"
+                class="w-full rounded-lg object-cover border border-default"
+                alt="Borrow photo"
+              >
+              <UButton
+                icon="i-lucide-x"
+                color="error"
+                variant="solid"
+                size="xs"
+                class="absolute top-1 right-1 rounded-full"
+                @click="removeBorrowPhoto"
+              />
             </div>
             <div
               v-else
               class="flex flex-col items-center justify-center w-full py-10 border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
               @click="() => { showBorrowCamera = true }"
             >
-              <UIcon name="i-lucide-camera" class="w-10 h-10 text-dimmed mb-3" />
+              <UIcon
+                name="i-lucide-camera"
+                class="w-10 h-10 text-dimmed mb-3"
+              />
               <span class="text-sm text-muted mb-2">{{ $t('pages.book.borrowPhotoHint') }}</span>
-              <UButton :label="$t('pages.book.openCamera')" icon="i-lucide-camera" color="neutral" variant="outline" size="sm" @click.stop="() => { showBorrowCamera = true }" />
+              <UButton
+                :label="$t('pages.book.openCamera')"
+                icon="i-lucide-camera"
+                color="neutral"
+                variant="outline"
+                size="sm"
+                @click.stop="() => { showBorrowCamera = true }"
+              />
             </div>
           </div>
         </div>
@@ -120,9 +199,15 @@
       </div>
 
       <!-- ═══ Tab: Kembalikan (Return) ═══ -->
-      <div v-if="activeTab === 'return'" class="space-y-5">
+      <div
+        v-if="activeTab === 'return'"
+        class="space-y-5"
+      >
         <!-- Select Book -->
-        <UFormField :label="$t('pages.book.selectBook')" required>
+        <UFormField
+          :label="$t('pages.book.selectBook')"
+          required
+        >
           <USelectMenu
             v-model="selectedBorrowedBook"
             :items="borrowedBookOptions"
@@ -133,7 +218,10 @@
             class="w-full"
           >
             <template #leading>
-              <UIcon name="i-lucide-book-open" class="w-4 h-4 text-dimmed" />
+              <UIcon
+                name="i-lucide-book-open"
+                class="w-4 h-4 text-dimmed"
+              />
             </template>
           </USelectMenu>
         </UFormField>
@@ -148,7 +236,11 @@
         />
 
         <!-- Goodreads Link → returnNote -->
-        <UFormField v-if="selectedBorrowedBook" :label="$t('pages.book.goodreadsLink')" required>
+        <UFormField
+          v-if="selectedBorrowedBook"
+          :label="$t('pages.book.goodreadsLink')"
+          required
+        >
           <UTextarea
             v-model="returnForm.goodreadsLink"
             :placeholder="$t('pages.book.goodreadsPlaceholder')"
@@ -162,18 +254,42 @@
           <label class="text-sm font-medium text-default block mb-1.5">
             {{ $t('pages.book.returnPhoto') }} <span class="text-red-500">*</span>
           </label>
-          <div v-if="returnPhotoPreview" class="relative w-full">
-            <img :src="returnPhotoPreview" class="w-full rounded-lg object-cover border border-default" alt="Return photo" />
-            <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="removeReturnPhoto" />
+          <div
+            v-if="returnPhotoPreview"
+            class="relative w-full"
+          >
+            <img
+              :src="returnPhotoPreview"
+              class="w-full rounded-lg object-cover border border-default"
+              alt="Return photo"
+            >
+            <UButton
+              icon="i-lucide-x"
+              color="error"
+              variant="solid"
+              size="xs"
+              class="absolute top-1 right-1 rounded-full"
+              @click="removeReturnPhoto"
+            />
           </div>
           <div
             v-else
             class="flex flex-col items-center justify-center w-full py-10 border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
             @click="() => { showReturnCamera = true }"
           >
-            <UIcon name="i-lucide-camera" class="w-10 h-10 text-dimmed mb-3" />
+            <UIcon
+              name="i-lucide-camera"
+              class="w-10 h-10 text-dimmed mb-3"
+            />
             <span class="text-sm text-muted mb-2">{{ $t('pages.book.returnPhotoHint') }}</span>
-            <UButton :label="$t('pages.book.openCamera')" icon="i-lucide-camera" color="neutral" variant="outline" size="sm" @click.stop="() => { showReturnCamera = true }" />
+            <UButton
+              :label="$t('pages.book.openCamera')"
+              icon="i-lucide-camera"
+              color="neutral"
+              variant="outline"
+              size="sm"
+              @click.stop="() => { showReturnCamera = true }"
+            />
           </div>
         </div>
 
@@ -193,9 +309,21 @@
     </UCard>
 
     <!-- Modals -->
-    <AssetScannerModal v-model="showScanner" :auto-close="true" @scanned="onScanned" />
-    <CameraModal watermark v-model="showBorrowCamera" @captured="onBorrowPhotoCaptured" />
-    <CameraModal watermark v-model="showReturnCamera" @captured="onReturnPhotoCaptured" />
+    <AssetScannerModal
+      v-model="showScanner"
+      :auto-close="true"
+      @scanned="onScanned"
+    />
+    <CameraModal
+      v-model="showBorrowCamera"
+      watermark
+      @captured="onBorrowPhotoCaptured"
+    />
+    <CameraModal
+      v-model="showReturnCamera"
+      watermark
+      @captured="onReturnPhotoCaptured"
+    />
   </div>
 </template>
 
@@ -214,17 +342,15 @@ const auth = useAuth()
 
 definePageMeta({ layout: 'form' })
 
-// ── Tabs ────────────────────────────────────────────────────────────────────
 const activeTab = ref('borrow')
 const tabs = computed(() => [
   { label: t('pages.book.borrow'), value: 'borrow', icon: 'i-lucide-book-open' },
-  { label: t('pages.book.return'), value: 'return', icon: 'i-lucide-check-square' },
+  { label: t('pages.book.return'), value: 'return', icon: 'i-lucide-check-square' }
 ])
 
-// ── Borrow State ────────────────────────────────────────────────────────────
 const borrowForm = reactive({
   serialNumber: '',
-  assignNote: '',
+  assignNote: ''
 })
 const foundAsset = ref<Asset | null>(null)
 const lookupError = ref<string | null>(null)
@@ -248,14 +374,12 @@ async function lookupAsset() {
   foundAsset.value = null
 
   try {
-    // Step 1: Check code exists & get ID
     const checkRes = await assetService.checkCode(serial)
     if (!checkRes.success || !checkRes.data?.exists || !checkRes.data?.id) {
       lookupError.value = t('pages.book.assetNotFound')
       return
     }
 
-    // Step 2: Get full asset details
     const assetRes = await assetService.getById(checkRes.data.id)
     if (!assetRes.success || !assetRes.data) {
       lookupError.value = t('pages.book.assetNotFound')
@@ -264,26 +388,22 @@ async function lookupAsset() {
 
     const asset = assetRes.data
 
-    // Validate: must be book category
     const categoryName = asset.subCategory?.category?.name || ''
     if (categoryName.toLowerCase() !== BOOK_CATEGORY_NAME.toLowerCase()) {
       lookupError.value = t('pages.book.notBookCategory')
       return
     }
 
-    // Validate: holder feature must be enabled
     if (!asset.hasHolder) {
       lookupError.value = t('pages.book.holderNotEnabled')
       return
     }
 
-    // Validate: must not have active holder
     if (asset.activeHolder) {
       lookupError.value = t('pages.book.alreadyBorrowed')
       return
     }
 
-    // Validate: last status must be active
     if (asset.lastStatus?.status !== 'active') {
       lookupError.value = t('pages.book.notActive')
       return
@@ -303,7 +423,6 @@ function onScanned(code: string) {
 async function onBorrowPhotoCaptured(file: File) {
   borrowPhotoPreview.value = URL.createObjectURL(file)
 
-  // Upload as attachment
   try {
     const res = await attachmentService.upload(file)
     if (res.success && res.data?.id) {
@@ -341,7 +460,7 @@ async function handleBorrow() {
     const res = await bookService.borrow({
       assetId: foundAsset.value.id,
       assignNote: borrowForm.assignNote.trim() || undefined,
-      attachmentIds: [borrowPhotoAttachmentId.value],
+      attachmentIds: [borrowPhotoAttachmentId.value]
     })
     if (res.success) {
       toast.add({ title: t('pages.book.borrowSuccess'), color: 'success', icon: 'i-lucide-circle-check' })
@@ -364,12 +483,11 @@ function resetBorrowForm() {
   borrowPhotoAttachmentId.value = null
 }
 
-// ── Return State ────────────────────────────────────────────────────────────
 const returnForm = reactive({
-  goodreadsLink: '',
+  goodreadsLink: ''
 })
 const borrowedBooks = ref<AssetHolder[]>([])
-const selectedBorrowedBook = ref<{ label: string; value: number } | undefined>(undefined)
+const selectedBorrowedBook = ref<{ label: string, value: number } | undefined>(undefined)
 const isLoadingBorrowed = ref(false)
 const showReturnCamera = ref(false)
 const returnPhotoPreview = ref<string | null>(null)
@@ -378,7 +496,7 @@ const returnPhotoAttachmentId = ref<number | null>(null)
 const borrowedBookOptions = computed(() => {
   return borrowedBooks.value.map(h => ({
     label: `${h.asset?.name || '-'} (${h.asset?.code || '-'})`,
-    value: h.id,
+    value: h.id
   }))
 })
 
@@ -436,7 +554,7 @@ async function handleReturn() {
     const res = await bookService.returnBook({
       assetHolderId: selectedBorrowedBook.value.value,
       returnNote,
-      attachmentIds: [returnPhotoAttachmentId.value],
+      attachmentIds: [returnPhotoAttachmentId.value]
     })
     if (res.success) {
       toast.add({ title: t('pages.book.returnSuccess'), color: 'success', icon: 'i-lucide-circle-check' })
@@ -458,7 +576,6 @@ function resetReturnForm() {
   returnPhotoAttachmentId.value = null
 }
 
-// ── Watchers ────────────────────────────────────────────────────────────────
 watch(activeTab, (tab) => {
   if (tab === 'return') {
     loadBorrowedBooks()

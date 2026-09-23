@@ -1,89 +1,257 @@
 <template>
   <div class="space-y-6">
-    <Header :title="$t('pages.inventory.edit.title')" :description="form.name" />
+    <Header
+      :title="$t('pages.inventory.edit.title')"
+      :description="form.name"
+    />
 
     <UCard class="w-full">
       <div class="w-full mb-4">
-        <UButton :label="$t('common.back')" :to="`/inventory/${id}`" color="neutral" icon="i-lucide-arrow-left" variant="link" />
+        <UButton
+          :label="$t('common.back')"
+          :to="`/inventory/${id}`"
+          color="neutral"
+          icon="i-lucide-arrow-left"
+          variant="link"
+        />
       </div>
 
-      <div v-if="isLoading" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div
+        v-if="isLoading"
+        class="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
         <USkeleton class="w-full aspect-square rounded-lg" />
         <div class="md:col-span-2 space-y-3">
-          <USkeleton v-for="i in 5" :key="i" class="h-9 w-full" />
+          <USkeleton
+            v-for="i in 5"
+            :key="i"
+            class="h-9 w-full"
+          />
         </div>
       </div>
 
-      <UForm v-else id="inv-edit-form" :schema="schema" :state="form" @submit="onSubmit">
+      <UForm
+        v-else
+        id="inv-edit-form"
+        :schema="schema"
+        :state="form"
+        @submit="onSubmit"
+      >
         <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
-
           <!-- ═══ Column 1: Photo ═══ -->
           <div class="space-y-4">
             <div>
               <div class="flex justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.inventory.item.photo') }}</label>
-                <UButton icon="i-lucide-camera" color="primary" variant="soft" size="xs" @click="() => { showCamera = true }">{{ $t('pages.asset.create.takePhoto') }}</UButton>
+                <UButton
+                  icon="i-lucide-camera"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="() => { showCamera = true }"
+                >
+                  {{ $t('pages.asset.create.takePhoto') }}
+                </UButton>
               </div>
-              <div v-if="previewUrl" class="relative inline-block w-full aspect-square">
-                <NuxtImg :src="previewUrl" class="w-full h-full rounded-lg object-cover border border-default" />
-                <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="removeImage" />
+              <div
+                v-if="previewUrl"
+                class="relative inline-block w-full aspect-square"
+              >
+                <NuxtImg
+                  :src="previewUrl"
+                  class="w-full h-full rounded-lg object-cover border border-default"
+                />
+                <UButton
+                  icon="i-lucide-x"
+                  color="error"
+                  variant="solid"
+                  size="xs"
+                  class="absolute top-1 right-1 rounded-full"
+                  @click="removeImage"
+                />
               </div>
-              <div v-else class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors" @click="triggerFileInput">
-                <UIcon name="i-lucide-upload" class="w-8 h-8 text-dimmed mb-2" />
+              <div
+                v-else
+                class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
+                @click="triggerFileInput"
+              >
+                <UIcon
+                  name="i-lucide-upload"
+                  class="w-8 h-8 text-dimmed mb-2"
+                />
                 <span class="text-sm text-muted">{{ $t('pages.asset.create.dropImage') }}</span>
                 <span class="text-xs text-dimmed mt-1">{{ $t('pages.asset.create.imageHint') }}</span>
               </div>
-              <div v-if="isUploading" class="mt-2 flex items-center gap-2 text-sm text-muted">
-                <UIcon name="i-lucide-loader-2" class="w-4 h-4 animate-spin" /> {{ $t('pages.asset.create.uploading') }}
+              <div
+                v-if="isUploading"
+                class="mt-2 flex items-center gap-2 text-sm text-muted"
+              >
+                <UIcon
+                  name="i-lucide-loader-2"
+                  class="w-4 h-4 animate-spin"
+                /> {{ $t('pages.asset.create.uploading') }}
               </div>
-              <input ref="fileInput" type="file" class="hidden" accept="image/*" @change="onFileChange">
-              <CameraModal v-model="showCamera" @captured="onCaptured" />
+              <input
+                ref="fileInput"
+                type="file"
+                class="hidden"
+                accept="image/*"
+                @change="onFileChange"
+              >
+              <CameraModal
+                v-model="showCamera"
+                @captured="onCaptured"
+              />
             </div>
 
-            <AttachmentManager v-model="attachments" @change="(ids) => { attachmentIds = ids }" />
+            <AttachmentManager
+              v-model="attachments"
+              @change="(ids) => { attachmentIds = ids }"
+            />
           </div>
 
           <!-- ═══ Column 2: Identity ═══ -->
           <div class="space-y-4">
-            <UFormField :label="$t('common.name')" name="name" required>
-              <UInput v-model="form.name" class="w-full" />
+            <UFormField
+              :label="$t('common.name')"
+              name="name"
+              required
+            >
+              <UInput
+                v-model="form.name"
+                class="w-full"
+              />
             </UFormField>
-            <UFormField :label="$t('common.code')" name="code">
-              <UInput v-model="form.code" :placeholder="$t('common.autoGenerated')" class="w-full" />
+            <UFormField
+              :label="$t('common.code')"
+              name="code"
+            >
+              <UInput
+                v-model="form.code"
+                :placeholder="$t('common.autoGenerated')"
+                class="w-full"
+              />
             </UFormField>
-            <UFormField :label="$t('common.category')" name="categoryId">
+            <UFormField
+              :label="$t('common.category')"
+              name="categoryId"
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedCategory" :items="categoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectCategory')" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddCategory = true }" />
+                <USelectMenu
+                  v-model="selectedCategory"
+                  :items="categoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectCategory')"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddCategory = true }"
+                />
               </div>
             </UFormField>
-            <UFormField :label="$t('common.subCategory')" name="subCategoryId">
+            <UFormField
+              :label="$t('common.subCategory')"
+              name="subCategoryId"
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedSubCategory" :items="subCategoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectSubCategory')" :disabled="!selectedCategoryId" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddSubCategory = true }" />
+                <USelectMenu
+                  v-model="selectedSubCategory"
+                  :items="subCategoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectSubCategory')"
+                  :disabled="!selectedCategoryId"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddSubCategory = true }"
+                />
               </div>
             </UFormField>
-            <UFormField :label="$t('pages.inventory.unit.label')" name="unit">
-              <USelectMenu v-model="form.unit" :items="unitOptions" value-key="value" :placeholder="$t('pages.inventory.unit.placeholder')" class="w-full" />
+            <UFormField
+              :label="$t('pages.inventory.unit.label')"
+              name="unit"
+            >
+              <USelectMenu
+                v-model="form.unit"
+                :items="unitOptions"
+                value-key="value"
+                :placeholder="$t('pages.inventory.unit.placeholder')"
+                class="w-full"
+              />
             </UFormField>
           </div>
 
           <!-- ═══ Column 3: Description + Labels ═══ -->
           <div class="space-y-4">
-            <UFormField :label="$t('common.description')" name="description">
-              <UTextarea v-model="form.description" class="w-full" :rows="3" />
+            <UFormField
+              :label="$t('common.description')"
+              name="description"
+            >
+              <UTextarea
+                v-model="form.description"
+                class="w-full"
+                :rows="3"
+              />
             </UFormField>
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.inventory.item.labels') }}</label>
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addLabel">{{ $t('common.add') }}</UButton>
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="addLabel"
+                >
+                  {{ $t('common.add') }}
+                </UButton>
               </div>
-              <div v-if="labels.length === 0" class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg">{{ $t('pages.inventory.create.noLabels') }}</div>
-              <div v-else class="space-y-2">
-                <div v-for="(label, i) in labels" :key="i" class="flex items-center gap-2">
-                  <UInputMenu v-model="label.key" :items="availableLabelKeys" placeholder="Key" class="w-full" />
-                  <UInput v-model="label.value" placeholder="Value" class="w-full" />
-                  <UButton icon="i-lucide-trash" color="error" variant="soft" size="sm" square @click="() => { labels.splice(i, 1) }" />
+              <div
+                v-if="labels.length === 0"
+                class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg"
+              >
+                {{ $t('pages.inventory.create.noLabels') }}
+              </div>
+              <div
+                v-else
+                class="space-y-2"
+              >
+                <div
+                  v-for="(label, i) in labels"
+                  :key="i"
+                  class="flex items-center gap-2"
+                >
+                  <UInputMenu
+                    v-model="label.key"
+                    :items="availableLabelKeys"
+                    placeholder="Key"
+                    class="w-full"
+                  />
+                  <UInput
+                    v-model="label.value"
+                    placeholder="Value"
+                    class="w-full"
+                  />
+                  <UButton
+                    icon="i-lucide-trash"
+                    color="error"
+                    variant="soft"
+                    size="sm"
+                    square
+                    @click="() => { labels.splice(i, 1) }"
+                  />
                 </div>
               </div>
             </div>
@@ -91,15 +259,43 @@
         </div>
 
         <div class="flex justify-end gap-2 pt-4 mt-6 border-t border-muted">
-          <UButton type="button" color="neutral" variant="outline" :to="`/inventory/${id}`">{{ $t('common.cancel') }}</UButton>
-          <UButton type="submit" color="primary" variant="outline" :loading="isSubmitting && submitMode === 'continue'" @click="() => { submitMode = 'continue' }">{{ $t('common.saveAndContinue') }}</UButton>
-          <UButton type="submit" color="primary" :loading="isSubmitting && submitMode === 'save'" @click="() => { submitMode = 'save' }">{{ $t('common.saveChanges') }}</UButton>
+          <UButton
+            type="button"
+            color="neutral"
+            variant="outline"
+            :to="`/inventory/${id}`"
+          >
+            {{ $t('common.cancel') }}
+          </UButton>
+          <UButton
+            type="submit"
+            color="primary"
+            variant="outline"
+            :loading="isSubmitting && submitMode === 'continue'"
+            @click="() => { submitMode = 'continue' }"
+          >
+            {{ $t('common.saveAndContinue') }}
+          </UButton>
+          <UButton
+            type="submit"
+            color="primary"
+            :loading="isSubmitting && submitMode === 'save'"
+            @click="() => { submitMode = 'save' }"
+          >
+            {{ $t('common.saveChanges') }}
+          </UButton>
         </div>
       </UForm>
     </UCard>
 
-    <CategoryAddModal v-model="showAddCategory" @created="onCategoryCreated" />
-    <SubCategoryAddModal v-model="showAddSubCategory" @created="onSubCategoryCreated" />
+    <CategoryAddModal
+      v-model="showAddCategory"
+      @created="onCategoryCreated"
+    />
+    <SubCategoryAddModal
+      v-model="showAddSubCategory"
+      @created="onSubCategoryCreated"
+    />
   </div>
 </template>
 
@@ -176,7 +372,6 @@ watch(selectedCategoryId, async (id2) => {
   if (id2) await fetchSubCategories(Number(id2))
 })
 
-// ── Photo ─────────────────────────────────────────────────────────────
 const fileInput = ref<HTMLInputElement | null>(null)
 const previewUrl = ref<string | null>(null)
 const isUploading = ref(false)
@@ -187,8 +382,7 @@ const uploadFile = async (file: File) => {
   isUploading.value = true
   try {
     const res = await inventoryService.uploadImage(file)
-    if (res.success && res.data) { form.image = res.data.path }
-    else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); previewUrl.value = null }
+    if (res.success && res.data) { form.image = res.data.path } else { toast.add({ title: res.message || 'Upload failed', color: 'error', icon: 'i-lucide-circle-alert' }); previewUrl.value = null }
   } finally { isUploading.value = false }
 }
 const onFileChange = (e: Event) => { const f = (e.target as HTMLInputElement).files?.[0]; if (f) uploadFile(f) }
@@ -231,7 +425,7 @@ const onSubmit = async () => {
       unit: form.unit || 'Pcs',
       subCategoryId: form.subCategoryId ?? null,
       labels: labels.value.filter(l => l.key.trim() && l.value.trim()),
-      attachmentIds: attachmentIds.value,
+      attachmentIds: attachmentIds.value
     })
     if (res.success) {
       toast.add({ title: t('pages.inventory.edit.success'), color: 'success', icon: 'i-lucide-circle-check' })

@@ -5,7 +5,10 @@
     :ui="{ content: 'sm:max-w-md', overlay: 'bg-black/40', footer: 'justify-end' }"
   >
     <template #body>
-      <div v-if="item" class="space-y-4">
+      <div
+        v-if="item"
+        class="space-y-4"
+      >
         <div class="grid grid-cols-2 gap-3 text-sm">
           <div>
             <span class="text-xs font-semibold text-dimmed uppercase tracking-wider block mb-1">{{ $t('common.employee') }}</span>
@@ -25,22 +28,63 @@
           </div>
         </div>
 
-        <UAlert color="warning" variant="soft" icon="i-lucide-info" :description="$t('pages.inventory.stockOut.returnHint')" />
+        <UAlert
+          color="warning"
+          variant="soft"
+          icon="i-lucide-info"
+          :description="$t('pages.inventory.stockOut.returnHint')"
+        />
 
-        <UForm id="stock-return-form" :schema="schema" :state="state" class="space-y-4 w-full" @submit="onSubmit">
-          <UFormField :label="$t('pages.inventory.stockOut.quantity')" name="quantity" required>
-            <UInput v-model.number="state.quantity" type="number" :min="1" :max="item.quantityRemaining" class="w-full" />
+        <UForm
+          id="stock-return-form"
+          :schema="schema"
+          :state="state"
+          class="space-y-4 w-full"
+          @submit="onSubmit"
+        >
+          <UFormField
+            :label="$t('pages.inventory.stockOut.quantity')"
+            name="quantity"
+            required
+          >
+            <UInput
+              v-model.number="state.quantity"
+              type="number"
+              :min="1"
+              :max="item.quantityRemaining"
+              class="w-full"
+            />
           </UFormField>
-          <UFormField :label="$t('common.note')" name="note">
-            <UTextarea v-model="state.note" :placeholder="$t('pages.inventory.transfer.notePlaceholder')" class="w-full" :rows="2" />
+          <UFormField
+            :label="$t('common.note')"
+            name="note"
+          >
+            <UTextarea
+              v-model="state.note"
+              :placeholder="$t('pages.inventory.transfer.notePlaceholder')"
+              class="w-full"
+              :rows="2"
+            />
           </UFormField>
         </UForm>
       </div>
     </template>
 
     <template #footer>
-      <UButton :label="$t('common.cancel')" color="neutral" variant="outline" :disabled="saving" @click="() => { open = false }" />
-      <UButton :label="$t('common.save')" color="primary" type="submit" form="stock-return-form" :loading="saving" />
+      <UButton
+        :label="$t('common.cancel')"
+        color="neutral"
+        variant="outline"
+        :disabled="saving"
+        @click="() => { open = false }"
+      />
+      <UButton
+        :label="$t('common.save')"
+        color="primary"
+        type="submit"
+        form="stock-return-form"
+        :loading="saving"
+      />
     </template>
   </UModal>
 </template>
@@ -53,7 +97,7 @@ import type { InventoryStockOutLineItem } from '~/types/inventory'
 const { t } = useI18n()
 const toast = useToast()
 
-const props = defineProps<{ employee: { id: number; name: string; employeeId: string } | null | undefined, item: InventoryStockOutLineItem | null }>()
+const props = defineProps<{ employee: { id: number, name: string, employeeId: string } | null | undefined, item: InventoryStockOutLineItem | null }>()
 const open = defineModel<boolean>({ default: false })
 const emit = defineEmits<{ done: [] }>()
 

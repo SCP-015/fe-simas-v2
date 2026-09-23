@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.subCategory.title')"
       :description="$t('pages.subCategory.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -28,7 +27,10 @@
           class="w-full md:w-52"
         />
       </template>
-      <template #actions v-if="hasPermission('sub-category:create')">
+      <template
+        v-if="hasPermission('sub-category:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -42,14 +44,21 @@
     </DataTable>
 
     <!-- Modals -->
-    <SubCategoryAddModal v-model="showAddModal" @created="fetchSubCategories" />
-    <SubCategoryUpdateModal v-model="showUpdateModal" :sub-category="selectedSubCategory" @updated="fetchSubCategories" />
-    <DeleteModal 
-      v-model="showDeleteModal" 
-      :title="$t('pages.subCategory.deleteTitle')" 
-      :item-name="selectedSubCategory?.name" 
+    <SubCategoryAddModal
+      v-model="showAddModal"
+      @created="fetchSubCategories"
+    />
+    <SubCategoryUpdateModal
+      v-model="showUpdateModal"
+      :sub-category="selectedSubCategory"
+      @updated="fetchSubCategories"
+    />
+    <DeleteModal
+      v-model="showDeleteModal"
+      :title="$t('pages.subCategory.deleteTitle')"
+      :item-name="selectedSubCategory?.name"
       :loading="isDeleting"
-      @confirm="handleDelete" 
+      @confirm="handleDelete"
     />
   </div>
 </template>
@@ -72,7 +81,6 @@ const { hasPermission } = useAuth()
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-// State
 const data = ref<SubCategory[]>([])
 const isLoading = ref(false)
 
@@ -87,15 +95,13 @@ const {
 
 const selectedSubCategory = ref<SubCategory | null>(null)
 
-// Modal states
 const showAddModal = ref(false)
 const showUpdateModal = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 
-// Category filter
 const categoryFilter = ref('all')
-const categoryOptions = ref<{ label: string; value: string }[]>([{ label: t('common.all'), value: 'all' }])
+const categoryOptions = ref<{ label: string, value: string }[]>([{ label: t('common.all'), value: 'all' }])
 
 const fetchCategories = async () => {
   const res = await categoryService.getList()
@@ -112,14 +118,12 @@ watch(categoryFilter, () => {
   fetchSubCategories()
 })
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch sub categories from API
 const fetchSubCategories = async () => {
   isLoading.value = true
   try {
@@ -138,9 +142,6 @@ const fetchSubCategories = async () => {
   }
 }
 
-
-
-// Table columns
 const baseColumns: TableColumn<SubCategory>[] = [
   {
     accessorKey: 'code',
@@ -207,17 +208,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -253,7 +254,6 @@ function getRowItems(row: Row<SubCategory>) {
   return actions
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedSubCategory.value) return
@@ -274,7 +274,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchSubCategories()
   fetchCategories()

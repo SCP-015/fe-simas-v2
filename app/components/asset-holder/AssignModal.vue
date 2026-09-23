@@ -1,18 +1,29 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.assetHolder.assignModal.title')"
     :description="$t('component.assetHolder.assignModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
-      <UForm id="assign-asset-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="assign-asset-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Asset Field (Only shown if not locked to a specific asset) -->
-        <UFormField v-if="!lockAssetId" :label="$t('common.asset')" name="assetId" required>
+        <UFormField
+          v-if="!lockAssetId"
+          :label="$t('common.asset')"
+          name="assetId"
+          required
+        >
           <USelectMenu
             v-model="selectedAsset"
             :items="assetOptions"
@@ -25,12 +36,25 @@
         </UFormField>
 
         <!-- Holder Kind Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.holderKind')" name="holderKind" required>
-          <URadioGroup v-model="form.holderKind" :items="holderKindOptions" orientation="horizontal" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.holderKind')"
+          name="holderKind"
+          required
+        >
+          <URadioGroup
+            v-model="form.holderKind"
+            :items="holderKindOptions"
+            orientation="horizontal"
+          />
         </UFormField>
 
         <!-- Employee Field -->
-        <UFormField v-if="form.holderKind === 'employee'" :label="$t('common.employee')" name="employeeId" required>
+        <UFormField
+          v-if="form.holderKind === 'employee'"
+          :label="$t('common.employee')"
+          name="employeeId"
+          required
+        >
           <USelectMenu
             v-model="selectedEmployee"
             :items="employeeOptions"
@@ -44,7 +68,12 @@
         </UFormField>
 
         <!-- Organization Field -->
-        <UFormField v-else :label="$t('common.organization')" name="organizationId" required>
+        <UFormField
+          v-else
+          :label="$t('common.organization')"
+          name="organizationId"
+          required
+        >
           <USelectMenu
             v-model="selectedOrganization"
             :items="organizationOptions"
@@ -57,13 +86,29 @@
         </UFormField>
 
         <!-- Assigned Date Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.assignmentDate')" name="assignedDate" required>
-          <UInput type="datetime-local" v-model="form.assignedDate" class="w-full" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.assignmentDate')"
+          name="assignedDate"
+          required
+        >
+          <UInput
+            v-model="form.assignedDate"
+            type="datetime-local"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Note Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.assignmentNotes')" name="assignNote">
-          <UTextarea v-model="form.assignNote" :placeholder="$t('component.assetHolder.assignModal.notesPlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.assignmentNotes')"
+          name="assignNote"
+        >
+          <UTextarea
+            v-model="form.assignNote"
+            :placeholder="$t('component.assetHolder.assignModal.notesPlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Attachment Manager -->
@@ -75,8 +120,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="assign-asset-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="assign-asset-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -89,6 +145,7 @@ import { employeeService } from '~/services/employee-service'
 import { organizationService } from '~/services/organization-service'
 import { assetService } from '~/services/asset-service'
 import type { Attachment } from '~/types/attachment'
+import type { EmployeePickerOption as EmployeeOption } from '~/types/employee'
 
 const { t } = useI18n()
 
@@ -100,29 +157,23 @@ const props = defineProps<{
 const emit = defineEmits<{ created: [] }>()
 const toast = useToast()
 
-// State
 const isSubmitting = ref(false)
 const isLoadingAssets = ref(false)
 const isLoadingEmployees = ref(false)
 const isLoadingOrganizations = ref(false)
 
-const assetOptions = ref<{ label: string; value: number }[]>([])
-const employeeOptions = ref<{
-  label: string
-  value: number
-  avatar?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-  photo?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-}[]>([])
-const organizationOptions = ref<{ label: string; value: number }[]>([])
+const assetOptions = ref<{ label: string, value: number }[]>([])
+const employeeOptions = ref<EmployeeOption[]>([])
+const organizationOptions = ref<{ label: string, value: number }[]>([])
 
-const selectedAsset = ref<{ label: string; value: number } | undefined>(undefined)
-const selectedEmployee = ref<{ label: string; value: number; avatar?: any; photo?: any } | undefined>(undefined)
-const selectedOrganization = ref<{ label: string; value: number } | undefined>(undefined)
+const selectedAsset = ref<{ label: string, value: number } | undefined>(undefined)
+const selectedEmployee = ref<EmployeeOption | undefined>(undefined)
+const selectedOrganization = ref<{ label: string, value: number } | undefined>(undefined)
 const uploadedAttachments = ref<Attachment[]>([])
 
 const holderKindOptions = computed(() => [
   { label: t('common.employee'), value: 'employee' as const },
-  { label: t('common.organization'), value: 'organization' as const },
+  { label: t('common.organization'), value: 'organization' as const }
 ])
 
 const schema = z.object({
@@ -131,7 +182,7 @@ const schema = z.object({
   employeeId: z.number().int().positive().optional(),
   organizationId: z.number().int().positive().optional(),
   assignedDate: z.string().min(1, t('component.assetHolder.assignModal.dateRequired')),
-  assignNote: z.string().optional().or(z.literal('')),
+  assignNote: z.string().optional().or(z.literal(''))
 }).superRefine((data, ctx) => {
   if (data.holderKind === 'employee' && !data.employeeId) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('component.assetHolder.assignModal.employeeRequired'), path: ['employeeId'] })
@@ -148,10 +199,9 @@ const form = reactive({
   organizationId: undefined as number | undefined,
   assignedDate: getLocalDatetimeString(), // Default to current date & time
   assignNote: '',
-  attachmentIds: [] as number[],
+  attachmentIds: [] as number[]
 })
 
-// Sync selections with form fields
 watch(selectedAsset, (val) => {
   if (val) form.assetId = val.value
 })
@@ -202,16 +252,20 @@ const loadEmployees = async () => {
       employeeOptions.value = res.data.map(e => ({
         label: `${e.name} (${e.employeeId})`,
         value: e.id,
-        photo: e.photo ? {
-          src: e.photo,
-          alt: e.name,
-          loading: 'lazy' as const
-        } : undefined,
-        avatar: e.photo ? {
-          src: e.photo,
-          alt: e.name,
-          loading: 'lazy' as const
-        } : undefined
+        photo: e.photo
+          ? {
+              src: e.photo,
+              alt: e.name,
+              loading: 'lazy' as const
+            }
+          : undefined,
+        avatar: e.photo
+          ? {
+              src: e.photo,
+              alt: e.name,
+              loading: 'lazy' as const
+            }
+          : undefined
       }))
     }
   } finally {
@@ -257,7 +311,7 @@ const handleSubmit = async () => {
       organizationId: form.holderKind === 'organization' ? form.organizationId : undefined,
       assignedDate: form.assignedDate,
       assignNote: form.assignNote,
-      attachmentIds: form.attachmentIds,
+      attachmentIds: form.attachmentIds
     })
     if (response.success) {
       toast.add({

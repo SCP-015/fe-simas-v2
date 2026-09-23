@@ -1,4 +1,4 @@
-import type { Attachment } from "./attachment"
+import type { Attachment } from './attachment'
 
 export interface AssetNote {
   id: number
@@ -17,7 +17,7 @@ export interface AssetNote {
     photo: string | null
   } | null
   attachments: Attachment[]
-  labels?: { id: number; key: string; value: string }[]
+  labels?: { id: number, key: string, value: string }[]
 }
 
 export interface AssetNotePayload {
@@ -25,5 +25,5 @@ export interface AssetNotePayload {
   date: string
   note?: string
   attachmentIds?: number[]
-  labels?: { key: string; value: string }[]
+  labels?: { key: string, value: string }[]
 }

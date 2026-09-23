@@ -1,25 +1,31 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.asset.importModal.title')"
     :description="$t('component.asset.importModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
       <div class="space-y-4">
-
         <!-- Download Template -->
         <div class="bg-muted border border-default rounded-lg p-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-file-spreadsheet" class="w-8 h-8 text-emerald-600" />
+              <UIcon
+                name="i-lucide-file-spreadsheet"
+                class="w-8 h-8 text-emerald-600"
+              />
               <div>
-                <p class="text-sm font-medium text-default">{{ $t('component.asset.importModal.downloadTemplate') }}</p>
-                <p class="text-xs text-muted">{{ $t('component.asset.importModal.useTemplate') }}</p>
+                <p class="text-sm font-medium text-default">
+                  {{ $t('component.asset.importModal.downloadTemplate') }}
+                </p>
+                <p class="text-xs text-muted">
+                  {{ $t('component.asset.importModal.useTemplate') }}
+                </p>
               </div>
             </div>
             <UButton
@@ -37,37 +43,69 @@
         <!-- File Upload Area (same pattern as Create Asset image upload) -->
         <div>
           <label class="text-sm font-medium text-default mb-1.5 block">{{ $t('component.asset.importModal.file') }}</label>
-          <div v-if="selectedFile" class="relative p-3 border border-default rounded-lg">
+          <div
+            v-if="selectedFile"
+            class="relative p-3 border border-default rounded-lg"
+          >
             <div class="flex items-center gap-3">
-              <UIcon name="i-lucide-file-check-2" class="w-8 h-8 text-emerald-600 shrink-0" />
+              <UIcon
+                name="i-lucide-file-check-2"
+                class="w-8 h-8 text-emerald-600 shrink-0"
+              />
               <div class="min-w-0 flex-1">
-                <p class="text-sm font-medium text-default truncate">{{ selectedFile.name }}</p>
-                <p class="text-xs text-muted">{{ formatFileSize(selectedFile.size) }}</p>
+                <p class="text-sm font-medium text-default truncate">
+                  {{ selectedFile.name }}
+                </p>
+                <p class="text-xs text-muted">
+                  {{ formatFileSize(selectedFile.size) }}
+                </p>
               </div>
             </div>
-            <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="clearFile" />
+            <UButton
+              icon="i-lucide-x"
+              color="error"
+              variant="solid"
+              size="xs"
+              class="absolute top-1 right-1 rounded-full"
+              @click="clearFile"
+            />
           </div>
-          <div 
-            v-else 
+          <div
+            v-else
             class="flex flex-col items-center justify-center w-full py-8 border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
             @click="triggerFileInput"
           >
-            <UIcon name="i-lucide-upload" class="w-8 h-8 text-dimmed mb-2" />
+            <UIcon
+              name="i-lucide-upload"
+              class="w-8 h-8 text-dimmed mb-2"
+            />
             <span class="text-sm text-muted">{{ $t('component.asset.importModal.dropExcel') }}</span>
             <span class="text-xs text-dimmed mt-1">{{ $t('component.asset.importModal.fileTypes') }}</span>
           </div>
-          <input ref="fileInputRef" type="file" class="hidden" accept=".xlsx,.xls" @change="onFileChange" />
+          <input
+            ref="fileInputRef"
+            type="file"
+            class="hidden"
+            accept=".xlsx,.xls"
+            @change="onFileChange"
+          >
         </div>
 
         <!-- Import Result -->
-        <div v-if="importResult" class="space-y-3">
+        <div
+          v-if="importResult"
+          class="space-y-3"
+        >
           <UAlert
             :color="importResult.errors.length > 0 ? 'warning' : 'success'"
             :icon="importResult.errors.length > 0 ? 'i-lucide-alert-triangle' : 'i-lucide-check-circle'"
             variant="soft"
             :title="`${importResult.success} successful, ${importResult.errors.length} failed`"
           >
-            <template v-if="importResult.errors.length > 0" #actions>
+            <template
+              v-if="importResult.errors.length > 0"
+              #actions
+            >
               <UButton
                 color="neutral"
                 variant="soft"
@@ -86,17 +124,29 @@
               <table class="w-full text-sm">
                 <thead>
                   <tr class="bg-elevated">
-                    <th class="text-left px-3 py-2 font-semibold text-toned w-16">{{ $t('component.asset.importModal.row') }}</th>
-                    <th class="text-left px-3 py-2 font-semibold text-toned">{{ $t('component.asset.importModal.error') }}</th>
+                    <th class="text-left px-3 py-2 font-semibold text-toned w-16">
+                      {{ $t('component.asset.importModal.row') }}
+                    </th>
+                    <th class="text-left px-3 py-2 font-semibold text-toned">
+                      {{ $t('component.asset.importModal.error') }}
+                    </th>
                   </tr>
                 </thead>
               </table>
               <div class="max-h-48 overflow-y-auto">
                 <table class="w-full text-sm">
                   <tbody>
-                    <tr v-for="err in importResult.errors" :key="err.row" class="border-t border-muted">
-                      <td class="px-3 py-2 font-semibold text-muted w-16">{{ err.row }}</td>
-                      <td class="px-3 py-2 text-default">{{ err.message }}</td>
+                    <tr
+                      v-for="err in importResult.errors"
+                      :key="err.row"
+                      class="border-t border-muted"
+                    >
+                      <td class="px-3 py-2 font-semibold text-muted w-16">
+                        {{ err.row }}
+                      </td>
+                      <td class="px-3 py-2 text-default">
+                        {{ err.message }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -104,12 +154,16 @@
             </div>
           </div>
         </div>
-
       </div>
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.close')" @click="() => { open = false }" color="neutral" variant="outline" />
+        <UButton
+          :label="$t('common.close')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
         <UButton
           v-if="!importResult"
           color="primary"
@@ -137,7 +191,7 @@ const fileInputRef = ref<HTMLInputElement>()
 const selectedFile = ref<File | null>(null)
 const isImporting = ref(false)
 const isDownloading = ref(false)
-const importResult = ref<{ success: number; errors: { row: number; message: string }[] } | null>(null)
+const importResult = ref<{ success: number, errors: { row: number, message: string }[] } | null>(null)
 
 const resetState = () => {
   selectedFile.value = null

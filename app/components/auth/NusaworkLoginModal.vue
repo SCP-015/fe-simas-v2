@@ -3,17 +3,22 @@
     v-model:open="open"
     :ui="{
       content: 'sm:max-w-sm',
-      overlay: 'bg-black/40',
+      overlay: 'bg-black/40'
     }"
     :title="$t('component.auth.nusawork.title')"
     :description="$t('component.auth.nusawork.description')"
   >
-
     <template #body>
       <div class="flex flex-col items-center gap-4 py-2">
         <!-- Loading state -->
-        <div v-if="isLoading" class="w-52 h-52 rounded-xl bg-elevated flex items-center justify-center">
-          <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-toned animate-spin" />
+        <div
+          v-if="isLoading"
+          class="w-52 h-52 rounded-xl bg-elevated flex items-center justify-center"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-8 h-8 text-toned animate-spin"
+          />
         </div>
 
         <!-- Error / Expired state -->
@@ -38,9 +43,12 @@
         </UAlert>
 
         <!-- Confirmation state: scanned, waiting for approval -->
-        <div v-else-if="status === 'confirmation' && profile" class="w-full flex flex-col items-center gap-4 py-2">
+        <div
+          v-else-if="status === 'confirmation' && profile"
+          class="w-full flex flex-col items-center gap-4 py-2"
+        >
           <UAvatar
-            :src="profile.photo"
+            :src="profile.photo ?? undefined"
             :alt="`${profile.firstName} ${profile.lastName}`"
             icon="i-lucide-user"
             size="3xl"
@@ -48,27 +56,43 @@
             loading="lazy"
           />
           <div class="text-center">
-            <p class="text-base font-bold text-highlighted">{{ profile.firstName }} {{ profile.lastName }}</p>
-            <p class="text-xs text-toned mt-0.5">{{ profile.email }}</p>
+            <p class="text-base font-bold text-highlighted">
+              {{ profile.firstName }} {{ profile.lastName }}
+            </p>
+            <p class="text-xs text-toned mt-0.5">
+              {{ profile.email }}
+            </p>
           </div>
-          <UBadge :label="$t('component.auth.nusawork.confirmed')" color="success" variant="subtle" size="sm" class="uppercase tracking-wide" />
+          <UBadge
+            :label="$t('component.auth.nusawork.confirmed')"
+            color="success"
+            variant="subtle"
+            size="sm"
+            class="uppercase tracking-wide"
+          />
           <p class="text-xs text-dimmed text-center">
             {{ $t('component.auth.nusawork.confirmInstruction') }}
           </p>
         </div>
 
         <!-- QR Code display (waiting state) -->
-        <div v-else class="relative">
+        <div
+          v-else
+          class="relative"
+        >
           <div class="w-52 h-52 rounded-xl bg-default border border-default p-2 shadow-sm">
             <img
               v-if="qrCode"
               :src="qrCode"
               alt="QR Code"
               class="w-full h-full object-contain rounded-lg"
-            />
+            >
           </div>
           <!-- Countdown badge -->
-          <div v-if="status === 'waiting'" class="absolute bottom-2 left-2 right-2 flex items-center justify-center">
+          <div
+            v-if="status === 'waiting'"
+            class="absolute bottom-2 left-2 right-2 flex items-center justify-center"
+          >
             <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm">
               <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
@@ -82,32 +106,38 @@
         </div>
 
         <!-- Instructions (only in waiting state) -->
-        <div v-if="status === 'waiting'" class="w-full space-y-2">
+        <div
+          v-if="status === 'waiting'"
+          class="w-full space-y-2"
+        >
           <div class="flex items-center gap-3 rounded-lg bg-muted px-3.5 py-3">
-            <UBadge label="1" color="success" variant="subtle" class="rounded-full w-6 h-6 justify-center" />
+            <UBadge
+              label="1"
+              color="success"
+              variant="subtle"
+              class="rounded-full w-6 h-6 justify-center"
+            />
             <span class="text-sm text-default">{{ $t('component.auth.nusawork.step1') }}</span>
           </div>
           <div class="flex items-center gap-3 rounded-lg bg-muted px-3.5 py-3">
-            <UBadge label="2" color="success" variant="subtle" class="rounded-full w-6 h-6 justify-center" />
+            <UBadge
+              label="2"
+              color="success"
+              variant="subtle"
+              class="rounded-full w-6 h-6 justify-center"
+            />
             <span class="text-sm text-default">{{ $t('component.auth.nusawork.step2') }}</span>
           </div>
         </div>
       </div>
     </template>
-
   </UModal>
 </template>
 
 <script setup lang="ts">
+import axios from 'axios'
 import { authService } from '~/services/auth-service'
-
-interface QrProfile {
-  firstName: string
-  lastName: string
-  email: string
-  photo: string
-  company?: { name: string; address: string }
-}
+import type { NusaworkQrProfile } from '~/types/auth'
 
 const { t } = useI18n()
 const open = defineModel<boolean>({ default: false })
@@ -119,7 +149,7 @@ const error = ref<string | null>(null)
 const qrToken = ref<string | null>(null)
 const qrCode = ref<string | null>(null)
 const status = ref<'idle' | 'waiting' | 'confirmation' | 'success'>('idle')
-const profile = ref<QrProfile | null>(null)
+const profile = ref<NusaworkQrProfile | null>(null)
 const countdown = ref(0)
 let pollingTimer: ReturnType<typeof setInterval> | null = null
 let countdownTimer: ReturnType<typeof setInterval> | null = null
@@ -148,8 +178,9 @@ async function generate() {
     } else {
       error.value = res.message || t('component.auth.nusawork.generateFailed')
     }
-  } catch (e: any) {
-    error.value = e?.response?.data?.message || e?.message || t('component.auth.nusawork.generateFailed')
+  } catch (e) {
+    const message = axios.isAxiosError(e) ? e.response?.data?.message : e instanceof Error ? e.message : undefined
+    error.value = message || t('component.auth.nusawork.generateFailed')
   } finally {
     isLoading.value = false
   }
@@ -216,15 +247,16 @@ async function exchangeToken(panelToken: string) {
     toast.add({
       title: t('pages.auth.signIn.loginSuccess'),
       icon: 'i-lucide-circle-check',
-      color: 'success',
+      color: 'success'
     })
     emit('success')
-  } catch (e: any) {
+  } catch (e) {
     open.value = false
+    const message = axios.isAxiosError(e) ? e.response?.data?.message : undefined
     toast.add({
-      title: e?.response?.data?.message || t('component.auth.nusawork.loginFailed'),
+      title: message || t('component.auth.nusawork.loginFailed'),
       icon: 'i-lucide-circle-x',
-      color: 'error',
+      color: 'error'
     })
   }
 }

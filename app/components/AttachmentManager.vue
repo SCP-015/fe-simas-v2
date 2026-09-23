@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-2">
-    <UFormField :label="$t('component.attachment.title')" name="attachments">
+    <UFormField
+      :label="$t('component.attachment.title')"
+      name="attachments"
+    >
       <UFileUpload
         v-model="selectedFiles"
         multiple
@@ -12,30 +15,47 @@
     </UFormField>
 
     <!-- Uploading indicator -->
-    <div v-if="isUploading" class="text-xs text-muted flex items-center gap-2 mt-1">
-      <UIcon name="i-lucide-loader-2" class="w-3.5 h-3.5 animate-spin text-primary" />
+    <div
+      v-if="isUploading"
+      class="text-xs text-muted flex items-center gap-2 mt-1"
+    >
+      <UIcon
+        name="i-lucide-loader-2"
+        class="w-3.5 h-3.5 animate-spin text-primary"
+      />
       <span>{{ $t('component.attachment.uploading') }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
-import { attachmentService } from "~/services/attachment-service"
-import type { Attachment } from "~/types/attachment"
+import { ref, watch } from 'vue'
+import { attachmentService } from '~/services/attachment-service'
+import type { Attachment } from '~/types/attachment'
+
+interface UploadedFile extends File {
+  id?: number
+  isUploaded?: boolean
+  url?: string
+}
+
+type FileUploadItem = UploadedFile | { file: File }
+
+interface PatchedCreateObjectURL {
+  (obj: Blob | MediaSource): string
+  __patched?: boolean
+}
 
 // Patch URL.createObjectURL globally to return custom url property if present on mapped File objects
 if (typeof window !== 'undefined' && window.URL) {
-  const original = window.URL.createObjectURL
-  // @ts-ignore
+  const original = window.URL.createObjectURL as PatchedCreateObjectURL
   if (!original.__patched) {
-    const patched = function (obj: any) {
-      if (obj && typeof obj === 'object' && 'url' in obj && obj.url) {
-        return obj.url
+    const patched: PatchedCreateObjectURL = (obj) => {
+      if (obj && typeof obj === 'object' && 'url' in obj && (obj as UploadedFile).url) {
+        return (obj as UploadedFile).url!
       }
       return original(obj)
     }
-    // @ts-ignore
     patched.__patched = true
     window.URL.createObjectURL = patched
   }
@@ -51,7 +71,7 @@ const emit = defineEmits<{
 }>()
 
 const isUploading = ref(false)
-const selectedFiles = ref<any[]>([])
+const selectedFiles = ref<UploadedFile[]>([])
 
 // Sync props.modelValue to selectedFiles
 watch(() => props.modelValue, (newVal) => {
@@ -61,9 +81,9 @@ watch(() => props.modelValue, (newVal) => {
   }
   const currentIds = selectedFiles.value.map(f => f.id).filter(Boolean)
   const incomingIds = newVal.map(a => a.id)
-  
+
   if (JSON.stringify(currentIds) !== JSON.stringify(incomingIds)) {
-    selectedFiles.value = newVal.map(att => {
+    selectedFiles.value = newVal.map((att) => {
       const file = new File([], att.originalName, { type: att.mimeType })
       Object.defineProperty(file, 'id', { value: att.id, writable: true, enumerable: true, configurable: true })
       Object.defineProperty(file, 'isUploaded', { value: true, writable: true, enumerable: true, configurable: true })
@@ -83,20 +103,20 @@ const deleteAttachment = async (id: number) => {
   }
 }
 
-const handleFilesUpdate = async (newFiles: any[] | null | undefined) => {
+const handleFilesUpdate = async (newFiles: FileUploadItem[] | null | undefined) => {
   const files = newFiles || []
   // 1. Detect removals
-  const newIds = files.map(f => f.id).filter(Boolean)
+  const newIds = files.map(f => ('id' in f ? f.id : undefined)).filter(Boolean)
   const oldIds = props.modelValue.map(a => a.id)
   const removedIds = oldIds.filter(id => !newIds.includes(id))
-  
+
   for (const id of removedIds) {
     await deleteAttachment(id)
   }
 
   // 2. Detect raw files to upload
-  const filesToUpload = files.filter(f => !f.isUploaded)
-  
+  const filesToUpload = files.filter(f => !('isUploaded' in f && f.isUploaded))
+
   if (filesToUpload.length > 0) {
     isUploading.value = true
     try {

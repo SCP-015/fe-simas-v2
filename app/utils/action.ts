@@ -1,5 +1,3 @@
-
-
 export const getActionIcon = (module: string, action: string) => {
   const key = `${module}:${action}`
   const icons: Record<string, string> = {
@@ -21,14 +19,14 @@ export const getActionIcon = (module: string, action: string) => {
     'stock:stock_in': 'i-lucide-package-plus',
     'stock:transfer': 'i-lucide-arrow-left-right',
     'stock:assign': 'i-lucide-user-plus',
-    'stock:return': 'i-lucide-user-minus',
+    'stock:return': 'i-lucide-user-minus'
   }
   return icons[key] || 'i-lucide-info'
 }
 
-export const getActionTheme = (module: string, action: string): { color: BadgeColor; label: string } => {
+export const getActionTheme = (module: string, action: string): { color: BadgeColor, label: string } => {
   const key = `${module}:${action}`
-  const themes: Record<string, { color: BadgeColor; label: string }> = {
+  const themes: Record<string, { color: BadgeColor, label: string }> = {
     'asset:create': { color: 'success', label: 'Asset Created' },
     'asset:update': { color: 'neutral', label: 'Asset Updated' },
     'holder:assign': { color: 'primary', label: 'Assigned' },
@@ -47,7 +45,7 @@ export const getActionTheme = (module: string, action: string): { color: BadgeCo
     'stock:stock_in': { color: 'success', label: 'Stock In' },
     'stock:transfer': { color: 'primary', label: 'Transfer' },
     'stock:assign': { color: 'primary', label: 'Assigned' },
-    'stock:return': { color: 'warning', label: 'Returned' },
+    'stock:return': { color: 'warning', label: 'Returned' }
   }
   return themes[key] || { color: 'neutral', label: `${module}:${action}` }
 }

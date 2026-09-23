@@ -9,7 +9,7 @@
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="paginatedData"
       :columns="columns"
       :loading="isLoading"
@@ -36,7 +36,6 @@ definePageMeta({
 
 const NuxtImg = resolveComponent('NuxtImg')
 
-// Table controls state
 const search = ref('')
 const perPage = ref(10)
 const page = ref(1)
@@ -51,7 +50,6 @@ const fetchFeedback = async () => {
   try {
     const response = await feedbackService.getAll()
     if (response.success && response.data) {
-      // Sort feedback by date descending
       feedbacks.value = response.data.sort((a, b) => {
         const timeA = Number(a.timestamp) || 0
         const timeB = Number(b.timestamp) || 0
@@ -63,7 +61,6 @@ const fetchFeedback = async () => {
   }
 }
 
-// Watch search to reset page
 watch(search, () => {
   page.value = 1
 })
@@ -73,10 +70,10 @@ const filteredData = computed(() => {
   let result = feedbacks.value
   if (search.value.trim()) {
     const q = search.value.toLowerCase()
-    result = result.filter(item => 
-      item.message.toLowerCase().includes(q) ||
-      item.type.toLowerCase().includes(q) ||
-      (item.url && item.url.toLowerCase().includes(q))
+    result = result.filter(item =>
+      item.message.toLowerCase().includes(q)
+      || item.type.toLowerCase().includes(q)
+      || (item.url && item.url.toLowerCase().includes(q))
     )
   }
   return result
@@ -95,9 +92,6 @@ const meta = computed(() => {
   return { total, from, to }
 })
 
-
-
-// Table columns: Time, URL, Message, Attachment, Reply (Matching style rules of User Profile / Category table cells)
 const columns: TableColumn<FeedbackItem>[] = [
   {
     accessorKey: 'timestamp',
@@ -134,11 +128,11 @@ const columns: TableColumn<FeedbackItem>[] = [
     cell: ({ row }) => {
       const imgs = row.original.images
       if (!imgs || !imgs.length) return h('span', { class: 'text-dimmed text-sm' }, '-')
-      
+
       return h(
         'div',
         { class: 'flex flex-wrap gap-1.5 py-1' },
-        imgs.map((img) => 
+        imgs.map(img =>
           h(NuxtImg, {
             src: img,
             alt: 'Screenshot',

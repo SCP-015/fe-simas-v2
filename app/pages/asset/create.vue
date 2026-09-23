@@ -1,121 +1,342 @@
 <template>
   <div class="space-y-6">
-    <Header :title="$t('pages.asset.create.title')" :description="$t('pages.asset.create.description')" />
+    <Header
+      :title="$t('pages.asset.create.title')"
+      :description="$t('pages.asset.create.description')"
+    />
 
     <UCard class="w-full">
       <div class="w-full mb-4">
-        <UButton :label="$t('common.back')" to="/asset" color="neutral" icon="i-lucide-arrow-left" variant="link" />
+        <UButton
+          :label="$t('common.back')"
+          to="/asset"
+          color="neutral"
+          icon="i-lucide-arrow-left"
+          variant="link"
+        />
       </div>
-      <UForm id="create-asset-form" :schema="schema" :state="form" @submit="handleSubmit">
+      <UForm
+        id="create-asset-form"
+        :schema="schema"
+        :state="form"
+        @submit="handleSubmit"
+      >
         <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
-
           <!-- ═══ Column 1: Identity ═══ -->
           <div class="space-y-4">
             <div>
               <div class="flex justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.asset.create.assetImage') }}</label>
-                <UButton icon="i-lucide-camera" color="primary" variant="soft" size="xs" @click="() => { showCamera = true }">{{ $t('pages.asset.create.takePhoto') }}</UButton>
+                <UButton
+                  icon="i-lucide-camera"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="() => { showCamera = true }"
+                >
+                  {{ $t('pages.asset.create.takePhoto') }}
+                </UButton>
               </div>
 
-              <div v-if="previewUrl" class="relative inline-block w-full aspect-square">
-                <NuxtImg :src="previewUrl" class="w-full h-full rounded-lg object-cover border border-default" />
-                <UButton icon="i-lucide-x" color="error" variant="solid" size="xs" class="absolute top-1 right-1 rounded-full" @click="removeImage(form)" />
+              <div
+                v-if="previewUrl"
+                class="relative inline-block w-full aspect-square"
+              >
+                <NuxtImg
+                  :src="previewUrl"
+                  class="w-full h-full rounded-lg object-cover border border-default"
+                />
+                <UButton
+                  icon="i-lucide-x"
+                  color="error"
+                  variant="solid"
+                  size="xs"
+                  class="absolute top-1 right-1 rounded-full"
+                  @click="removeImage(form)"
+                />
               </div>
-              <div v-else class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors" @click="triggerFileInput">
-                <UIcon name="i-lucide-upload" class="w-8 h-8 text-dimmed mb-2" />
+              <div
+                v-else
+                class="flex flex-col items-center justify-center w-full aspect-square border-2 border-dashed border-default rounded-lg cursor-pointer hover:border-primary transition-colors"
+                @click="triggerFileInput"
+              >
+                <UIcon
+                  name="i-lucide-upload"
+                  class="w-8 h-8 text-dimmed mb-2"
+                />
                 <span class="text-sm text-muted">{{ $t('pages.asset.create.dropImage') }}</span>
                 <span class="text-xs text-dimmed mt-1">{{ $t('pages.asset.create.imageHint') }}</span>
               </div>
-              <div v-if="isUploading" class="mt-2 flex items-center gap-2 text-sm text-muted">
-                <UIcon name="i-lucide-loader-2" class="w-4 h-4 animate-spin" /> {{ $t('pages.asset.create.uploading') }}
+              <div
+                v-if="isUploading"
+                class="mt-2 flex items-center gap-2 text-sm text-muted"
+              >
+                <UIcon
+                  name="i-lucide-loader-2"
+                  class="w-4 h-4 animate-spin"
+                /> {{ $t('pages.asset.create.uploading') }}
               </div>
-              <input ref="fileInput" type="file" class="hidden" accept="image/*" @change="onFileChange($event, form)" />
-              <CameraModal v-model="showCamera" @captured="(file: File) => handleUploadImageFile(file, form)" />
+              <input
+                ref="fileInput"
+                type="file"
+                class="hidden"
+                accept="image/*"
+                @change="onFileChange($event, form)"
+              >
+              <CameraModal
+                v-model="showCamera"
+                @captured="(file: File) => handleUploadImageFile(file, form)"
+              />
             </div>
 
             <AttachmentManager
               v-model="uploadedAssetAttachments"
               @change="onAssetAttachmentsChanged"
             />
-
           </div>
-          
+
           <!-- ═══ Column 2: Details ═══ -->
           <div class="space-y-4">
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.asset.create.codeLabel') }} <span class="text-red-500">*</span></label>
                 <div class="flex items-center gap-1">
-                  <UButton icon="i-lucide-scan" color="neutral" variant="soft" size="xs" @click="openCodeScanner(-1)">{{ $t('pages.asset.create.scan') }}</UButton>
-                  <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addCode">{{ $t('pages.asset.create.addCode') }}</UButton>
+                  <UButton
+                    icon="i-lucide-scan"
+                    color="neutral"
+                    variant="soft"
+                    size="xs"
+                    @click="openCodeScanner(-1)"
+                  >
+                    {{ $t('pages.asset.create.scan') }}
+                  </UButton>
+                  <UButton
+                    icon="i-lucide-plus"
+                    color="primary"
+                    variant="soft"
+                    size="xs"
+                    @click="addCode"
+                  >
+                    {{ $t('pages.asset.create.addCode') }}
+                  </UButton>
                 </div>
               </div>
               <div class="space-y-3">
-                <div v-for="(entry, index) in codes" :key="index" class="p-3 border border-default rounded-lg space-y-2">
+                <div
+                  v-for="(entry, index) in codes"
+                  :key="index"
+                  class="p-3 border border-default rounded-lg space-y-2"
+                >
                   <div class="flex items-center gap-2">
                     <div class="relative w-full">
-                      <UInput v-model="entry.code" :placeholder="$t('pages.asset.create.codePlaceholder')" class="w-full" />
-                      <div v-if="codeStatuses[index] || isDuplicateCode(index)" class="absolute right-2 top-1/2 -translate-y-1/2">
-                        <UIcon v-if="isDuplicateCode(index)" name="i-lucide-circle-x" class="w-4 h-4 text-red-500" />
-                        <UIcon v-else-if="codeStatuses[index] === 'checking'" name="i-lucide-loader-2" class="w-4 h-4 text-dimmed animate-spin" />
-                        <UIcon v-else-if="codeStatuses[index] === 'available'" name="i-lucide-circle-check" class="w-4 h-4 text-green-500" />
-                        <UIcon v-else-if="codeStatuses[index] === 'exists'" name="i-lucide-circle-x" class="w-4 h-4 text-red-500" />
+                      <UInput
+                        v-model="entry.code"
+                        :placeholder="$t('pages.asset.create.codePlaceholder')"
+                        class="w-full"
+                      />
+                      <div
+                        v-if="codeStatuses[index] || isDuplicateCode(index)"
+                        class="absolute right-2 top-1/2 -translate-y-1/2"
+                      >
+                        <UIcon
+                          v-if="isDuplicateCode(index)"
+                          name="i-lucide-circle-x"
+                          class="w-4 h-4 text-red-500"
+                        />
+                        <UIcon
+                          v-else-if="codeStatuses[index] === 'checking'"
+                          name="i-lucide-loader-2"
+                          class="w-4 h-4 text-dimmed animate-spin"
+                        />
+                        <UIcon
+                          v-else-if="codeStatuses[index] === 'available'"
+                          name="i-lucide-circle-check"
+                          class="w-4 h-4 text-green-500"
+                        />
+                        <UIcon
+                          v-else-if="codeStatuses[index] === 'exists'"
+                          name="i-lucide-circle-x"
+                          class="w-4 h-4 text-red-500"
+                        />
                       </div>
                     </div>
-                    <UButton v-if="codes.length > 1" icon="i-lucide-trash" color="error" variant="soft" size="sm" square @click="removeCode(index)" />
-                    <UButton icon="i-lucide-scan" color="neutral" variant="soft" size="sm" square @click="openCodeScanner(index)" title="Scan barcode" />
+                    <UButton
+                      v-if="codes.length > 1"
+                      icon="i-lucide-trash"
+                      color="error"
+                      variant="soft"
+                      size="sm"
+                      square
+                      @click="removeCode(index)"
+                    />
+                    <UButton
+                      icon="i-lucide-scan"
+                      color="neutral"
+                      variant="soft"
+                      size="sm"
+                      square
+                      title="Scan barcode"
+                      @click="openCodeScanner(index)"
+                    />
                   </div>
-                  <p v-if="isDuplicateCode(index)" class="text-xs text-red-500">{{ $t('pages.asset.create.duplicateCode') }}</p>
-                  <p v-else-if="codeStatuses[index] === 'exists'" class="text-xs text-red-500">{{ $t('pages.asset.create.codeExists', { code: entry.code }) }}</p>
-                  <p v-else-if="codeStatuses[index] === 'available'" class="text-xs text-green-500">{{ $t('pages.asset.create.codeAvailable') }}</p>
-                  <UInput :model-value="entry.bleTagMac" placeholder="AA:BB:CC:DD:EE:FF" class="w-full" maxlength="17" @update:model-value="(v: string) => entry.bleTagMac = formatMacAddress(v)">
+                  <p
+                    v-if="isDuplicateCode(index)"
+                    class="text-xs text-red-500"
+                  >
+                    {{ $t('pages.asset.create.duplicateCode') }}
+                  </p>
+                  <p
+                    v-else-if="codeStatuses[index] === 'exists'"
+                    class="text-xs text-red-500"
+                  >
+                    {{ $t('pages.asset.create.codeExists', { code: entry.code }) }}
+                  </p>
+                  <p
+                    v-else-if="codeStatuses[index] === 'available'"
+                    class="text-xs text-green-500"
+                  >
+                    {{ $t('pages.asset.create.codeAvailable') }}
+                  </p>
+                  <UInput
+                    :model-value="entry.bleTagMac"
+                    placeholder="AA:BB:CC:DD:EE:FF"
+                    class="w-full"
+                    maxlength="17"
+                    @update:model-value="(v: string) => entry.bleTagMac = formatMacAddress(v)"
+                  >
                     <template #leading>
-                      <UIcon name="i-lucide-bluetooth" class="w-4 h-4" />
+                      <UIcon
+                        name="i-lucide-bluetooth"
+                        class="w-4 h-4"
+                      />
                     </template>
                   </UInput>
                 </div>
               </div>
-              <AssetScannerModal v-model="showCodeScanner" :auto-close="scanAutoClose" @scanned="onCodeScanned" />
+              <AssetScannerModal
+                v-model="showCodeScanner"
+                :auto-close="scanAutoClose"
+                @scanned="onCodeScanned"
+              />
             </div>
-  
-            <UFormField :label="$t('pages.asset.create.nameLabel')" name="name" required>
-              <UInput v-model="form.name" :placeholder="$t('pages.asset.create.namePlaceholder')" class="w-full" />
+
+            <UFormField
+              :label="$t('pages.asset.create.nameLabel')"
+              name="name"
+              required
+            >
+              <UInput
+                v-model="form.name"
+                :placeholder="$t('pages.asset.create.namePlaceholder')"
+                class="w-full"
+              />
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.categoryLabel')" name="categoryId" required>
+            <UFormField
+              :label="$t('pages.asset.create.categoryLabel')"
+              name="categoryId"
+              required
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedCategory" :items="categoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectCategory')" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddCategory = true }" />
+                <USelectMenu
+                  v-model="selectedCategory"
+                  :items="categoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectCategory')"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddCategory = true }"
+                />
               </div>
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.subCategoryLabel')" name="subCategoryId" required>
+            <UFormField
+              :label="$t('pages.asset.create.subCategoryLabel')"
+              name="subCategoryId"
+              required
+            >
               <div class="flex items-center gap-2">
-                <USelectMenu v-model="selectedSubCategory" :items="subCategoryOptions" searchable :searchable-placeholder="$t('common.search')" :placeholder="$t('pages.asset.create.selectSubCategory')" :disabled="!selectedCategoryId || isLoadingSubCategories" class="w-full" />
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square @click="() => { showAddSubCategory = true }" />
+                <USelectMenu
+                  v-model="selectedSubCategory"
+                  :items="subCategoryOptions"
+                  searchable
+                  :searchable-placeholder="$t('common.search')"
+                  :placeholder="$t('pages.asset.create.selectSubCategory')"
+                  :disabled="!selectedCategoryId || isLoadingSubCategories"
+                  class="w-full"
+                />
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="sm"
+                  square
+                  @click="() => { showAddSubCategory = true }"
+                />
               </div>
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.descriptionLabel')" name="description">
-              <UTextarea v-model="form.description" :placeholder="$t('pages.asset.create.descriptionPlaceholder')" class="w-full" :rows="3" />
+            <UFormField
+              :label="$t('pages.asset.create.descriptionLabel')"
+              name="description"
+            >
+              <UTextarea
+                v-model="form.description"
+                :placeholder="$t('pages.asset.create.descriptionPlaceholder')"
+                class="w-full"
+                :rows="3"
+              />
             </UFormField>
           </div>
 
           <!-- ═══ Column 3: Classification ═══ -->
           <div class="space-y-4">
-            <UFormField :label="$t('pages.asset.create.brandLabel')" name="brand">
-              <UInput v-model="form.brand" :placeholder="$t('pages.asset.create.brandPlaceholder')" class="w-full" />
+            <UFormField
+              :label="$t('pages.asset.create.brandLabel')"
+              name="brand"
+            >
+              <UInput
+                v-model="form.brand"
+                :placeholder="$t('pages.asset.create.brandPlaceholder')"
+                class="w-full"
+              />
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.modelLabel')" name="model">
-              <UInput v-model="form.model" :placeholder="$t('pages.asset.create.modelPlaceholder')" class="w-full" />
+            <UFormField
+              :label="$t('pages.asset.create.modelLabel')"
+              name="model"
+            >
+              <UInput
+                v-model="form.model"
+                :placeholder="$t('pages.asset.create.modelPlaceholder')"
+                class="w-full"
+              />
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.purchaseDateLabel')" name="purchaseDate">
-              <UInputDate v-model="purchaseDateVal" class="w-full">
+            <UFormField
+              :label="$t('pages.asset.create.purchaseDateLabel')"
+              name="purchaseDate"
+            >
+              <UInputDate
+                v-model="purchaseDateVal"
+                class="w-full"
+              >
                 <template #trailing>
                   <UPopover>
-                    <UButton icon="i-lucide-calendar" color="neutral" variant="ghost" size="sm" square />
+                    <UButton
+                      icon="i-lucide-calendar"
+                      color="neutral"
+                      variant="ghost"
+                      size="sm"
+                      square
+                    />
                     <template #content>
                       <UCalendar v-model="purchaseDateVal" />
                     </template>
@@ -124,8 +345,15 @@
               </UInputDate>
             </UFormField>
 
-            <UFormField :label="$t('pages.asset.create.priceLabel')" name="price">
-              <UInput v-model="priceDisplay" placeholder="0" class="w-full">
+            <UFormField
+              :label="$t('pages.asset.create.priceLabel')"
+              name="price"
+            >
+              <UInput
+                v-model="priceDisplay"
+                placeholder="0"
+                class="w-full"
+              >
                 <template #leading>
                   <span class="text-muted text-sm">Rp</span>
                 </template>
@@ -133,15 +361,31 @@
             </UFormField>
 
             <div class="grid grid-cols-2 gap-3">
-              <UFormField :label="$t('pages.asset.create.usefulLifeLabel')" name="usefulLife">
-                <UInput v-model.number="form.usefulLife" type="number" min="1" :placeholder="$t('pages.asset.create.usefulLifePlaceholder')" class="w-full">
+              <UFormField
+                :label="$t('pages.asset.create.usefulLifeLabel')"
+                name="usefulLife"
+              >
+                <UInput
+                  v-model.number="form.usefulLife"
+                  type="number"
+                  min="1"
+                  :placeholder="$t('pages.asset.create.usefulLifePlaceholder')"
+                  class="w-full"
+                >
                   <template #trailing>
                     <span class="text-dimmed text-xs">{{ $t('pages.asset.create.usefulLifeUnit') }}</span>
                   </template>
                 </UInput>
               </UFormField>
-              <UFormField :label="$t('pages.asset.create.monthlyDepreciationLabel')" name="monthlyDepreciation">
-                <UInput :model-value="monthlyDepreciationDisplay" readonly class="w-full bg-muted">
+              <UFormField
+                :label="$t('pages.asset.create.monthlyDepreciationLabel')"
+                name="monthlyDepreciation"
+              >
+                <UInput
+                  :model-value="monthlyDepreciationDisplay"
+                  readonly
+                  class="w-full bg-muted"
+                >
                   <template #leading>
                     <span class="text-muted text-sm">Rp</span>
                   </template>
@@ -149,13 +393,18 @@
               </UFormField>
             </div>
             <p class="text-xs text-dimmed -mt-2 flex items-start gap-1">
-              <UIcon name="i-lucide-info" class="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              <UIcon
+                name="i-lucide-info"
+                class="w-3.5 h-3.5 shrink-0 mt-0.5"
+              />
               <span>{{ $t('pages.asset.create.depreciationHint') }}</span>
             </p>
 
-
-
-            <UFormField :label="$t('pages.asset.create.statusLabel')" name="status" required>
+            <UFormField
+              :label="$t('pages.asset.create.statusLabel')"
+              name="status"
+              required
+            >
               <USelect
                 v-model="form.status"
                 :items="statusOptions"
@@ -168,13 +417,30 @@
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="text-sm font-medium text-default">{{ $t('pages.asset.create.labelsLabel') }}</label>
-                <UButton icon="i-lucide-plus" color="primary" variant="soft" size="xs" @click="addLabel">{{ $t('common.add') }}</UButton>
+                <UButton
+                  icon="i-lucide-plus"
+                  color="primary"
+                  variant="soft"
+                  size="xs"
+                  @click="addLabel"
+                >
+                  {{ $t('common.add') }}
+                </UButton>
               </div>
-              <div v-if="labels.length === 0" class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg">
+              <div
+                v-if="labels.length === 0"
+                class="text-sm text-dimmed py-3 text-center border border-dashed border-default rounded-lg"
+              >
                 {{ $t('pages.asset.create.noLabels') }}
               </div>
-              <div v-else class="space-y-2">
-                <div v-for="(label, index) in labels" :key="index">
+              <div
+                v-else
+                class="space-y-2"
+              >
+                <div
+                  v-for="(label, index) in labels"
+                  :key="index"
+                >
                   <div class="flex items-center gap-2">
                     <UInputMenu
                       v-model="label.key"
@@ -183,10 +449,26 @@
                       placeholder="Key"
                       class="w-full"
                     />
-                    <UInput v-model="label.value" placeholder="Value" class="w-full" />
-                    <UButton icon="i-lucide-trash" color="error" variant="soft" size="sm" square @click="removeLabel(index)" />
+                    <UInput
+                      v-model="label.value"
+                      placeholder="Value"
+                      class="w-full"
+                    />
+                    <UButton
+                      icon="i-lucide-trash"
+                      color="error"
+                      variant="soft"
+                      size="sm"
+                      square
+                      @click="removeLabel(index)"
+                    />
                   </div>
-                  <p v-if="isDuplicateLabelKey(index)" class="text-xs text-red-500 mt-1">{{ $t('pages.asset.create.duplicateKey', { key: label.key }) }}</p>
+                  <p
+                    v-if="isDuplicateLabelKey(index)"
+                    class="text-xs text-red-500 mt-1"
+                  >
+                    {{ $t('pages.asset.create.duplicateKey', { key: label.key }) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -196,14 +478,19 @@
         <!-- Feature Settings -->
         <div class="mt-8 pt-6 border-t border-muted col-span-full">
           <h3 class="text-md font-semibold text-highlighted mb-4 flex items-center gap-2">
-            <UIcon name="i-lucide-toggle-left" class="w-5 h-5 text-primary-500" />
+            <UIcon
+              name="i-lucide-toggle-left"
+              class="w-5 h-5 text-primary-500"
+            />
             {{ $t('pages.asset.create.assetFeatures') }}
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="p-4 rounded-lg border border-muted bg-muted/50 flex items-center justify-between">
               <div>
                 <span class="font-medium text-sm text-highlighted block">{{ $t('pages.asset.create.featureHolder') }}</span>
-                <p class="text-xs text-muted">{{ $t('pages.asset.create.featureHolderDesc') }}</p>
+                <p class="text-xs text-muted">
+                  {{ $t('pages.asset.create.featureHolderDesc') }}
+                </p>
               </div>
               <USwitch v-model="form.hasHolder" />
             </div>
@@ -211,7 +498,9 @@
             <div class="p-4 rounded-lg border border-muted bg-muted/50 flex items-center justify-between">
               <div>
                 <span class="font-medium text-sm text-highlighted block">{{ $t('pages.asset.create.featureLocation') }}</span>
-                <p class="text-xs text-muted">{{ $t('pages.asset.create.featureLocationDesc') }}</p>
+                <p class="text-xs text-muted">
+                  {{ $t('pages.asset.create.featureLocationDesc') }}
+                </p>
               </div>
               <USwitch v-model="form.hasLocation" />
             </div>
@@ -219,7 +508,9 @@
             <div class="p-4 rounded-lg border border-muted bg-muted/50 flex items-center justify-between">
               <div>
                 <span class="font-medium text-sm text-highlighted block">{{ $t('pages.asset.create.featureMaintenance') }}</span>
-                <p class="text-xs text-muted">{{ $t('pages.asset.create.featureMaintenanceDesc') }}</p>
+                <p class="text-xs text-muted">
+                  {{ $t('pages.asset.create.featureMaintenanceDesc') }}
+                </p>
               </div>
               <USwitch v-model="form.hasMaintenance" />
             </div>
@@ -227,22 +518,45 @@
         </div>
 
         <!-- Optional Initial Assignment & Location -->
-        <div v-if="form.hasHolder || form.hasLocation" class="mt-8 pt-6 border-t border-muted col-span-full">
+        <div
+          v-if="form.hasHolder || form.hasLocation"
+          class="mt-8 pt-6 border-t border-muted col-span-full"
+        >
           <h3 class="text-md font-semibold text-highlighted mb-4 flex items-center gap-2">
-            <UIcon name="i-lucide-settings-2" class="w-5 h-5 text-primary-500" />
+            <UIcon
+              name="i-lucide-settings-2"
+              class="w-5 h-5 text-primary-500"
+            />
             {{ $t('pages.asset.create.initialSection') }}
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Assignment Section -->
-            <div v-if="form.hasHolder" class="p-4 rounded-lg border border-muted bg-muted/50 space-y-4">
+            <div
+              v-if="form.hasHolder"
+              class="p-4 rounded-lg border border-muted bg-muted/50 space-y-4"
+            >
               <div class="font-medium text-sm text-highlighted flex items-center gap-1.5 border-b border-muted pb-2">
-                <UIcon name="i-lucide-user-plus" class="w-4 h-4 text-primary-500" />
+                <UIcon
+                  name="i-lucide-user-plus"
+                  class="w-4 h-4 text-primary-500"
+                />
                 {{ $t('pages.asset.create.assignHolder') }}
               </div>
-              <UFormField :label="$t('component.assetHolder.assignModal.holderKind')" name="holderKind">
-                <URadioGroup v-model="form.holderKind" :items="holderKindOptions" orientation="horizontal" />
+              <UFormField
+                :label="$t('component.assetHolder.assignModal.holderKind')"
+                name="holderKind"
+              >
+                <URadioGroup
+                  v-model="form.holderKind"
+                  :items="holderKindOptions"
+                  orientation="horizontal"
+                />
               </UFormField>
-              <UFormField v-if="form.holderKind === 'employee'" :label="$t('common.employee')" name="employeeId">
+              <UFormField
+                v-if="form.holderKind === 'employee'"
+                :label="$t('common.employee')"
+                name="employeeId"
+              >
                 <USelectMenu
                   v-model="selectedEmployee"
                   :items="employeeOptions"
@@ -254,7 +568,11 @@
                   class="w-full"
                 />
               </UFormField>
-              <UFormField v-else :label="$t('common.organization')" name="organizationId">
+              <UFormField
+                v-else
+                :label="$t('common.organization')"
+                name="organizationId"
+              >
                 <USelectMenu
                   v-model="selectedOrganization"
                   :items="organizationOptions"
@@ -265,11 +583,28 @@
                   class="w-full"
                 />
               </UFormField>
-              <UFormField v-if="form.employeeId || form.organizationId" :label="$t('pages.asset.create.assignmentDate')" name="assignedDate">
-                <UInput type="datetime-local" v-model="form.assignedDate" class="w-full" />
+              <UFormField
+                v-if="form.employeeId || form.organizationId"
+                :label="$t('pages.asset.create.assignmentDate')"
+                name="assignedDate"
+              >
+                <UInput
+                  v-model="form.assignedDate"
+                  type="datetime-local"
+                  class="w-full"
+                />
               </UFormField>
-              <UFormField v-if="form.employeeId || form.organizationId" :label="$t('pages.asset.create.assignmentNotes')" name="assignNote">
-                <UTextarea v-model="form.assignNote" :placeholder="$t('pages.asset.create.assignNotesPlaceholder')" class="w-full" :rows="2" />
+              <UFormField
+                v-if="form.employeeId || form.organizationId"
+                :label="$t('pages.asset.create.assignmentNotes')"
+                name="assignNote"
+              >
+                <UTextarea
+                  v-model="form.assignNote"
+                  :placeholder="$t('pages.asset.create.assignNotesPlaceholder')"
+                  class="w-full"
+                  :rows="2"
+                />
               </UFormField>
               <AttachmentManager
                 v-if="form.employeeId || form.organizationId"
@@ -279,12 +614,21 @@
             </div>
 
             <!-- Location Section -->
-            <div v-if="form.hasLocation" class="p-4 rounded-lg border border-muted bg-muted/50 space-y-4">
+            <div
+              v-if="form.hasLocation"
+              class="p-4 rounded-lg border border-muted bg-muted/50 space-y-4"
+            >
               <div class="font-medium text-sm text-highlighted flex items-center gap-1.5 border-b border-muted pb-2">
-                <UIcon name="i-lucide-map-pin" class="w-4 h-4 text-primary-500" />
+                <UIcon
+                  name="i-lucide-map-pin"
+                  class="w-4 h-4 text-primary-500"
+                />
                 {{ $t('pages.asset.create.setInitialLocation') }}
               </div>
-              <UFormField :label="$t('common.branch')" name="branchId">
+              <UFormField
+                :label="$t('common.branch')"
+                name="branchId"
+              >
                 <USelectMenu
                   v-model="selectedBranch"
                   :items="branchOptions"
@@ -295,7 +639,10 @@
                   class="w-full"
                 />
               </UFormField>
-              <UFormField :label="$t('common.location')" name="locationId">
+              <UFormField
+                :label="$t('common.location')"
+                name="locationId"
+              >
                 <div class="flex items-center gap-2">
                   <USelectMenu
                     v-model="selectedLocation"
@@ -307,14 +654,39 @@
                     :loading="isLoadingLocations"
                     class="w-full"
                   />
-                  <UButton icon="i-lucide-plus" color="primary" variant="soft" size="sm" square :disabled="!selectedBranch" @click="() => { showAddLocation = true }" />
+                  <UButton
+                    icon="i-lucide-plus"
+                    color="primary"
+                    variant="soft"
+                    size="sm"
+                    square
+                    :disabled="!selectedBranch"
+                    @click="() => { showAddLocation = true }"
+                  />
                 </div>
               </UFormField>
-              <UFormField v-if="form.locationId" :label="$t('pages.asset.create.relocationDate')" name="locationDate">
-                <UInput type="datetime-local" v-model="form.locationDate" class="w-full" />
+              <UFormField
+                v-if="form.locationId"
+                :label="$t('pages.asset.create.relocationDate')"
+                name="locationDate"
+              >
+                <UInput
+                  v-model="form.locationDate"
+                  type="datetime-local"
+                  class="w-full"
+                />
               </UFormField>
-              <UFormField v-if="form.locationId" :label="$t('pages.asset.create.relocationNotes')" name="locationNote">
-                <UTextarea v-model="form.locationNote" :placeholder="$t('pages.asset.create.relocationNotesPlaceholder')" class="w-full" :rows="2" />
+              <UFormField
+                v-if="form.locationId"
+                :label="$t('pages.asset.create.relocationNotes')"
+                name="locationNote"
+              >
+                <UTextarea
+                  v-model="form.locationNote"
+                  :placeholder="$t('pages.asset.create.relocationNotesPlaceholder')"
+                  class="w-full"
+                  :rows="2"
+                />
               </UFormField>
               <AttachmentManager
                 v-if="form.locationId"
@@ -327,16 +699,46 @@
 
         <!-- Footer Actions -->
         <div class="flex justify-end gap-2 pt-4 mt-6 border-t border-muted">
-          <UButton :label="$t('common.cancel')" color="neutral" variant="outline" :disabled="isSubmitting" to="/asset" />
-          <UButton :label="$t('common.saveAndCreateAnother')" color="primary" variant="outline" :loading="isSubmitting && submitMode === 'another'" :disabled="isUploading || isSubmitting || hasInvalidCodes || hasDuplicateLabelKeys" @click="() => { submitMode = 'another'; submitForm() }" />
-          <UButton :label="$t('common.save')" type="submit" color="primary" :loading="isSubmitting && submitMode === 'save'" :disabled="isUploading || isSubmitting || hasInvalidCodes || hasDuplicateLabelKeys" @click="() => { submitMode = 'save' }" />
+          <UButton
+            :label="$t('common.cancel')"
+            color="neutral"
+            variant="outline"
+            :disabled="isSubmitting"
+            to="/asset"
+          />
+          <UButton
+            :label="$t('common.saveAndCreateAnother')"
+            color="primary"
+            variant="outline"
+            :loading="isSubmitting && submitMode === 'another'"
+            :disabled="isUploading || isSubmitting || hasInvalidCodes || hasDuplicateLabelKeys"
+            @click="() => { submitMode = 'another'; submitForm() }"
+          />
+          <UButton
+            :label="$t('common.save')"
+            type="submit"
+            color="primary"
+            :loading="isSubmitting && submitMode === 'save'"
+            :disabled="isUploading || isSubmitting || hasInvalidCodes || hasDuplicateLabelKeys"
+            @click="() => { submitMode = 'save' }"
+          />
         </div>
       </UForm>
     </UCard>
 
-    <CategoryAddModal v-model="showAddCategory" @created="onCategoryCreated" />
-    <SubCategoryAddModal v-model="showAddSubCategory" @created="() => onSubCategoryCreated(form)" />
-    <LocationAddModal v-model="showAddLocation" :default-branch-id="form.branchId || undefined" @created="onLocationCreated" />
+    <CategoryAddModal
+      v-model="showAddCategory"
+      @created="onCategoryCreated"
+    />
+    <SubCategoryAddModal
+      v-model="showAddSubCategory"
+      @created="() => onSubCategoryCreated(form)"
+    />
+    <LocationAddModal
+      v-model="showAddLocation"
+      :default-branch-id="form.branchId || undefined"
+      @created="onLocationCreated"
+    />
   </div>
 </template>
 
@@ -349,6 +751,7 @@ import { organizationService } from '~/services/organization-service'
 import { branchService } from '~/services/branch-service'
 import { locationService } from '~/services/location-service'
 import type { Attachment } from '~/types/attachment'
+import type { EmployeePickerOption } from '~/types/employee'
 
 const { t } = useI18n()
 
@@ -395,17 +798,15 @@ const {
   showAddCategory, showAddSubCategory,
   fetchCategories, fetchSubCategories, onCategoryCreated, onSubCategoryCreated,
   fileInput, triggerFileInput, onFileChange, handleUploadImageFile, removeImage,
-  makePurchaseDateComputed, makePriceDisplayComputed, formatMacAddress,
+  makePurchaseDateComputed, makePriceDisplayComputed, formatMacAddress
 } = useAssetForm()
 
-// ── State ───────────────────────────────────────────────────────────────────
 const isSubmitting = ref(false)
 const submitMode = ref<'save' | 'another'>('save')
 const uploadedAssignAttachments = ref<Attachment[]>([])
 const uploadedLocationAttachments = ref<Attachment[]>([])
 const uploadedAssetAttachments = ref<Attachment[]>([])
 
-// ── Schema & Form ───────────────────────────────────────────────────────────
 const schema = assetSchema.pick({ categoryId: true, name: true, subCategoryId: true, brand: true, model: true, price: true, purchaseDate: true, description: true })
 
 const form = reactive<Omit<AssetPayload, 'code' | 'bleTagMac'> & { categoryId: number } & {
@@ -454,7 +855,7 @@ const form = reactive<Omit<AssetPayload, 'code' | 'bleTagMac'> & { categoryId: n
   hasLocation: true,
   usefulLife: undefined,
   status: 'active',
-  statusNote: undefined,
+  statusNote: undefined
 })
 
 const onAssignAttachmentsChanged = (ids: number[]) => {
@@ -477,9 +878,8 @@ const monthlyDepreciationDisplay = computed(() => {
   return (Math.round(price / (life * 12) * 100) / 100).toLocaleString('id-ID', { maximumFractionDigits: 2 })
 })
 
-// ── Category Select ─────────────────────────────────────────────────────────
 const selectedCategory = computed({
-  get: () => categoryOptions.value.find((c) => c.value === selectedCategoryId.value),
+  get: () => categoryOptions.value.find(c => c.value === selectedCategoryId.value),
   set: (val) => {
     selectedCategoryId.value = val?.value
     form.categoryId = val?.value as unknown as number
@@ -487,7 +887,7 @@ const selectedCategory = computed({
 })
 
 const selectedSubCategory = computed({
-  get: () => subCategoryOptions.value.find((s) => s.value === form.subCategoryId),
+  get: () => subCategoryOptions.value.find(s => s.value === form.subCategoryId),
   set: (val) => { form.subCategoryId = val?.value as unknown as number }
 })
 
@@ -498,14 +898,13 @@ watch(selectedCategoryId, async (newVal) => {
     return
   }
   await fetchSubCategories(Number(newVal))
-  if (form.subCategoryId && !subCategoryOptions.value.some((s) => s.value === form.subCategoryId)) {
+  if (form.subCategoryId && !subCategoryOptions.value.some(s => s.value === form.subCategoryId)) {
     form.subCategoryId = undefined as unknown as number
   }
 })
 
-// ── Codes & Validation ──────────────────────────────────────────────────────
 type CodeStatus = 'checking' | 'available' | 'exists' | null
-interface CodeEntry { code: string; bleTagMac: string }
+interface CodeEntry { code: string, bleTagMac: string }
 const codes = ref<CodeEntry[]>([{ code: '', bleTagMac: '' }])
 const codeStatuses = ref<Record<number, CodeStatus>>({})
 const codeTimers: Record<number, ReturnType<typeof setTimeout>> = {}
@@ -528,7 +927,7 @@ const removeCode = (index: number) => {
 const validateCode = (index: number, code: string) => {
   if (codeTimers[index]) clearTimeout(codeTimers[index])
   const trimmed = code?.trim()
-  if (!trimmed) { codeStatuses.value[index] = null; return  }
+  if (!trimmed) { codeStatuses.value[index] = null; return }
   codeStatuses.value[index] = 'checking'
   codeTimers[index] = setTimeout(async () => {
     const res = await assetService.checkCode(trimmed)
@@ -556,30 +955,24 @@ const hasInvalidCodes = computed(() => {
   return new Set(trimmed).size !== trimmed.length || Object.values(codeStatuses.value).some(s => s === 'exists')
 })
 
-// ── Assignment & Location Selects ───────────────────────────────────────────
 const isLoadingEmployees = ref(false)
 const isLoadingOrganizations = ref(false)
 const isLoadingBranches = ref(false)
 const isLoadingLocations = ref(false)
-const employeeOptions = ref<{
-  label: string
-  value: number
-  avatar?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-  photo?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-}[]>([])
-const organizationOptions = ref<{ label: string; value: number }[]>([])
-const branchOptions = ref<{ label: string; value: number }[]>([])
-const filteredLocationOptions = ref<{ label: string; value: number }[]>([])
+const employeeOptions = ref<EmployeePickerOption[]>([])
+const organizationOptions = ref<{ label: string, value: number }[]>([])
+const branchOptions = ref<{ label: string, value: number }[]>([])
+const filteredLocationOptions = ref<{ label: string, value: number }[]>([])
 
-const selectedEmployee = ref<{ label: string; value: number; avatar?: any; photo?: any } | undefined>(undefined)
-const selectedOrganization = ref<{ label: string; value: number } | undefined>(undefined)
-const selectedBranch = ref<{ label: string; value: number } | undefined>(undefined)
-const selectedLocation = ref<{ label: string; value: number } | undefined>(undefined)
+const selectedEmployee = ref<EmployeePickerOption | undefined>(undefined)
+const selectedOrganization = ref<{ label: string, value: number } | undefined>(undefined)
+const selectedBranch = ref<{ label: string, value: number } | undefined>(undefined)
+const selectedLocation = ref<{ label: string, value: number } | undefined>(undefined)
 const showAddLocation = ref(false)
 
 const holderKindOptions = computed(() => [
   { label: t('common.employee'), value: 'employee' as const },
-  { label: t('common.organization'), value: 'organization' as const },
+  { label: t('common.organization'), value: 'organization' as const }
 ])
 
 watch(selectedEmployee, (val) => {
@@ -609,16 +1002,20 @@ const loadEmployees = async () => {
       employeeOptions.value = res.data.map(e => ({
         label: `${e.name} (${e.employeeId})`,
         value: e.id,
-        photo: e.photo ? {
-          src: e.photo,
-          alt: e.name,
-          loading: 'lazy' as const
-        } : undefined,
-        avatar: e.photo ? {
-          src: e.photo,
-          alt: e.name,
-          loading: 'lazy' as const
-        } : undefined
+        photo: e.photo
+          ? {
+              src: e.photo,
+              alt: e.name,
+              loading: 'lazy' as const
+            }
+          : undefined,
+        avatar: e.photo
+          ? {
+              src: e.photo,
+              alt: e.name,
+              loading: 'lazy' as const
+            }
+          : undefined
       }))
     }
   } finally {
@@ -696,7 +1093,6 @@ const onLocationCreated = async () => {
   }
 }
 
-// ── Reset ───────────────────────────────────────────────────────────────────
 const resetForm = () => {
   codes.value = [{ code: '', bleTagMac: '' }]
   codeStatuses.value = {}
@@ -714,7 +1110,7 @@ const resetForm = () => {
     hasLocation: true,
     usefulLife: undefined,
     status: 'active',
-    statusNote: undefined,
+    statusNote: undefined
   })
   selectedCategoryId.value = undefined
   selectedEmployee.value = undefined
@@ -728,7 +1124,6 @@ const resetForm = () => {
   uploadedAssetAttachments.value = []
 }
 
-// ── Submit ──────────────────────────────────────────────────────────────────
 const submitForm = () => {
   (document.getElementById('create-asset-form') as HTMLFormElement)?.requestSubmit()
 }
@@ -773,10 +1168,14 @@ const handleSubmit = async () => {
         locationAttachmentIds: form.hasLocation && form.locationId ? form.locationAttachmentIds : null,
         attachmentIds: form.attachmentIds || null,
         status: form.status || null,
-        statusNote: form.statusNote || null,
+        statusNote: form.statusNote || null
       }
       const response = await assetService.create(payload)
-      response.success ? successCount++ : failedCodes.push(entry.code.trim())
+      if (response.success) {
+        successCount++
+      } else {
+        failedCodes.push(entry.code.trim())
+      }
     }
     if (successCount > 0) {
       toast.add({ title: t('pages.asset.create.successCount', { count: successCount }), color: 'success', icon: 'i-lucide-circle-check' })
@@ -785,7 +1184,11 @@ const handleSubmit = async () => {
       toast.add({ title: t('pages.asset.create.failedCreate', { codes: failedCodes.join(', ') }), description: t('pages.asset.create.codeExistsHint'), color: 'error', icon: 'i-lucide-circle-alert' })
     }
     if (failedCodes.length === 0) {
-      submitMode.value === 'another' ? resetForm() : navigateTo('/asset')
+      if (submitMode.value === 'another') {
+        resetForm()
+      } else {
+        navigateTo('/asset')
+      }
     }
   } finally {
     isSubmitting.value = false

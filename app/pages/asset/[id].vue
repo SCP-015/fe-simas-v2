@@ -18,7 +18,6 @@ const assetId = computed(() => Number(route.params.id))
 const asset = ref<Asset | null>(null)
 const isLoading = ref(true)
 
-// Fetch asset details once at the parent level
 const loadData = async () => {
   isLoading.value = true
   try {
@@ -26,7 +25,7 @@ const loadData = async () => {
     if (response.success) {
       asset.value = response.data
     }
-  } catch (error) {
+  } catch {
     router.push('/asset')
   } finally {
     isLoading.value = false

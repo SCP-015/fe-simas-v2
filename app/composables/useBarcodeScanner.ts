@@ -1,13 +1,13 @@
 import { QrcodeStream } from 'vue-qrcode-reader'
-import type { DetectedBarcode } from 'vue-qrcode-reader'
+import type { DetectedBarcode, BarcodeFormat } from 'vue-qrcode-reader'
 
 export function useBarcodeScanner() {
   const error = ref('')
 
-  const formats = [
+  const formats: BarcodeFormat[] = [
     'qr_code', 'code_128', 'code_39', 'ean_13', 'ean_8',
-    'upc_a', 'upc_e', 'itf', 'codabar', 'code_93', 'data_matrix',
-  ] as any
+    'upc_a', 'upc_e', 'itf', 'codabar', 'code_93', 'data_matrix'
+  ]
 
   function paintBoundingBox(detectedCodes: DetectedBarcode[], ctx: CanvasRenderingContext2D) {
     for (const code of detectedCodes) {
@@ -41,6 +41,6 @@ export function useBarcodeScanner() {
     formats,
     paintBoundingBox,
     onCameraError,
-    reset,
+    reset
   }
 }

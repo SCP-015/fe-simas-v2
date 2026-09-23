@@ -14,7 +14,10 @@
     </div>
 
     <!-- Success State -->
-    <div v-if="isSubmitted" class="space-y-6">
+    <div
+      v-if="isSubmitted"
+      class="space-y-6"
+    >
       <UAlert
         title="Check your email"
         description="We've sent a password reset link to your email address. Please check your inbox."
@@ -25,7 +28,7 @@
 
       <div class="space-y-3">
         <UButton
-          
+
           block
           color="primary"
           @click="() => { isSubmitted = false }"
@@ -37,21 +40,35 @@
           to="/auth/sign-in"
           class="flex items-center justify-center gap-2 text-sm font-medium text-toned hover:text-highlighted transition-colors"
         >
-          <UIcon name="i-lucide-arrow-left" class="w-4 h-4" />
+          <UIcon
+            name="i-lucide-arrow-left"
+            class="w-4 h-4"
+          />
           {{ $t('pages.auth.forgotPassword.backToLogin') }}
         </NuxtLink>
       </div>
     </div>
 
     <!-- Form State -->
-    <UForm v-else :state="state" :schema="forgotSchema" @submit="handleSubmit" class="space-y-4">
-      <UFormField :label="$t('pages.auth.forgotPassword.emailLabel')" name="email" class="w-full font-medium text-highlighted" :ui="{ label: 'text-sm font-medium text-highlighted' }">
+    <UForm
+      v-else
+      :state="state"
+      :schema="forgotSchema"
+      class="space-y-4"
+      @submit="handleSubmit"
+    >
+      <UFormField
+        :label="$t('pages.auth.forgotPassword.emailLabel')"
+        name="email"
+        class="w-full font-medium text-highlighted"
+        :ui="{ label: 'text-sm font-medium text-highlighted' }"
+      >
         <UInput
           id="forgot-email"
           v-model="state.email"
           type="email"
           :placeholder="$t('pages.auth.forgotPassword.emailPlaceholder')"
-          
+
           class="w-full"
         />
       </UFormField>
@@ -59,7 +76,7 @@
       <div class="flex flex-col gap-3 pt-2">
         <UButton
           type="submit"
-          
+
           block
           color="primary"
           :loading="loading"
@@ -71,7 +88,10 @@
           to="/auth/sign-in"
           class="flex items-center justify-center gap-2 text-sm font-medium text-toned hover:text-highlighted transition-colors"
         >
-          <UIcon name="i-lucide-arrow-left" class="w-4 h-4" />
+          <UIcon
+            name="i-lucide-arrow-left"
+            class="w-4 h-4"
+          />
           {{ $t('pages.auth.forgotPassword.backToLogin') }}
         </NuxtLink>
       </div>

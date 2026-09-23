@@ -1,23 +1,55 @@
 <template>
   <!-- Tab Content: Password -->
   <div class="p-6 space-y-6">
-    <UForm :schema="passwordSchema" :state="formPassword" @submit="handlePasswordSubmit" class="space-y-4">
-      <UFormField v-if="authState.user?.hasPassword" name="oldPassword" required>
+    <UForm
+      :schema="passwordSchema"
+      :state="formPassword"
+      class="space-y-4"
+      @submit="handlePasswordSubmit"
+    >
+      <UFormField
+        v-if="authState.user?.hasPassword"
+        name="oldPassword"
+        required
+      >
         <template #label>
           <div class="flex flex-col gap-0.5">
             <span class="font-medium text-sm text-highlighted">{{ $t('pages.profile.passwordPage.currentPassword') }}</span>
             <span class="text-[10px] text-dimmed font-normal">{{ $t('pages.profile.passwordPage.currentPasswordHelper') }}</span>
           </div>
         </template>
-        <UInput v-model="formPassword.oldPassword" type="password" :placeholder="$t('pages.profile.passwordPage.currentPasswordPlaceholder')" class="w-full" />
+        <UInput
+          v-model="formPassword.oldPassword"
+          type="password"
+          :placeholder="$t('pages.profile.passwordPage.currentPasswordPlaceholder')"
+          class="w-full"
+        />
       </UFormField>
-      <UFormField :label="$t('pages.profile.passwordPage.newPassword')" name="newPassword" required>
-        <UInput v-model="formPassword.newPassword" type="password" :placeholder="$t('pages.profile.passwordPage.newPasswordPlaceholder')" class="w-full" />
+      <UFormField
+        :label="$t('pages.profile.passwordPage.newPassword')"
+        name="newPassword"
+        required
+      >
+        <UInput
+          v-model="formPassword.newPassword"
+          type="password"
+          :placeholder="$t('pages.profile.passwordPage.newPasswordPlaceholder')"
+          class="w-full"
+        />
       </UFormField>
-      <UFormField :label="$t('pages.profile.passwordPage.confirmPassword')" name="confirmPassword" required>
-        <UInput v-model="formPassword.confirmPassword" type="password" :placeholder="$t('pages.profile.passwordPage.confirmPasswordPlaceholder')" class="w-full" />
+      <UFormField
+        :label="$t('pages.profile.passwordPage.confirmPassword')"
+        name="confirmPassword"
+        required
+      >
+        <UInput
+          v-model="formPassword.confirmPassword"
+          type="password"
+          :placeholder="$t('pages.profile.passwordPage.confirmPasswordPlaceholder')"
+          class="w-full"
+        />
       </UFormField>
-      
+
       <div class="flex justify-end pt-2">
         <UButton
           type="submit"
@@ -40,10 +72,8 @@ const { t } = useI18n()
 const { state: authState, service: authService } = useAuth()
 const toast = useToast()
 
-// Saving state
 const isSavingPassword = ref(false)
 
-// Form - Password
 const formPassword = reactive({
   oldPassword: '',
   newPassword: '',
@@ -54,9 +84,9 @@ const passwordSchema = z.object({
   oldPassword: z.string().optional().or(z.literal('')),
   newPassword: z.string().min(6, t('pages.profile.passwordPage.passwordMin')),
   confirmPassword: z.string().min(6, t('pages.profile.passwordPage.confirmMin'))
-}).refine((data) => data.newPassword === data.confirmPassword, {
+}).refine(data => data.newPassword === data.confirmPassword, {
   message: t('pages.profile.passwordPage.mismatch'),
-  path: ["confirmPassword"]
+  path: ['confirmPassword']
 })
 
 const handlePasswordSubmit = async () => {
@@ -78,7 +108,6 @@ const handlePasswordSubmit = async () => {
         color: 'success',
         icon: 'i-lucide-circle-check'
       })
-      // Clear password form fields
       formPassword.oldPassword = ''
       formPassword.newPassword = ''
       formPassword.confirmPassword = ''

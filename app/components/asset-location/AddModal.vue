@@ -1,18 +1,29 @@
 <template>
-  <UModal 
+  <UModal
+    v-model:open="open"
     :title="$t('component.assetLocation.addModal.title')"
     :description="$t('component.assetLocation.addModal.description')"
-    v-model:open="open" 
-    :ui="{ 
-      content: 'sm:max-w-md', 
+    :ui="{
+      content: 'sm:max-w-md',
       overlay: 'bg-black/40',
       footer: 'justify-end'
     }"
   >
     <template #body>
-      <UForm id="add-location-history-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="add-location-history-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Asset Field (Only shown if not locked to a specific asset) -->
-        <UFormField v-if="!lockAssetId" :label="$t('common.asset')" name="assetId" required>
+        <UFormField
+          v-if="!lockAssetId"
+          :label="$t('common.asset')"
+          name="assetId"
+          required
+        >
           <USelectMenu
             v-model="selectedAsset"
             :items="assetOptions"
@@ -25,7 +36,11 @@
         </UFormField>
 
         <!-- Branch Field -->
-        <UFormField :label="$t('common.branch')" name="branchId" required>
+        <UFormField
+          :label="$t('common.branch')"
+          name="branchId"
+          required
+        >
           <USelectMenu
             v-model="selectedBranch"
             :items="branchOptions"
@@ -38,7 +53,11 @@
         </UFormField>
 
         <!-- Location Field -->
-        <UFormField :label="$t('component.assetLocation.addModal.newLocation')" name="locationId" required>
+        <UFormField
+          :label="$t('component.assetLocation.addModal.newLocation')"
+          name="locationId"
+          required
+        >
           <USelectMenu
             v-model="selectedLocation"
             :items="filteredLocationOptions"
@@ -52,13 +71,29 @@
         </UFormField>
 
         <!-- Date Field -->
-        <UFormField :label="$t('component.assetLocation.addModal.relocationDate')" name="date" required>
-          <UInput type="datetime-local" v-model="form.date" class="w-full" />
+        <UFormField
+          :label="$t('component.assetLocation.addModal.relocationDate')"
+          name="date"
+          required
+        >
+          <UInput
+            v-model="form.date"
+            type="datetime-local"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Note Field -->
-        <UFormField :label="$t('component.assetLocation.addModal.noteReason')" name="note">
-          <UTextarea v-model="form.note" :placeholder="$t('component.assetLocation.addModal.notePlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('component.assetLocation.addModal.noteReason')"
+          name="note"
+        >
+          <UTextarea
+            v-model="form.note"
+            :placeholder="$t('component.assetLocation.addModal.notePlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Attachment Manager -->
@@ -70,8 +105,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="add-location-history-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="add-location-history-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -96,19 +142,18 @@ const props = defineProps<{
 const emit = defineEmits<{ created: [] }>()
 const toast = useToast()
 
-// State
 const isSubmitting = ref(false)
 const isLoadingAssets = ref(false)
 const isLoadingBranches = ref(false)
 const isLoadingLocations = ref(false)
 
-const assetOptions = ref<{ label: string; value: number }[]>([])
-const branchOptions = ref<{ label: string; value: number }[]>([])
-const filteredLocationOptions = ref<{ label: string; value: number }[]>([])
+const assetOptions = ref<{ label: string, value: number }[]>([])
+const branchOptions = ref<{ label: string, value: number }[]>([])
+const filteredLocationOptions = ref<{ label: string, value: number }[]>([])
 
-const selectedAsset = ref<{ label: string; value: number } | undefined>(undefined)
-const selectedBranch = ref<{ label: string; value: number } | undefined>(undefined)
-const selectedLocation = ref<{ label: string; value: number } | undefined>(undefined)
+const selectedAsset = ref<{ label: string, value: number } | undefined>(undefined)
+const selectedBranch = ref<{ label: string, value: number } | undefined>(undefined)
+const selectedLocation = ref<{ label: string, value: number } | undefined>(undefined)
 const uploadedAttachments = ref<Attachment[]>([])
 
 const schema = z.object({
@@ -116,7 +161,7 @@ const schema = z.object({
   branchId: z.number(),
   locationId: z.number(),
   date: z.string().min(1, t('component.assetLocation.addModal.dateRequired')),
-  note: z.string().optional().or(z.literal('')),
+  note: z.string().optional().or(z.literal(''))
 })
 
 const form = reactive({
@@ -125,10 +170,9 @@ const form = reactive({
   locationId: undefined as unknown as number,
   date: getLocalDatetimeString(), // Default to current date & time
   note: '',
-  attachmentIds: [] as number[],
+  attachmentIds: [] as number[]
 })
 
-// Sync selections with form fields
 watch(selectedAsset, (val) => {
   if (val) form.assetId = val.value
 })
@@ -223,7 +267,7 @@ const handleSubmit = async () => {
       locationId: form.locationId,
       date: form.date,
       note: form.note,
-      attachmentIds: form.attachmentIds,
+      attachmentIds: form.attachmentIds
     })
     if (response.success) {
       toast.add({

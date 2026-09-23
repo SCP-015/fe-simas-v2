@@ -4,13 +4,12 @@
     <Header
       :title="$t('pages.organization.title')"
       :description="$t('pages.organization.description')"
-    >
-    </Header>
+    />
 
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       :data="data"
       :columns="columns"
       :loading="isLoading"
@@ -18,7 +17,10 @@
       :to="meta.to"
       :total="meta.total"
     >
-      <template #actions v-if="hasPermission('organization:create')">
+      <template
+        v-if="hasPermission('organization:create')"
+        #actions
+      >
         <UButton
           color="primary"
           variant="solid"
@@ -32,7 +34,11 @@
     </DataTable>
 
     <!-- Modals -->
-    <OrganizationFormModal v-model="showForm" :organization="editingOrganization" @saved="fetchOrganizations" />
+    <OrganizationFormModal
+      v-model="showForm"
+      :organization="editingOrganization"
+      @saved="fetchOrganizations"
+    />
     <DeleteModal
       v-model="showDeleteModal"
       :title="$t('pages.organization.deleteTitle')"
@@ -61,7 +67,6 @@ const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
 
-// State
 const data = ref<Organization[]>([])
 const isLoading = ref(false)
 
@@ -76,20 +81,17 @@ const {
 
 const selectedOrganization = ref<Organization | null>(null)
 
-// Modal states
 const showForm = ref(false)
 const showDeleteModal = ref(false)
 const isDeleting = ref(false)
 const editingOrganization = ref<Organization | null>(null)
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch organizations from API
 const fetchOrganizations = async () => {
   isLoading.value = true
   try {
@@ -112,7 +114,6 @@ const openCreate = () => {
   showForm.value = true
 }
 
-// Table columns
 const baseColumns: TableColumn<Organization>[] = [
   {
     accessorKey: 'name',
@@ -177,17 +178,17 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: {
+            'content': {
               align: 'end'
             },
-            items: items,
+            'items': items,
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )
@@ -223,7 +224,6 @@ function getRowItems(row: Row<Organization>) {
   return actions
 }
 
-// Handle delete
 const toast = useToast()
 const handleDelete = async () => {
   if (!selectedOrganization.value) return
@@ -244,7 +244,6 @@ const handleDelete = async () => {
   }
 }
 
-// Initial fetch
 onMounted(() => {
   fetchOrganizations()
 })

@@ -25,7 +25,10 @@
         :to="stat.to"
         class="block"
       >
-        <UCard :ui="{ body: 'sm:p-5' }" class="cursor-pointer transition-shadow hover:shadow-md hover:ring-primary/40">
+        <UCard
+          :ui="{ body: 'sm:p-5' }"
+          class="cursor-pointer transition-shadow hover:shadow-md hover:ring-primary/40"
+        >
           <UAvatar
             :icon="stat.icon"
             size="lg"
@@ -34,10 +37,16 @@
             loading="lazy"
           />
           <p class="text-xs font-medium text-muted uppercase tracking-wider mb-1">{{ stat.label }}</p>
-          <p v-if="!isLoading" class="text-xl font-semibold text-highlighted tabular-nums">
+          <p
+            v-if="!isLoading"
+            class="text-xl font-semibold text-highlighted tabular-nums"
+          >
             {{ stat.value.toLocaleString('id-ID') }}
           </p>
-          <USkeleton v-else class="h-7 w-24" />
+          <USkeleton
+            v-else
+            class="h-7 w-24"
+          />
         </UCard>
       </NuxtLink>
     </div>
@@ -50,7 +59,10 @@
         :to="stat.to"
         class="block"
       >
-        <UCard :ui="{ body: 'sm:p-5' }" class="cursor-pointer transition-shadow hover:shadow-md hover:ring-primary/40">
+        <UCard
+          :ui="{ body: 'sm:p-5' }"
+          class="cursor-pointer transition-shadow hover:shadow-md hover:ring-primary/40"
+        >
           <UAvatar
             :icon="stat.icon"
             size="lg"
@@ -59,10 +71,16 @@
             loading="lazy"
           />
           <p class="text-xs font-medium text-muted uppercase tracking-wider mb-1">{{ stat.label }}</p>
-          <p v-if="!isLoading" class="text-xl font-semibold text-highlighted tabular-nums">
+          <p
+            v-if="!isLoading"
+            class="text-xl font-semibold text-highlighted tabular-nums"
+          >
             {{ stat.format(stat.value) }}
           </p>
-          <USkeleton v-else class="h-7 w-24" />
+          <USkeleton
+            v-else
+            class="h-7 w-24"
+          />
         </UCard>
       </NuxtLink>
     </div>
@@ -73,13 +91,23 @@
       <UCard class="md:col-span-4">
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.assetByCategory') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.assetByCategoryDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.assetByCategory') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.assetByCategoryDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-64">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-64"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="categoryData.length">
           <DonutChart
@@ -98,14 +126,20 @@
               @click="goToAssetFilter('categoryIds', item.id)"
             >
               <div class="flex items-center gap-2 min-w-0">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ backgroundColor: chartColors[i % chartColors.length] }" />
+                <span
+                  class="w-2.5 h-2.5 rounded-full shrink-0"
+                  :style="{ backgroundColor: chartColors[i % chartColors.length] }"
+                />
                 <span class="text-default truncate">{{ item.name }}</span>
               </div>
               <span class="font-medium text-highlighted tabular-nums shrink-0 ml-2">{{ item.count.toLocaleString('id-ID') }}</span>
             </div>
           </div>
         </div>
-        <div v-else class="flex items-center justify-center h-64 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-64 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -114,13 +148,23 @@
       <UCard class="md:col-span-8">
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.valueByCategory') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.valueByCategoryDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.valueByCategory') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.valueByCategoryDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-64">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-64"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="categoryData.length">
           <BarChart
@@ -136,7 +180,10 @@
             :radius="4"
           />
         </div>
-        <div v-else class="flex items-center justify-center h-64 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-64 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -148,13 +195,23 @@
       <UCard class="md:col-span-4">
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.assetByLocation') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.assetByLocationDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.assetByLocation') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.assetByLocationDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-64">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-64"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="locationData.length">
           <DonutChart
@@ -173,14 +230,20 @@
               @click="goToAssetFilter('locationIds', item.id)"
             >
               <div class="flex items-center gap-2 min-w-0">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ backgroundColor: chartColors[i % chartColors.length] }" />
+                <span
+                  class="w-2.5 h-2.5 rounded-full shrink-0"
+                  :style="{ backgroundColor: chartColors[i % chartColors.length] }"
+                />
                 <span class="text-default truncate">{{ item.name }}</span>
               </div>
               <span class="font-medium text-highlighted tabular-nums shrink-0 ml-2">{{ item.count.toLocaleString('id-ID') }}</span>
             </div>
           </div>
         </div>
-        <div v-else class="flex items-center justify-center h-64 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-64 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -189,13 +252,23 @@
       <UCard class="md:col-span-8">
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.valueByLocation') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.valueByLocationDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.valueByLocation') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.valueByLocationDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-64">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-64"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="locationData.length">
           <BarChart
@@ -211,7 +284,10 @@
             :radius="4"
           />
         </div>
-        <div v-else class="flex items-center justify-center h-64 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-64 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -223,13 +299,23 @@
       <UCard>
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.subCategories') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.assetBySubCategory') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.subCategories') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.assetBySubCategory') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-72">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-72"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="subCategoryData.length">
           <DonutChart
@@ -248,14 +334,20 @@
               @click="goToAssetFilter('subCategoryIds', item.id)"
             >
               <div class="flex items-center gap-2 min-w-0">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ backgroundColor: chartColors[i % chartColors.length] }" />
+                <span
+                  class="w-2.5 h-2.5 rounded-full shrink-0"
+                  :style="{ backgroundColor: chartColors[i % chartColors.length] }"
+                />
                 <span class="text-default truncate">{{ item.name }}</span>
               </div>
               <span class="font-medium text-highlighted tabular-nums shrink-0 ml-2">{{ item.count.toLocaleString('id-ID') }}</span>
             </div>
           </div>
         </div>
-        <div v-else class="flex items-center justify-center h-72 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-72 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -264,13 +356,23 @@
       <UCard>
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.assetAging') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.assetAgingDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.assetAging') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.assetAgingDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-72">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-72"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="agingData.length">
           <BarChart
@@ -285,7 +387,10 @@
             hide-legend
           />
         </div>
-        <div v-else class="flex items-center justify-center h-72 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-72 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -294,13 +399,23 @@
       <UCard>
         <template #header>
           <div>
-            <h3 class="text-base font-semibold text-highlighted">{{ $t('pages.dashboard.dataQuality') }}</h3>
-            <p class="text-xs text-muted mt-0.5">{{ $t('pages.dashboard.dataQualityDesc') }}</p>
+            <h3 class="text-base font-semibold text-highlighted">
+              {{ $t('pages.dashboard.dataQuality') }}
+            </h3>
+            <p class="text-xs text-muted mt-0.5">
+              {{ $t('pages.dashboard.dataQualityDesc') }}
+            </p>
           </div>
         </template>
 
-        <div v-if="isChartLoading" class="flex items-center justify-center h-72">
-          <UIcon name="i-lucide-loader-2" class="w-6 h-6 animate-spin text-dimmed" />
+        <div
+          v-if="isChartLoading"
+          class="flex items-center justify-center h-72"
+        >
+          <UIcon
+            name="i-lucide-loader-2"
+            class="w-6 h-6 animate-spin text-dimmed"
+          />
         </div>
         <div v-else-if="qualityData.length">
           <BarChart
@@ -315,7 +430,10 @@
             hide-legend
           />
         </div>
-        <div v-else class="flex items-center justify-center h-72 text-sm text-dimmed">
+        <div
+          v-else
+          class="flex items-center justify-center h-72 text-sm text-dimmed"
+        >
           {{ $t('pages.dashboard.noData') }}
         </div>
       </UCard>
@@ -334,25 +452,21 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-// ── Color palette ────────────────────────────────────
 const chartColors = [
   '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
   '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1',
-  '#14b8a6', '#e11d48', '#a855f7', '#eab308', '#0ea5e9',
+  '#14b8a6', '#e11d48', '#a855f7', '#eab308', '#0ea5e9'
 ]
 
-// ── Status filter ────────────────────────────────────
 const statusOptions = getStatusOptions()
 const selectedStatuses = ref<string[]>(['active'])
 
-// ── Loading states ───────────────────────────────────
 const isLoading = ref(true)
 const isChartLoading = ref(true)
 
-// ── Summary data ─────────────────────────────────────
 const summary = ref<StatisticSummary>({
   totalAssets: 0, totalPrice: 0, totalBookValue: 0, totalDepreciation: 0,
-  totalCategories: 0, totalSubCategories: 0, totalLocations: 0, totalBranches: 0, totalActiveEmployees: 0,
+  totalCategories: 0, totalSubCategories: 0, totalLocations: 0, totalBranches: 0, totalActiveEmployees: 0
 })
 
 // Where the "Assets" and monetary cards link to — the asset list, scoped to the same status filter as this dashboard.
@@ -367,13 +481,13 @@ const statsRow1 = computed(() => [
   { key: 'subCategories', label: t('pages.dashboard.subCategories'), icon: 'i-lucide-list-tree', bgClass: 'bg-amber-50', iconClass: 'text-amber-600', value: summary.value.totalSubCategories, to: '/sub-category' },
   { key: 'branches', label: t('pages.dashboard.branches'), icon: 'i-lucide-building-2', bgClass: 'bg-teal-50', iconClass: 'text-teal-600', value: summary.value.totalBranches, to: '/branch' },
   { key: 'locations', label: t('pages.dashboard.locations'), icon: 'i-lucide-map-pin', bgClass: 'bg-rose-50', iconClass: 'text-rose-600', value: summary.value.totalLocations, to: '/location' },
-  { key: 'employees', label: t('pages.dashboard.activeEmployees'), icon: 'i-lucide-users', bgClass: 'bg-indigo-50', iconClass: 'text-indigo-600', value: summary.value.totalActiveEmployees, to: '/employee' },
+  { key: 'employees', label: t('pages.dashboard.activeEmployees'), icon: 'i-lucide-users', bgClass: 'bg-indigo-50', iconClass: 'text-indigo-600', value: summary.value.totalActiveEmployees, to: '/employee' }
 ])
 
 const statsRow2 = computed(() => [
   { key: 'price', label: t('pages.dashboard.totalPrice'), icon: 'i-lucide-banknote', bgClass: 'bg-emerald-50', iconClass: 'text-emerald-600', value: summary.value.totalPrice, format: (v: number) => `Rp ${v.toLocaleString('id-ID')}`, to: assetLink.value },
   { key: 'bookValue', label: t('pages.dashboard.totalBookValue'), icon: 'i-lucide-wallet', bgClass: 'bg-cyan-50', iconClass: 'text-cyan-600', value: summary.value.totalBookValue, format: (v: number) => `Rp ${v.toLocaleString('id-ID')}`, to: assetLink.value },
-  { key: 'depreciation', label: t('pages.dashboard.depreciationValue'), icon: 'i-lucide-trending-down', bgClass: 'bg-red-50', iconClass: 'text-red-600', value: summary.value.totalDepreciation, format: (v: number) => `Rp ${v.toLocaleString('id-ID')}`, to: assetLink.value },
+  { key: 'depreciation', label: t('pages.dashboard.depreciationValue'), icon: 'i-lucide-trending-down', bgClass: 'bg-red-50', iconClass: 'text-red-600', value: summary.value.totalDepreciation, format: (v: number) => `Rp ${v.toLocaleString('id-ID')}`, to: assetLink.value }
 ])
 
 // Chart legends (category/location/sub-category) drill into the asset list, filtered to that one item.
@@ -384,71 +498,61 @@ const goToAssetFilter = (key: 'categoryIds' | 'locationIds' | 'subCategoryIds', 
   router.push({ path: '/asset', query })
 }
 
-// ── Chart data ───────────────────────────────────────
 const categoryData = ref<ChartGroupItem[]>([])
 const locationData = ref<ChartGroupItem[]>([])
 const subCategoryData = ref<ChartGroupItem[]>([])
 const agingData = ref<LabelCountItem[]>([])
 const qualityData = ref<LabelCountItem[]>([])
 
-// Category Donut
 const categoryDonutValues = computed(() => categoryData.value.map(c => c.count))
 const categoryDonutCategories = computed(() => {
-  const result: Record<string, { name: string; color: string }> = {}
+  const result: Record<string, { name: string, color: string }> = {}
   categoryData.value.forEach((c, i) => {
     result[i.toString()] = { name: `${c.name}  ${c.count}`, color: chartColors[i % chartColors.length] ?? '#3b82f6' }
   })
   return result
 })
 
-// Category Bar
 const categoryBarData = computed(() => categoryData.value.map(c => ({ name: c.name, totalPrice: c.totalPrice, totalBookValue: c.totalBookValue ?? c.totalPrice })))
 const categoryBarCategories = computed(() => ({
   totalPrice: { name: t('pages.dashboard.originalPrice'), color: '#3b82f6' },
-  totalBookValue: { name: t('pages.dashboard.bookValue'), color: '#10b981' },
+  totalBookValue: { name: t('pages.dashboard.bookValue'), color: '#10b981' }
 }))
 
-// Location Donut
 const locationDonutValues = computed(() => locationData.value.map(l => l.count))
 const locationDonutCategories = computed(() => {
-  const result: Record<string, { name: string; color: string }> = {}
+  const result: Record<string, { name: string, color: string }> = {}
   locationData.value.forEach((l, i) => {
     result[i.toString()] = { name: `${l.name}  ${l.count}`, color: chartColors[i % chartColors.length] ?? '#3b82f6' }
   })
   return result
 })
 
-// Location Bar
 const locationBarData = computed(() => locationData.value.map(l => ({ name: l.name, totalPrice: l.totalPrice, totalBookValue: l.totalBookValue ?? l.totalPrice })))
 const locationBarCategories = computed(() => ({
   totalPrice: { name: t('pages.dashboard.originalPrice'), color: '#10b981' },
-  totalBookValue: { name: t('pages.dashboard.bookValue'), color: '#f59e0b' },
+  totalBookValue: { name: t('pages.dashboard.bookValue'), color: '#f59e0b' }
 }))
 
-// Sub Category Donut
 const subCategoryDonutValues = computed(() => subCategoryData.value.map(s => s.count))
 const subCategoryDonutCategories = computed(() => {
-  const result: Record<string, { name: string; color: string }> = {}
+  const result: Record<string, { name: string, color: string }> = {}
   subCategoryData.value.forEach((s, i) => {
     result[i.toString()] = { name: `${s.name}  ${s.count}`, color: chartColors[i % chartColors.length] ?? '#3b82f6' }
   })
   return result
 })
 
-// Aging Bar
-const agingColors = ['#f59e0b', '#10b981', '#3b82f6']
 const agingBarData = computed(() => agingData.value.map(a => ({ label: a.label, count: a.count })))
 const agingBarCategories = computed(() => ({
-  count: { name: t('pages.dashboard.assets'), color: '#f59e0b' },
+  count: { name: t('pages.dashboard.assets'), color: '#f59e0b' }
 }))
 
-// Quality Bar
 const qualityBarData = computed(() => qualityData.value.map(q => ({ label: q.label, count: q.count })))
 const qualityBarCategories = computed(() => ({
-  count: { name: t('pages.dashboard.assets'), color: '#ef4444' },
+  count: { name: t('pages.dashboard.assets'), color: '#ef4444' }
 }))
 
-// ── Fetch ────────────────────────────────────────────
 const fetchSummary = async () => {
   isLoading.value = true
   try {
@@ -469,7 +573,7 @@ const fetchCharts = async () => {
       statisticService.getAssetsByLocation(statuses),
       statisticService.getAssetsBySubCategory(statuses),
       statisticService.getAssetAging(statuses),
-      statisticService.getDataQuality(statuses),
+      statisticService.getDataQuality(statuses)
     ])
     if (catRes.success) categoryData.value = catRes.data
     if (locRes.success) locationData.value = locRes.data

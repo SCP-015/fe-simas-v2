@@ -1,13 +1,15 @@
 <template>
   <div class="flex h-screen w-full font-sans text-highlighted overflow-hidden bg-default">
-    
     <!-- 1. Sidebar Left (Desktop) -->
     <div class="hidden lg:block h-full">
       <Sidebar />
     </div>
 
     <!-- 2. Mobile Sidebar Overlay Drawer -->
-    <div v-if="isMobileMenuOpen" class="fixed inset-0 z-40 lg:hidden">
+    <div
+      v-if="isMobileMenuOpen"
+      class="fixed inset-0 z-40 lg:hidden"
+    >
       <!-- Backdrop with Fade Transition -->
       <Transition
         enter-active-class="transition-opacity duration-300 ease-out"
@@ -18,12 +20,12 @@
         leave-to-class="opacity-0"
         appear
       >
-        <div 
+        <div
           class="fixed inset-0 bg-black/40"
           @click="() => { isMobileMenuOpen = false }"
         />
       </Transition>
-      
+
       <!-- Drawer Sidebar Panel with Slide-in Transition -->
       <Transition
         enter-active-class="transition-transform duration-300 ease-out"
@@ -42,8 +44,8 @@
               color="neutral"
               variant="ghost"
               class="text-toned hover:text-highlighted"
-              @click="() => { isMobileMenuOpen = false }"
               aria-label="Close sidebar"
+              @click="() => { isMobileMenuOpen = false }"
             />
           </div>
           <Sidebar class="h-full" />
@@ -53,8 +55,6 @@
 
     <!-- 3. Main Dashboard Content (Right) -->
     <div class="flex-1 flex flex-col h-full overflow-hidden">
-
-
       <!-- Scrollable content area -->
       <main class="flex-1 overflow-y-auto p-4 lg:p-6">
         <slot />
@@ -63,7 +63,6 @@
 
     <!-- Feedback Feature Global Components -->
     <FeedbackModal v-model:open="isFeedbackOpen" />
-
   </div>
 </template>
 
@@ -74,7 +73,6 @@ import { useFeedback } from '~/composables/useFeedback'
 const route = useRoute()
 const isMobileMenuOpen = useState('isMobileMenuOpen', () => false)
 
-// Feedback Global State
 const { isOpen: isFeedbackOpen } = useFeedback()
 
 // Close mobile sidebar when switching pages

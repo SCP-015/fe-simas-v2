@@ -1,7 +1,7 @@
-import { apiService } from "./api-service"
-import { handleServiceError } from "../composables/error-helper"
-import type { InventoryStockOpname } from "../types/inventory"
-import type { ApiResponse } from "../types/api"
+import { apiService } from './api-service'
+import { handleServiceError } from '../composables/error-helper'
+import type { InventoryStockOpname } from '../types/inventory'
+import type { ApiResponse } from '../types/api'
 
 export class InventoryStockOpnameService {
   private get authHeaders() {
@@ -13,14 +13,14 @@ export class InventoryStockOpnameService {
       const url = `/inventory-stock-opname?inventoryId=${filters.inventoryId}&page=${page}&limit=${perPage}`
       const res = await apiService.client.get<ApiResponse<InventoryStockOpname[]>>(url, this.authHeaders)
       return res.data
-    } catch (error: any) { return handleServiceError(error) }
+    } catch (error) { return handleServiceError(error) }
   }
 
-  async create(payload: { inventoryId: number; branchId: number; note?: string | null; attachmentIds?: number[]; items: { variantId: number; new: number; used: number }[] }): Promise<ApiResponse<InventoryStockOpname>> {
+  async create(payload: { inventoryId: number, branchId: number, note?: string | null, attachmentIds?: number[], items: { variantId: number, new: number, used: number }[] }): Promise<ApiResponse<InventoryStockOpname>> {
     try {
       const res = await apiService.client.post<ApiResponse<InventoryStockOpname>>(`/inventory-stock-opname`, payload, this.authHeaders)
       return res.data
-    } catch (error: any) { return handleServiceError(error) }
+    } catch (error) { return handleServiceError(error) }
   }
 }
 

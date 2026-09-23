@@ -8,7 +8,7 @@
     <!-- Glowing brand-themed background radial gradient with pure CSS -->
     <div
       class="absolute inset-0 z-0 pointer-events-none"
-      style="background: 
+      style="background:
         radial-gradient(circle at 50% 0%, rgba(0, 152, 56, 0.4) 0%, transparent 70%),
         radial-gradient(circle at 0% 100%, rgba(0, 128, 47, 0.35) 0%, transparent 60%),
         radial-gradient(circle at 100% 100%, rgba(0, 152, 56, 0.35) 0%, transparent 60%);"

@@ -6,7 +6,11 @@
     :ui="{ content: 'sm:max-w-md', overlay: 'bg-black/40', footer: 'justify-end' }"
   >
     <template #body>
-      <UTabs v-model="activeTab" :items="tabItems" class="w-full" />
+      <UTabs
+        v-model="activeTab"
+        :items="tabItems"
+        class="w-full"
+      />
 
       <div class="mt-4 space-y-3">
         <div
@@ -16,11 +20,24 @@
         >
           <div class="flex items-start gap-2">
             <div class="space-y-2 flex-1 min-w-0">
-              <UFormField :label="$t('pages.handover.fieldSettings.label')" :error="errors[activeTab][index]?.label">
-                <UInput v-model="field.label" :placeholder="$t('pages.handover.fieldSettings.labelPlaceholder')" class="w-full" @update:model-value="() => clearError(index)" />
+              <UFormField
+                :label="$t('pages.handover.fieldSettings.label')"
+                :error="errors[activeTab][index]?.label"
+              >
+                <UInput
+                  v-model="field.label"
+                  :placeholder="$t('pages.handover.fieldSettings.labelPlaceholder')"
+                  class="w-full"
+                  @update:model-value="() => clearError(index)"
+                />
               </UFormField>
               <UFormField :label="$t('pages.handover.fieldSettings.type')">
-                <USelect v-model="field.type" :items="typeOptions" class="w-full" @update:model-value="() => { onTypeChange(field); clearError(index) }" />
+                <USelect
+                  v-model="field.type"
+                  :items="typeOptions"
+                  class="w-full"
+                  @update:model-value="() => { onTypeChange(field); clearError(index) }"
+                />
               </UFormField>
             </div>
             <UButton
@@ -34,16 +51,46 @@
           </div>
 
           <!-- Options editor for select / radio -->
-          <div v-if="field.type === 'select' || field.type === 'radio'" class="pl-1 space-y-2">
+          <div
+            v-if="field.type === 'select' || field.type === 'radio'"
+            class="pl-1 space-y-2"
+          >
             <span class="text-xs font-semibold text-dimmed uppercase tracking-wider">{{ $t('pages.handover.fieldSettings.options') }}</span>
-            <div v-for="(_, oi) in field.options" :key="oi" class="flex items-center gap-2">
-              <UInput v-model="field.options[oi]" :placeholder="$t('pages.handover.fieldSettings.optionPlaceholder')" class="flex-1" @update:model-value="() => clearError(index)" />
-              <UButton color="neutral" variant="ghost" icon="i-lucide-x" square size="sm" @click="() => { field.options.splice(oi, 1) }" />
+            <div
+              v-for="(_, oi) in field.options"
+              :key="oi"
+              class="flex items-center gap-2"
+            >
+              <UInput
+                v-model="field.options[oi]"
+                :placeholder="$t('pages.handover.fieldSettings.optionPlaceholder')"
+                class="flex-1"
+                @update:model-value="() => clearError(index)"
+              />
+              <UButton
+                color="neutral"
+                variant="ghost"
+                icon="i-lucide-x"
+                square
+                size="sm"
+                @click="() => { field.options.splice(oi, 1) }"
+              />
             </div>
-            <UButton color="neutral" variant="soft" icon="i-lucide-plus" size="xs" @click="() => { field.options.push('') }">
+            <UButton
+              color="neutral"
+              variant="soft"
+              icon="i-lucide-plus"
+              size="xs"
+              @click="() => { field.options.push('') }"
+            >
               {{ $t('pages.handover.fieldSettings.addOption') }}
             </UButton>
-            <p v-if="errors[activeTab][index]?.options" class="text-xs text-error">{{ errors[activeTab][index]?.options }}</p>
+            <p
+              v-if="errors[activeTab][index]?.options"
+              class="text-xs text-error"
+            >
+              {{ errors[activeTab][index]?.options }}
+            </p>
           </div>
 
           <label class="flex items-center gap-2 cursor-pointer">
@@ -52,19 +99,39 @@
           </label>
         </div>
 
-        <div v-if="currentFields.length === 0" class="text-center text-sm text-dimmed py-6 border-2 border-dashed border-default rounded-lg">
+        <div
+          v-if="currentFields.length === 0"
+          class="text-center text-sm text-dimmed py-6 border-2 border-dashed border-default rounded-lg"
+        >
           {{ $t('pages.handover.fieldSettings.empty') }}
         </div>
 
-        <UButton color="primary" variant="soft" icon="i-lucide-plus" block @click="addField">
+        <UButton
+          color="primary"
+          variant="soft"
+          icon="i-lucide-plus"
+          block
+          @click="addField"
+        >
           {{ $t('pages.handover.fieldSettings.addField') }}
         </UButton>
       </div>
     </template>
 
     <template #footer>
-      <UButton :label="$t('common.cancel')" color="neutral" variant="outline" :disabled="saving" @click="() => { open = false }" />
-      <UButton :label="$t('common.save')" color="primary" :loading="saving" @click="save" />
+      <UButton
+        :label="$t('common.cancel')"
+        color="neutral"
+        variant="outline"
+        :disabled="saving"
+        @click="() => { open = false }"
+      />
+      <UButton
+        :label="$t('common.save')"
+        color="primary"
+        :loading="saving"
+        @click="save"
+      />
     </template>
   </UModal>
 </template>
@@ -101,14 +168,14 @@ const typeOptions = [
   { label: t('pages.handover.fieldSettings.typeRadio'), value: 'radio' }
 ]
 
-const forms = reactive<{ assign: FieldRow[]; return: FieldRow[] }>({ assign: [], return: [] })
+const forms = reactive<{ assign: FieldRow[], return: FieldRow[] }>({ assign: [], return: [] })
 const currentFields = computed(() => forms[activeTab.value])
 const saving = ref(false)
 
 // Per-row validation errors, keyed by row index within each tab.
 const errors = reactive<Record<'assign' | 'return', Record<number, { label?: string, options?: string }>>>({ assign: {}, return: {} })
 const clearError = (index: number) => {
-  delete errors[activeTab.value][index]
+  Reflect.deleteProperty(errors[activeTab.value], index)
 }
 
 const fieldSchema = z.object({

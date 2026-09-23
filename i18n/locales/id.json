@@ -86,6 +86,7 @@
     "feedback": "Feedback",
     "capturing": "Menangkap...",
     "inventory": "Persediaan",
+    "transfer": "Transfer",
     "calendar": "Kalender"
   },
   "component": {
@@ -149,8 +150,8 @@
       "nfcNotSupportedDesc": "NFC hanya tersedia di Android Chrome dengan HTTPS.",
       "readyToScan": "Siap memindai",
       "holdNfc": "Dekatkan tag NFC ke perangkat Anda",
-      "manualEntry": "Atau masukkan kode manual",
-      "typePlaceholder": "Ketik kode aset...",
+      "manualEntry": "Atau masukkan nomor seri secara manual",
+      "typePlaceholder": "Ketik nomor seri aset...",
       "notFound": "Aset \"{code}\" tidak ditemukan",
       "searchFailed": "Gagal mencari aset",
       "conventional": "Konvensional",
@@ -178,7 +179,7 @@
     "asset": {
       "detailWrapper": {
         "activityLog": "Log Aktivitas",
-        "printCode": "Cetak Kode",
+        "printCode": "Cetak Nomor Seri",
         "changeStatus": "Ubah Status",
         "editAsset": "Edit Aset",
         "noImage": "Tidak Ada Gambar",
@@ -196,7 +197,7 @@
         "scheduleTab": "Jadwal"
       },
       "printCodeModal": {
-        "title": "Cetak Kode Aset",
+        "title": "Cetak Nomor Seri Aset",
         "description": "{count} aset dipilih",
         "codeType": "Jenis Kode",
         "qrCode": "QR Code",
@@ -208,7 +209,7 @@
         "columns": "Kolom",
         "displayOptions": "Opsi Tampilan",
         "showAssetName": "Tampilkan Nama Aset",
-        "showAssetCode": "Tampilkan Kode Aset",
+        "showAssetCode": "Tampilkan Nomor Seri",
         "showCategoryName": "Tampilkan Sub Kategori",
         "showCutMarks": "Tanda Potong",
         "preview": "Pratinjau",
@@ -297,8 +298,8 @@
         "readyToScan": "Siap memindai",
         "holdNfc": "Dekatkan tag NFC ke perangkat Anda",
         "manual": "Manual",
-        "manualDesc": "Ketik kode aset secara manual",
-        "manualPlaceholder": "Masukkan kode aset..."
+        "manualDesc": "Ketik nomor seri aset secara manual",
+        "manualPlaceholder": "Masukkan nomor seri aset..."
       }
     },
     "inventory": {
@@ -805,7 +806,7 @@
         "bulkDeleteDescription": "Apakah Anda yakin ingin menghapus {count} aset yang dipilih? Tindakan ini tidak dapat dibatalkan.",
         "bulkDeleteSuccess": "{count} aset berhasil dihapus!",
         "bulkDeletePartial": "{deleted} dihapus, {failed} gagal (memiliki dependensi)",
-        "printCode": "Cetak Kode"
+        "printCode": "Cetak Nomor Seri"
       },
       "create": {
         "title": "Tambah Aset Baru",
@@ -815,13 +816,13 @@
         "dropImage": "Seret gambar Anda di sini",
         "imageHint": "PNG, JPG maksimal 2MB",
         "uploading": "Mengunggah...",
-        "codeLabel": "Kode",
+        "codeLabel": "Nomor Seri",
         "scan": "Pindai Massal",
-        "addCode": "Tambah Kode",
+        "addCode": "Tambah Nomor Seri",
         "codePlaceholder": "cth. AST-001",
-        "duplicateCode": "Kode duplikat dalam daftar",
-        "codeExists": "Kode \"{code}\" sudah ada",
-        "codeAvailable": "Kode tersedia",
+        "duplicateCode": "Nomor seri duplikat dalam daftar",
+        "codeExists": "Nomor seri \"{code}\" sudah ada",
+        "codeAvailable": "Nomor seri tersedia",
         "nameLabel": "Nama",
         "namePlaceholder": "Nama aset",
         "categoryLabel": "Kategori",
@@ -873,11 +874,11 @@
         "relocationDate": "Tanggal Relokasi",
         "relocationNotes": "Catatan Relokasi",
         "relocationNotesPlaceholder": "Masukkan alasan relokasi...",
-        "codeRequired": "Minimal satu kode diperlukan",
-        "duplicateCodesError": "Kode duplikat tidak diperbolehkan",
+        "codeRequired": "Minimal satu nomor seri diperlukan",
+        "duplicateCodesError": "Nomor seri duplikat tidak diperbolehkan",
         "successCount": "{count} aset berhasil dibuat!",
         "failedCreate": "Gagal membuat: {codes}",
-        "codeExistsHint": "Kode mungkin sudah ada"
+        "codeExistsHint": "Nomor seri mungkin sudah ada"
       },
       "edit": {
         "title": "Edit Aset",
@@ -1003,6 +1004,31 @@
       "deleteTitle": "Hapus Organisasi",
       "deleteSuccess": "Organisasi berhasil dihapus"
     },
+    "transfer": {
+      "title": "Transfer",
+      "description": "Lengkapi data barang masuk dan gabungkan menjadi Aset",
+      "statusAll": "Semua Status",
+      "statusPending": "Menunggu",
+      "statusMerged": "Sudah Digabung",
+      "noSerial": "Belum ada nomor seri",
+      "noSerialWithQuantity": "{quantity} unit, belum ada nomor seri",
+      "codeWithMore": "{codes} (+{more} lagi)",
+      "columnName": "Nama",
+      "columnCode": "Nomor Seri",
+      "columnPrice": "Harga",
+      "columnPurchaseDate": "Tanggal Pembelian",
+      "columnStatus": "Status",
+      "columnCreatedBy": "Dibuat Oleh",
+      "columnCreatedAt": "Dibuat Pada",
+      "createdBySystem": "Sistem Eksternal",
+      "columnAction": "Aksi",
+      "mergeToAsset": "Gabung ke Aset",
+      "mergeTitle": "Gabungkan ke Aset",
+      "mergeDescription": "Lengkapi data untuk menggabungkan barang transfer ini menjadi Aset",
+      "mergeSubmit": "Gabungkan",
+      "mergeNotFound": "Barang transfer tidak ditemukan",
+      "mergeAlreadyDone": "Barang transfer ini sudah digabung sebelumnya"
+    },
     "subCategory": {
       "title": "Manajemen Sub Kategori",
       "description": "Kelola sub kategori aset",
@@ -1127,8 +1153,8 @@
       "description": "Peminjaman & pengembalian buku",
       "borrow": "Pinjam",
       "return": "Kembalikan",
-      "serialNumber": "Nomor Serial",
-      "serialPlaceholder": "Ketik atau scan nomor serial",
+      "serialNumber": "Nomor Seri",
+      "serialPlaceholder": "Ketik atau scan nomor seri",
       "bookTitle": "Judul Buku",
       "bookTitlePlaceholder": "Otomatis terisi setelah scan",
       "category": "Kategori",
@@ -1150,7 +1176,7 @@
       "alreadyBorrowed": "Buku ini sedang dipinjam oleh seseorang",
       "notActive": "Buku ini tidak dalam status aktif",
       "holderNotEnabled": "Fitur pemegang tidak aktif untuk aset ini",
-      "assetNotFound": "Aset tidak ditemukan dengan nomor serial ini",
+      "assetNotFound": "Aset tidak ditemukan dengan nomor seri ini",
       "borrowSuccess": "Buku berhasil dipinjam!",
       "returnSuccess": "Buku berhasil dikembalikan!",
       "borrowFailed": "Gagal meminjam buku",

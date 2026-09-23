@@ -1,8 +1,8 @@
 <template>
   <UModal
+    v-model:open="open"
     :title="$t('component.assetHolder.updateModal.title')"
     :description="$t('component.assetHolder.updateModal.description')"
-    v-model:open="open"
     :ui="{
       content: 'sm:max-w-md',
       overlay: 'bg-black/40',
@@ -10,14 +10,33 @@
     }"
   >
     <template #body>
-      <UForm id="update-asset-holder-form" :schema="schema" :state="form" @submit="handleSubmit" class="space-y-4">
+      <UForm
+        id="update-asset-holder-form"
+        :schema="schema"
+        :state="form"
+        class="space-y-4"
+        @submit="handleSubmit"
+      >
         <!-- Holder Kind Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.holderKind')" name="holderKind" required>
-          <URadioGroup v-model="form.holderKind" :items="holderKindOptions" orientation="horizontal" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.holderKind')"
+          name="holderKind"
+          required
+        >
+          <URadioGroup
+            v-model="form.holderKind"
+            :items="holderKindOptions"
+            orientation="horizontal"
+          />
         </UFormField>
 
         <!-- Employee Field -->
-        <UFormField v-if="form.holderKind === 'employee'" :label="$t('common.employee')" name="employeeId" required>
+        <UFormField
+          v-if="form.holderKind === 'employee'"
+          :label="$t('common.employee')"
+          name="employeeId"
+          required
+        >
           <USelectMenu
             v-model="selectedEmployee"
             :items="employeeOptions"
@@ -31,7 +50,12 @@
         </UFormField>
 
         <!-- Organization Field -->
-        <UFormField v-else :label="$t('common.organization')" name="organizationId" required>
+        <UFormField
+          v-else
+          :label="$t('common.organization')"
+          name="organizationId"
+          required
+        >
           <USelectMenu
             v-model="selectedOrganization"
             :items="organizationOptions"
@@ -44,25 +68,57 @@
         </UFormField>
 
         <!-- Assigned Date Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.assignmentDate')" name="assignedDate" required>
-          <UInput type="datetime-local" v-model="form.assignedDate" class="w-full" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.assignmentDate')"
+          name="assignedDate"
+          required
+        >
+          <UInput
+            v-model="form.assignedDate"
+            type="datetime-local"
+            class="w-full"
+          />
         </UFormField>
 
         <!-- Assign Note Field -->
-        <UFormField :label="$t('component.assetHolder.assignModal.assignmentNotes')" name="assignNote">
-          <UTextarea v-model="form.assignNote" :placeholder="$t('component.assetHolder.assignModal.notesPlaceholder')" class="w-full" :rows="3" />
+        <UFormField
+          :label="$t('component.assetHolder.assignModal.assignmentNotes')"
+          name="assignNote"
+        >
+          <UTextarea
+            v-model="form.assignNote"
+            :placeholder="$t('component.assetHolder.assignModal.notesPlaceholder')"
+            class="w-full"
+            :rows="3"
+          />
         </UFormField>
 
         <!-- Return fields — only editable once the record has actually been returned -->
         <template v-if="isReturned">
           <USeparator />
 
-          <UFormField :label="$t('component.assetHolder.returnModal.returnDate')" name="returnedDate" required>
-            <UInput type="datetime-local" v-model="form.returnedDate" class="w-full" />
+          <UFormField
+            :label="$t('component.assetHolder.returnModal.returnDate')"
+            name="returnedDate"
+            required
+          >
+            <UInput
+              v-model="form.returnedDate"
+              type="datetime-local"
+              class="w-full"
+            />
           </UFormField>
 
-          <UFormField :label="$t('component.assetHolder.returnModal.returnNotes')" name="returnNote">
-            <UTextarea v-model="form.returnNote" :placeholder="$t('component.assetHolder.returnModal.notesPlaceholder')" class="w-full" :rows="3" />
+          <UFormField
+            :label="$t('component.assetHolder.returnModal.returnNotes')"
+            name="returnNote"
+          >
+            <UTextarea
+              v-model="form.returnNote"
+              :placeholder="$t('component.assetHolder.returnModal.notesPlaceholder')"
+              class="w-full"
+              :rows="3"
+            />
           </UFormField>
         </template>
 
@@ -75,8 +131,19 @@
     </template>
     <template #footer>
       <div class="flex justify-end items-center gap-2 w-full">
-        <UButton :label="$t('common.cancel')" @click="() => { open = false }" color="neutral" variant="outline" />
-        <UButton :label="$t('common.save')" type="submit" form="update-asset-holder-form" color="primary" :loading="isSubmitting" />
+        <UButton
+          :label="$t('common.cancel')"
+          color="neutral"
+          variant="outline"
+          @click="() => { open = false }"
+        />
+        <UButton
+          :label="$t('common.save')"
+          type="submit"
+          form="update-asset-holder-form"
+          color="primary"
+          :loading="isSubmitting"
+        />
       </div>
     </template>
   </UModal>
@@ -89,6 +156,7 @@ import { employeeService } from '~/services/employee-service'
 import { organizationService } from '~/services/organization-service'
 import type { AssetHolder } from '~/types/asset-holder'
 import type { Attachment } from '~/types/attachment'
+import type { EmployeePickerOption as EmployeeOption } from '~/types/employee'
 
 const { t } = useI18n()
 
@@ -102,26 +170,20 @@ const toast = useToast()
 
 const isReturned = computed(() => !!props.holder?.returnedDate)
 
-// State
 const isSubmitting = ref(false)
 const isLoadingEmployees = ref(false)
 const isLoadingOrganizations = ref(false)
 
-const employeeOptions = ref<{
-  label: string
-  value: number
-  avatar?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-  photo?: { src: string; alt: string; loading?: 'lazy' | 'eager' }
-}[]>([])
-const organizationOptions = ref<{ label: string; value: number }[]>([])
+const employeeOptions = ref<EmployeeOption[]>([])
+const organizationOptions = ref<{ label: string, value: number }[]>([])
 
-const selectedEmployee = ref<{ label: string; value: number; avatar?: any; photo?: any } | undefined>(undefined)
-const selectedOrganization = ref<{ label: string; value: number } | undefined>(undefined)
+const selectedEmployee = ref<EmployeeOption | undefined>(undefined)
+const selectedOrganization = ref<{ label: string, value: number } | undefined>(undefined)
 const uploadedAttachments = ref<Attachment[]>([])
 
 const holderKindOptions = computed(() => [
   { label: t('common.employee'), value: 'employee' as const },
-  { label: t('common.organization'), value: 'organization' as const },
+  { label: t('common.organization'), value: 'organization' as const }
 ])
 
 const schema = z.object({
@@ -131,7 +193,7 @@ const schema = z.object({
   assignedDate: z.string().min(1, t('component.assetHolder.assignModal.dateRequired')),
   assignNote: z.string().optional().or(z.literal('')),
   returnedDate: z.string().optional().or(z.literal('')),
-  returnNote: z.string().optional().or(z.literal('')),
+  returnNote: z.string().optional().or(z.literal(''))
 }).superRefine((data, ctx) => {
   if (data.holderKind === 'employee' && !data.employeeId) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('component.assetHolder.assignModal.employeeRequired'), path: ['employeeId'] })
@@ -149,7 +211,7 @@ const form = reactive({
   assignNote: '',
   returnedDate: '',
   returnNote: '',
-  attachmentIds: [] as number[],
+  attachmentIds: [] as number[]
 })
 
 watch(selectedEmployee, (val) => {
@@ -237,11 +299,13 @@ const handleSubmit = async () => {
       organizationId: form.holderKind === 'organization' ? form.organizationId : null,
       assignedDate: form.assignedDate,
       assignNote: form.assignNote,
-      ...(isReturned.value ? {
-        returnedDate: form.returnedDate,
-        returnNote: form.returnNote,
-      } : {}),
-      attachmentIds: form.attachmentIds,
+      ...(isReturned.value
+        ? {
+            returnedDate: form.returnedDate,
+            returnNote: form.returnNote
+          }
+        : {}),
+      attachmentIds: form.attachmentIds
     })
     if (response.success) {
       toast.add({

@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <DataTable
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       v-model:expanded="expanded"
       :data="data"
       :columns="columns"
@@ -14,10 +14,19 @@
       table-class="min-w-[860px]"
     >
       <template #filters>
-        <USwitch v-model="activeOnly" :label="$t('pages.inventory.stockOut.activeOnly')" @update:model-value="fetchStockOuts" />
+        <USwitch
+          v-model="activeOnly"
+          :label="$t('pages.inventory.stockOut.activeOnly')"
+          @update:model-value="fetchStockOuts"
+        />
       </template>
       <template #actions>
-        <UButton v-if="hasPermission('inventory-stock:assign')" color="primary" icon="i-lucide-package-minus" @click="openAssign">
+        <UButton
+          v-if="hasPermission('inventory-stock:assign')"
+          color="primary"
+          icon="i-lucide-package-minus"
+          @click="openAssign"
+        >
           {{ $t('pages.inventory.stockOut.assign') }}
         </UButton>
       </template>
@@ -32,8 +41,17 @@
       </template>
     </DataTable>
 
-    <AssignModal v-model="showAssignModal" :inventory-id="inventoryId" @done="fetchStockOuts" />
-    <ReturnModal v-model="showReturnModal" :employee="selectedEmployee" :item="selectedItem" @done="fetchStockOuts" />
+    <AssignModal
+      v-model="showAssignModal"
+      :inventory-id="inventoryId"
+      @done="fetchStockOuts"
+    />
+    <ReturnModal
+      v-model="showReturnModal"
+      :employee="selectedEmployee"
+      :item="selectedItem"
+      @done="fetchStockOuts"
+    />
   </div>
 </template>
 
@@ -104,7 +122,7 @@ const buildItemColumns = (doc: InventoryStockOut): TableColumn<InventoryStockOut
       const c = row.original.conditionAssigned
       return h(UBadge, { color: c === 'new' ? 'success' : 'warning', variant: 'subtle' }, () => c === 'new' ? t('pages.inventory.condition.new') : t('pages.inventory.condition.used'))
     } },
-    { id: 'remaining', header: t('pages.inventory.stockOut.remaining'), cell: ({ row }) => h('span', { class: 'font-semibold text-highlighted text-sm' }, `${row.original.quantityRemaining} / ${row.original.quantity} ${row.original.variant?.unit || ''}`) },
+    { id: 'remaining', header: t('pages.inventory.stockOut.remaining'), cell: ({ row }) => h('span', { class: 'font-semibold text-highlighted text-sm' }, `${row.original.quantityRemaining} / ${row.original.quantity} ${row.original.variant?.unit || ''}`) }
   ]
   if (hasPermission('inventory-stock:return')) {
     cols.push({
@@ -161,7 +179,7 @@ const columns = computed<TableColumn<InventoryStockOut>[]>(() => {
           h(UBadge, { color: theme.color, variant: 'subtle', icon: theme.icon, label: att.originalName, class: 'max-w-full truncate' })
         ])
       }))
-    } },
+    } }
   ]
   return cols
 })

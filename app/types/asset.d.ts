@@ -1,9 +1,35 @@
-import type { ApiResponse } from './api'
-
 export interface AssetLabel {
   id?: number
   key: string
   value: string
+}
+
+export interface AssetFilters {
+  categoryIds?: number[]
+  subCategoryIds?: number[]
+  branchIds?: number[]
+  locationIds?: number[]
+  status?: string[]
+  holderStatus?: string
+  holderType?: string
+  holderKind?: string
+  holderId?: number
+  bleTagStatus?: string
+  priceMin?: number
+  priceMax?: number
+  purchaseDateFrom?: string
+  purchaseDateTo?: string
+  missingFields?: string[]
+  depreciationStatus?: string
+  usefulLifeOp?: string
+  usefulLifeYears?: number
+  monthlyDepMin?: number
+  monthlyDepMax?: number
+  accumulatedDepMin?: number
+  accumulatedDepMax?: number
+  bookValueMin?: number
+  bookValueMax?: number
+  labels?: AssetLabel[]
 }
 
 export interface AssetStatus {

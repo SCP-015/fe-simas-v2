@@ -8,9 +8,16 @@ export interface Employee {
   photo: string | null
   isActive: boolean
   organizationId: number | null
-  organization: { id: number; name: string } | null
+  organization: { id: number, name: string } | null
   assetCount: number
   createdAt: string
+}
+
+export interface EmployeePickerOption {
+  label: string
+  value: number
+  avatar?: { src: string, alt: string, loading?: 'lazy' | 'eager' }
+  photo?: { src: string, alt: string, loading?: 'lazy' | 'eager' }
 }
 
 export interface EmployeePayload {

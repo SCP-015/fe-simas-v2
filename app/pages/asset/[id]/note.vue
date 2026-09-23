@@ -1,10 +1,10 @@
 <template>
-  <AssetDetailWrapper v-slot="{ asset, isLoading }">
+  <AssetDetailWrapper>
     <div class="space-y-4">
       <DataTable
         v-model:search="search"
         v-model:page="page"
-        v-model:perPage="perPage"
+        v-model:per-page="perPage"
         :data="data"
         :columns="columns"
         :loading="isLoadingLogs"
@@ -36,11 +36,21 @@
                   <div class="text-sm font-semibold text-toned mb-1">
                     {{ $t('common.customLabels') }}
                   </div>
-                  <div v-if="availableLabelKeys.length === 0" class="text-xs text-dimmed italic">
+                  <div
+                    v-if="availableLabelKeys.length === 0"
+                    class="text-xs text-dimmed italic"
+                  >
                     {{ $t('pages.asset.index.noCustomLabels') }}
                   </div>
-                  <div v-else class="space-y-1.5 max-h-48 overflow-y-auto">
-                    <div v-for="key in availableLabelKeys" :key="key" class="flex items-center gap-2">
+                  <div
+                    v-else
+                    class="space-y-1.5 max-h-48 overflow-y-auto"
+                  >
+                    <div
+                      v-for="key in availableLabelKeys"
+                      :key="key"
+                      class="flex items-center gap-2"
+                    >
                       <UCheckbox
                         :id="`col-${key}`"
                         :model-value="activeLabelColumns.includes(key)"
@@ -52,7 +62,7 @@
                 </div>
               </template>
             </UPopover>
-          </div>    
+          </div>
         </template>
       </DataTable>
 
@@ -72,12 +82,12 @@
       />
 
       <!-- Delete Modal -->
-      <DeleteModal 
-        v-model="showDeleteModal" 
-        :title="$t('pages.asset.note.deleteTitle')" 
-        :item-name="selectedNote?.note ? `note: '${selectedNote.note}'` : `note ID: ${selectedNote?.id}`" 
+      <DeleteModal
+        v-model="showDeleteModal"
+        :title="$t('pages.asset.note.deleteTitle')"
+        :item-name="selectedNote?.note ? `note: '${selectedNote.note}'` : `note ID: ${selectedNote?.id}`"
         :loading="isDeleting"
-        @confirm="handleDelete" 
+        @confirm="handleDelete"
       />
     </div>
   </AssetDetailWrapper>
@@ -105,7 +115,6 @@ const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
 
-// State
 const data = ref<AssetNote[]>([])
 const isLoadingLogs = ref(false)
 
@@ -128,14 +137,12 @@ const availableLabelKeys = ref<string[]>([])
 const activeLabelColumns = ref<string[]>([])
 const LABEL_STORAGE_KEY = 'asset_note_label_columns'
 
-// Pagination meta
 const meta = reactive({
   total: 0,
   from: 0,
   to: 0
 })
 
-// Fetch notes for this specific asset
 const fetchNotes = async () => {
   isLoadingLogs.value = true
   try {
@@ -175,7 +182,6 @@ const toggleLabelColumn = (key: string, checked: boolean) => {
   }
 }
 
-// Table columns
 const baseColumns: TableColumn<AssetNote>[] = [
   {
     accessorKey: 'date',
@@ -198,11 +204,10 @@ const baseColumns: TableColumn<AssetNote>[] = [
       const attachments = row.original.attachments || []
       if (attachments.length === 0) return h('span', { class: 'text-dimmed text-xs' }, '-')
 
-      // Render clickable mini badges for each attachment
       return h(
         'div',
         { class: 'flex flex-wrap gap-2 max-w-sm' },
-        attachments.map(att => {
+        attachments.map((att) => {
           const theme = getAttachmentBadgeTheme(att.mimeType)
           return h(
             'a',
@@ -223,8 +228,8 @@ const baseColumns: TableColumn<AssetNote>[] = [
           )
         })
       )
+    }
   }
-}
 ]
 
 const createdByColumn: TableColumn<AssetNote> = {
@@ -251,12 +256,12 @@ const createdByColumn: TableColumn<AssetNote> = {
 
 const columns = computed(() => {
   const list = [...baseColumns]
-  activeLabelColumns.value.forEach(key => {
+  activeLabelColumns.value.forEach((key) => {
     list.push({
       id: `label:${key}`,
       header: key,
-      cell: ({ row }: any) => {
-        const label = row.original.labels?.find((l: any) => l.key === key)
+      cell: ({ row }: { row: Row<AssetNote> }) => {
+        const label = row.original.labels?.find(l => l.key === key)
         return h('span', { class: 'text-toned' }, label ? label.value : '-')
       }
     })
@@ -276,15 +281,15 @@ const columns = computed(() => {
         return h(
           UDropdownMenu,
           {
-            content: { align: 'end' },
-            items: getRowItems(row),
+            'content': { align: 'end' },
+            'items': getRowItems(row),
             'aria-label': 'Actions dropdown'
           },
           () =>
             h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
+              'icon': 'i-lucide-ellipsis-vertical',
+              'color': 'neutral',
+              'variant': 'ghost',
               'aria-label': 'Actions dropdown'
             })
         )

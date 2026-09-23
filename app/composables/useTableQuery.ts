@@ -1,11 +1,12 @@
 import { UIcon } from '#components'
 import type { Ref } from 'vue'
+import type { FilterBag } from '~/types/api'
 
 interface TableQueryOptions {
   defaultSortBy?: string
   defaultOrder?: 'ASC' | 'DESC'
   syncUrl?: boolean
-  filters?: Ref<Record<string, any>>
+  filters?: Ref<FilterBag>
 }
 
 export function useTableQuery(onQueryChange: () => void, options: TableQueryOptions = {}) {
@@ -14,7 +15,6 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
   const route = syncUrl ? useRoute() : null
   const router = syncUrl ? useRouter() : null
 
-  // Initialize from URL query params if syncUrl enabled
   const search = ref(syncUrl ? ((route!.query.q as string) || '') : '')
   const limitOptions = ref([10, 25, 50, 100])
   const perPage = ref(syncUrl ? (Number(route!.query.perPage) || 10) : 10)
@@ -26,68 +26,64 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
       : defaultOrder
   )
 
-  // Initialize filters from URL query params
   if (syncUrl && filters) {
     const query = route!.query
-    const parsedFilters: Record<string, any> = {}
-    
+    const parsedFilters: FilterBag = {}
+
     const arrayNumberFields = ['categoryIds', 'subCategoryIds', 'branchIds', 'locationIds']
     const arrayStringFields = ['status', 'missingFields', 'units']
     const numberFields = ['holderId', 'priceMin', 'priceMax', 'usefulLifeYears', 'monthlyDepMin', 'monthlyDepMax', 'accumulatedDepMin', 'accumulatedDepMax', 'bookValueMin', 'bookValueMax', 'newStockMin', 'newStockMax', 'usedStockMin', 'usedStockMax']
     const stringFields = ['holderStatus', 'holderType', 'purchaseDateFrom', 'purchaseDateTo', 'depreciationStatus', 'bleTagStatus', 'usefulLifeOp', 'handoverStatus', 'transactionType', 'variantStatus', 'isActive']
-    
-    arrayNumberFields.forEach(field => {
+
+    arrayNumberFields.forEach((field) => {
       if (query[field] !== undefined && query[field] !== '') {
         parsedFilters[field] = String(query[field]).split(',').map(Number).filter(n => !isNaN(n))
       }
     })
 
-    arrayStringFields.forEach(field => {
+    arrayStringFields.forEach((field) => {
       if (query[field] !== undefined && query[field] !== '') {
         parsedFilters[field] = String(query[field]).split(',')
       }
     })
-    
-    numberFields.forEach(field => {
+
+    numberFields.forEach((field) => {
       if (query[field] !== undefined && query[field] !== '') {
         parsedFilters[field] = Number(query[field])
       }
     })
-    
-    stringFields.forEach(field => {
+
+    stringFields.forEach((field) => {
       if (query[field] !== undefined && query[field] !== '') {
-        parsedFilters[field] = query[field]
+        parsedFilters[field] = String(query[field])
       }
     })
 
-    // Parse label.* params
-    const labelFilters: { key: string; value: string }[] = []
+    const labelFilters: { key: string, value: string }[] = []
     for (const [qKey, qVal] of Object.entries(query)) {
       if (qKey.startsWith('label.') && qVal) {
         labelFilters.push({ key: qKey.substring(6), value: String(qVal) })
       }
     }
     if (labelFilters.length) parsedFilters.labels = labelFilters
-    
+
     filters.value = parsedFilters
   }
 
-  // Sync state to URL query params (only if enabled)
   const syncToUrl = () => {
     if (!syncUrl || !router) return
-    const query: Record<string, any> = {}
+    const query: Record<string, string> = {}
     if (page.value > 1) query.page = String(page.value)
     if (perPage.value !== 10) query.perPage = String(perPage.value)
     if (search.value) query.q = search.value
     if (sortBy.value) query.sortBy = sortBy.value
     if (sortBy.value && order.value) query.order = order.value
-    
-    // Append filters to URL query
+
     if (filters && filters.value) {
       for (const [key, value] of Object.entries(filters.value)) {
         if (value === undefined || value === null || value === '') continue
         if (key === 'labels' && Array.isArray(value)) {
-          for (const label of value as { key: string; value: string }[]) {
+          for (const label of value as { key: string, value: string }[]) {
             if (label.key && label.value) {
               query[`label.${label.key}`] = label.value
             }
@@ -99,7 +95,7 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
         }
       }
     }
-    
+
     router.replace({ query })
   }
 
@@ -112,7 +108,6 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
     }
   }
 
-  // Watch for pagination and sorting changes
   const watchSources = [page, perPage, sortBy, order]
 
   watch(watchSources, () => {
@@ -120,7 +115,6 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
     onQueryChange()
   })
 
-  // Watch for filter changes with deep reactive checking
   if (filters) {
     watch(filters, () => {
       if (page.value !== 1) {
@@ -132,7 +126,6 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
     }, { deep: true })
   }
 
-  // Watch search with debounce
   let searchTimeout: ReturnType<typeof setTimeout>
   watch(search, () => {
     clearTimeout(searchTimeout)
@@ -156,7 +149,7 @@ export function useTableQuery(onQueryChange: () => void, options: TableQueryOpti
         h('span', label),
         h('div', { class: 'flex flex-col -space-y-1.5' }, [
           h(UIcon, { name: 'i-lucide-chevron-up', class: `w-3 h-3 ${upColor}` }),
-          h(UIcon, { name: 'i-lucide-chevron-down', class: `w-3 h-3 ${downColor}` }),
+          h(UIcon, { name: 'i-lucide-chevron-down', class: `w-3 h-3 ${downColor}` })
         ])
       ])
     }

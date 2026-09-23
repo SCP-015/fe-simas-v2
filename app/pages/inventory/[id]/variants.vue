@@ -3,7 +3,7 @@
     <DataTable
       v-model:search="search"
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       v-model:expanded="expanded"
       :data="pagedVariants"
       :columns="variantColumns"
@@ -14,7 +14,12 @@
       table-class="min-w-[720px]"
     >
       <template #actions>
-        <UButton v-if="hasPermission('inventory-variant:read')" color="primary" icon="i-lucide-layers" @click="() => { showVariantModal = true }">
+        <UButton
+          v-if="hasPermission('inventory-variant:read')"
+          color="primary"
+          icon="i-lucide-layers"
+          @click="() => { showVariantModal = true }"
+        >
           {{ $t('pages.inventory.variant.manageTitle') }}
         </UButton>
       </template>
@@ -29,7 +34,11 @@
       </template>
     </DataTable>
 
-    <InventoryVariantManagerModal v-model="showVariantModal" :inventory="item" @changed="onVariantsChanged" />
+    <InventoryVariantManagerModal
+      v-model="showVariantModal"
+      :inventory="item"
+      @changed="onVariantsChanged"
+    />
   </div>
 </template>
 
@@ -88,7 +97,7 @@ watch(search, () => { page.value = 1 })
 const branchColumns: TableColumn<BranchStockRow>[] = [
   { accessorKey: 'name', header: t('common.branch'), cell: ({ row }) => h('span', { class: 'text-highlighted text-sm' }, row.original.name) },
   { accessorKey: 'newStock', header: t('pages.inventory.condition.new'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-emerald-600 text-sm font-medium' }, String(row.original.newStock)) },
-  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) },
+  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) }
 ]
 
 const variantColumns: TableColumn<VariantStockRow>[] = [
@@ -117,7 +126,7 @@ const variantColumns: TableColumn<VariantStockRow>[] = [
   } },
   { accessorKey: 'description', header: t('common.description'), cell: ({ row }) => h('span', { class: 'text-toned text-sm' }, row.original.description || '-') },
   { accessorKey: 'newStock', header: t('pages.inventory.condition.new'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-emerald-600 text-sm font-medium' }, String(row.original.newStock)) },
-  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) },
+  { accessorKey: 'usedStock', header: t('pages.inventory.condition.used'), meta: { class: { td: 'text-center', th: 'text-center' } }, cell: ({ row }) => h('span', { class: 'text-amber-600 text-sm font-medium' }, String(row.original.usedStock)) }
 ]
 
 const fetchData = async () => {
@@ -147,13 +156,13 @@ const fetchData = async () => {
         if (b.condition === 'new') branchEntry.newStock += b.quantity
         else branchEntry.usedStock += b.quantity
       }
-      allVariants.value = variantsRes.data.map(v => {
+      allVariants.value = variantsRes.data.map((v) => {
         const entry = stockByVariant.get(v.id)
         return {
           ...v,
           newStock: entry?.new ?? 0,
           usedStock: entry?.used ?? 0,
-          branches: entry ? Array.from(entry.branches.values()) : [],
+          branches: entry ? Array.from(entry.branches.values()) : []
         }
       })
     }

@@ -86,6 +86,7 @@
     "feedback": "Feedback",
     "capturing": "Capturing...",
     "inventory": "Inventory",
+    "transfer": "Transfer",
     "calendar": "Calendar"
   },
   "component": {
@@ -149,8 +150,8 @@
       "nfcNotSupportedDesc": "NFC is only available on Android Chrome with HTTPS.",
       "readyToScan": "Ready to scan",
       "holdNfc": "Hold NFC tag near your device",
-      "manualEntry": "Or enter code manually",
-      "typePlaceholder": "Type asset code...",
+      "manualEntry": "Or enter serial number manually",
+      "typePlaceholder": "Type asset serial number...",
       "notFound": "Asset \"{code}\" not found",
       "searchFailed": "Failed to search asset",
       "conventional": "Conventional",
@@ -178,7 +179,7 @@
     "asset": {
       "detailWrapper": {
         "activityLog": "Activity Log",
-        "printCode": "Print Code",
+        "printCode": "Print Serial Number",
         "changeStatus": "Change Status",
         "editAsset": "Edit Asset",
         "noImage": "No Image",
@@ -196,7 +197,7 @@
         "scheduleTab": "Schedule"
       },
       "printCodeModal": {
-        "title": "Print Asset Code",
+        "title": "Print Asset Serial Number",
         "description": "{count} asset(s) selected",
         "codeType": "Code Type",
         "qrCode": "QR Code",
@@ -208,7 +209,7 @@
         "columns": "Columns",
         "displayOptions": "Display Options",
         "showAssetName": "Show Asset Name",
-        "showAssetCode": "Show Asset Code",
+        "showAssetCode": "Show Serial Number",
         "showCategoryName": "Show Sub Category",
         "showCutMarks": "Cut Marks",
         "preview": "Preview",
@@ -297,8 +298,8 @@
         "readyToScan": "Ready to scan",
         "holdNfc": "Hold NFC tag near your device",
         "manual": "Manual",
-        "manualDesc": "Type asset code manually",
-        "manualPlaceholder": "Enter asset code..."
+        "manualDesc": "Type asset serial number manually",
+        "manualPlaceholder": "Enter asset serial number..."
       }
     },
     "inventory": {
@@ -805,7 +806,7 @@
         "bulkDeleteDescription": "Are you sure you want to delete {count} selected assets? This action cannot be undone.",
         "bulkDeleteSuccess": "{count} asset(s) deleted successfully!",
         "bulkDeletePartial": "{deleted} deleted, {failed} failed (has dependencies)",
-        "printCode": "Print Code"
+        "printCode": "Print Serial Number"
       },
       "create": {
         "title": "Add New Asset",
@@ -815,13 +816,13 @@
         "dropImage": "Drop your image here",
         "imageHint": "PNG, JPG up to 2MB",
         "uploading": "Uploading...",
-        "codeLabel": "Code",
+        "codeLabel": "Serial Number",
         "scan": "Multi Scan",
-        "addCode": "Add Code",
+        "addCode": "Add Serial Number",
         "codePlaceholder": "e.g. AST-001",
-        "duplicateCode": "Duplicate code in the list",
-        "codeExists": "Code \"{code}\" already exists",
-        "codeAvailable": "Code available",
+        "duplicateCode": "Duplicate serial number in the list",
+        "codeExists": "Serial number \"{code}\" already exists",
+        "codeAvailable": "Serial number available",
         "nameLabel": "Name",
         "namePlaceholder": "Asset name",
         "categoryLabel": "Category",
@@ -873,11 +874,11 @@
         "relocationDate": "Relocation Date",
         "relocationNotes": "Relocation Notes",
         "relocationNotesPlaceholder": "Enter relocation reasons...",
-        "codeRequired": "At least one code is required",
-        "duplicateCodesError": "Duplicate codes are not allowed",
+        "codeRequired": "At least one serial number is required",
+        "duplicateCodesError": "Duplicate serial numbers are not allowed",
         "successCount": "{count} asset(s) created successfully!",
         "failedCreate": "Failed to create: {codes}",
-        "codeExistsHint": "Code may already exist"
+        "codeExistsHint": "Serial number may already exist"
       },
       "edit": {
         "title": "Edit Asset",
@@ -1002,6 +1003,31 @@
       "deleteOrganization": "Delete Organization",
       "deleteTitle": "Delete Organization",
       "deleteSuccess": "Organization deleted successfully"
+    },
+    "transfer": {
+      "title": "Transfer",
+      "description": "Complete incoming item data and merge it into Assets",
+      "statusAll": "All Statuses",
+      "statusPending": "Pending",
+      "statusMerged": "Merged",
+      "noSerial": "No serial number yet",
+      "noSerialWithQuantity": "{quantity} unit(s), no serial yet",
+      "codeWithMore": "{codes} (+{more} more)",
+      "columnName": "Name",
+      "columnCode": "Serial Number",
+      "columnPrice": "Price",
+      "columnPurchaseDate": "Purchase Date",
+      "columnStatus": "Status",
+      "columnCreatedBy": "Created By",
+      "columnCreatedAt": "Created At",
+      "createdBySystem": "External System",
+      "columnAction": "Action",
+      "mergeToAsset": "Merge to Asset",
+      "mergeTitle": "Merge to Asset",
+      "mergeDescription": "Complete this data to merge the transfer item into an Asset",
+      "mergeSubmit": "Merge",
+      "mergeNotFound": "Transfer item not found",
+      "mergeAlreadyDone": "This transfer item has already been merged"
     },
     "subCategory": {
       "title": "Sub Category Management",

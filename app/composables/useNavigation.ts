@@ -48,11 +48,17 @@ export const useNavigation = () => {
           permission: 'inventory:read'
         },
         {
+          label: t('nav.transfer'),
+          to: '/transfer',
+          icon: 'i-lucide-package-plus',
+          permission: 'transfer:read'
+        },
+        {
           label: t('nav.calendar'),
           to: '/calendar',
           icon: 'i-lucide-calendar',
           permission: 'asset-schedule:read'
-        },
+        }
       ]
     },
     {

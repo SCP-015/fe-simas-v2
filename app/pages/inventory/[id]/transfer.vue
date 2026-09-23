@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <DataTable
       v-model:page="page"
-      v-model:perPage="perPage"
+      v-model:per-page="perPage"
       v-model:expanded="expanded"
       :data="data"
       :columns="columns"
@@ -33,7 +33,11 @@
       </template>
     </DataTable>
 
-    <TransferModal v-model="showModal" :inventory-id="inventoryId" @done="fetchTransfers" />
+    <TransferModal
+      v-model="showModal"
+      :inventory-id="inventoryId"
+      @done="fetchTransfers"
+    />
   </div>
 </template>
 
@@ -86,7 +90,7 @@ const itemColumns: TableColumn<TransferItem>[] = [
     const c = row.original.condition
     return h('span', { class: c === 'new' ? 'text-emerald-600 text-sm' : 'text-amber-600 text-sm' }, c === 'new' ? t('pages.inventory.condition.new') : t('pages.inventory.condition.used'))
   } },
-  { id: 'quantity', header: t('pages.inventory.monitor.quantity'), cell: ({ row }) => h('span', { class: 'font-semibold text-default text-sm' }, `× ${row.original.quantity}`) },
+  { id: 'quantity', header: t('pages.inventory.monitor.quantity'), cell: ({ row }) => h('span', { class: 'font-semibold text-default text-sm' }, `× ${row.original.quantity}`) }
 ]
 
 const columns: TableColumn<InventoryStockTransfer>[] = [

@@ -1,7 +1,7 @@
 export interface Organization {
   id: number
   parentId: number | null
-  parent: { id: number; name: string } | null
+  parent: { id: number, name: string } | null
   name: string
   type: string
   description: string | null

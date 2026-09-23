@@ -31,7 +31,11 @@
         @submit="onSubmit"
       >
         <!-- Type Field -->
-        <UFormField :label="$t('component.feedbackModal.type')" name="type" required>
+        <UFormField
+          :label="$t('component.feedbackModal.type')"
+          name="type"
+          required
+        >
           <URadioGroup
             v-model="state.type"
             indicator="end"
@@ -43,7 +47,11 @@
         </UFormField>
 
         <!-- Description Field -->
-        <UFormField :label="$t('component.feedbackModal.descriptionLabel')" name="description" required>
+        <UFormField
+          :label="$t('component.feedbackModal.descriptionLabel')"
+          name="description"
+          required
+        >
           <UTextarea
             v-model="state.description"
             :placeholder="$t('component.feedbackModal.descriptionPlaceholder')"
@@ -53,7 +61,11 @@
         </UFormField>
 
         <!-- Attachment Field -->
-        <UFormField :label="$t('component.feedbackModal.attachment')" name="images" required>
+        <UFormField
+          :label="$t('component.feedbackModal.attachment')"
+          name="images"
+          required
+        >
           <UFileUpload
             v-model="state.images"
             layout="grid"
@@ -73,7 +85,10 @@
             </template>
 
             <template #files-top="{ open: openFileSelect, files }">
-              <div v-if="files?.length" class="mb-2 flex items-center justify-between">
+              <div
+                v-if="files?.length"
+                class="mb-2 flex items-center justify-between"
+              >
                 <p class="font-bold text-sm">
                   {{ $t('component.feedbackModal.attachmentCount', { count: files.length }) }}
                 </p>
@@ -178,13 +193,12 @@ const onSubmit = async () => {
         icon: 'i-lucide-circle-check'
       })
       open.value = false
-    } 
+    }
   } finally {
     saving.value = false
   }
 }
 
-// Watch open state to pre-fill screenshot and URL
 watch(open, (isOpenVal) => {
   if (isOpenVal) {
     state.url = currentUrl.value
@@ -196,7 +210,6 @@ watch(open, (isOpenVal) => {
       state.images = []
     }
   } else {
-    // Clean up
     state.url = ''
     state.description = ''
     state.images = []

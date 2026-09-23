@@ -20,13 +20,13 @@ export interface HandoverStockItem {
   condition: 'new' | 'used'
   quantity: number
   note: string | null
-  branch: { id: number; name: string } | null
+  branch: { id: number, name: string } | null
   variant: {
     id: number
     name: string
     code: string | null
     unit: string
-    inventory: { id: number; name: string; code: string | null } | null
+    inventory: { id: number, name: string, code: string | null } | null
   } | null
 }
 
@@ -92,4 +92,3 @@ export interface CreateHandoverPayload {
   stockItems?: HandoverStockItemPayload[]
   attachmentIds?: number[]
 }
-

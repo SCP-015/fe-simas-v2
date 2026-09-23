@@ -267,7 +267,6 @@ const draft = reactive<{ inventoryId?: number, branchId?: number }>({ inventoryI
 const tableRows = ref<TableRow[]>([])
 const isLoadingTable = ref(false)
 
-// ── Assign: available New/Used at the selected branch, for the selected inventory's variants ──
 const entryTemplate = ref<Map<number, InventoryStockEntryRow>>(new Map())
 
 const onInventoryChange = async () => {
@@ -311,7 +310,6 @@ const buildAssignRows = () => {
   refreshAvailability()
 }
 
-// ── Return: what the handing-over employee currently holds, per variant × origin branch ──
 // Stock always returns to the branch it was originally taken from, so held
 // amounts are grouped by (variant, branch) rather than by variant alone.
 interface HeldEntry { variantId: number, branchId: number, branchName: string, inventoryName: string, variantName: string, unit: string, image: string | null, remaining: number }

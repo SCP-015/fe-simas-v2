@@ -1,7 +1,7 @@
-import { apiService } from "./api-service"
-import { handleServiceError } from "../composables/error-helper"
-import type { HandoverField, HandoverFieldInput } from "../types/handover-field"
-import type { ApiResponse } from "../types/api"
+import { apiService } from './api-service'
+import { handleServiceError } from '../composables/error-helper'
+import type { HandoverField, HandoverFieldInput } from '../types/handover-field'
+import type { ApiResponse } from '../types/api'
 
 export class HandoverFieldService {
   private get authHeaders() {
@@ -15,7 +15,7 @@ export class HandoverFieldService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }
@@ -28,7 +28,7 @@ export class HandoverFieldService {
         this.authHeaders
       )
       return response.data
-    } catch (error: any) {
+    } catch (error) {
       return handleServiceError(error)
     }
   }

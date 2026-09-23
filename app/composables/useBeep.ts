@@ -5,7 +5,8 @@
 export function useBeep() {
   const playBeep = (frequency = 1200, duration = 150) => {
     try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      const ctx = new AudioContextClass()
       const oscillator = ctx.createOscillator()
       const gain = ctx.createGain()
 
