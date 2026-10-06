@@ -78,7 +78,7 @@
         <!-- QR Code display (waiting state) -->
         <div
           v-else
-          class="relative"
+          class="flex flex-col items-center gap-3"
         >
           <div class="w-52 h-52 rounded-xl bg-default border border-default p-2 shadow-sm">
             <img
@@ -89,20 +89,21 @@
             >
           </div>
           <!-- Countdown badge -->
-          <div
+          <UBadge
             v-if="status === 'waiting'"
-            class="absolute bottom-2 left-2 right-2 flex items-center justify-center"
+            color="neutral"
+            variant="subtle"
+            size="md"
+            class="rounded-full px-3 py-1 flex items-center gap-1.5"
           >
-            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-sm">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-              </span>
-              <span class="text-[10px] font-medium text-white">
-                {{ countdown > 0 ? `${countdown}s` : $t('component.auth.nusawork.waiting') }}
-              </span>
-            </div>
-          </div>
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+            </span>
+            <span class="text-xs font-medium">
+              {{ countdown > 0 ? `${countdown}s` : $t('component.auth.nusawork.waiting') }}
+            </span>
+          </UBadge>
         </div>
 
         <!-- Instructions (only in waiting state) -->
