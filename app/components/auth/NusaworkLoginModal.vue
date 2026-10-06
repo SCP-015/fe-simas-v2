@@ -80,6 +80,7 @@
           v-else
           class="flex flex-col items-center gap-3"
         >
+          <!-- Test push notification trigger for Google Chat integration -->
           <div class="w-52 h-52 rounded-2xl bg-white p-3 shadow-md ring-1 ring-black/5 dark:ring-white/10 flex items-center justify-center">
             <img
               v-if="qrCode"
