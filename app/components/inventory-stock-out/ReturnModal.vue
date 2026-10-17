@@ -117,7 +117,7 @@ const onSubmit = async () => {
     const res = await inventoryStockOutService.returnStock({
       employeeId: props.employee.id,
       note: state.note || null,
-      items: [{ variantId: props.item.variant.id, branchId: props.item.branch.id, quantity: Number(state.quantity) }]
+      items: [{ stockOutItemId: props.item.id, variantId: props.item.variant.id, branchId: props.item.branch.id, quantity: Number(state.quantity) }]
     })
     if (res.success) {
       toast.add({ title: t('pages.inventory.stockOut.returnSuccess'), color: 'success', icon: 'i-lucide-circle-check' })

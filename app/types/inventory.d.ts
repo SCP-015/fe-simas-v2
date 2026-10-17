@@ -215,6 +215,7 @@ export interface InventoryStockAssignItem {
 }
 
 export interface InventoryStockReturnItem {
+  stockOutItemId?: number
   variantId: number
   branchId: number
   quantity: number
