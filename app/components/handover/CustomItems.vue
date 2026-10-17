@@ -74,7 +74,7 @@
           <div class="min-w-0 flex-1">
             <span class="text-sm font-semibold text-highlighted block truncate">{{ item.name }}</span>
             <span class="text-xs text-muted block truncate">
-              {{ item.code || 'No code' }} · {{ item.quantity }} {{ item.unit || 'pcs' }}
+              {{ item.code || 'No code' }} · {{ item.quantity }} {{ item.unit || 'Pcs' }}
             </span>
           </div>
         </div>
@@ -119,10 +119,12 @@
               />
             </UFormField>
           </div>
-          <UFormField label="Unit">
-            <UInput
+          <UFormField label="Unit" required>
+            <USelectMenu
               v-model="draft.unit"
-              placeholder="Example: pcs"
+              :items="unitOptions"
+              value-key="value"
+              placeholder="Select unit"
               class="w-full"
             />
           </UFormField>
@@ -163,14 +165,17 @@ export interface HandoverCustomRow {
   note: string
 }
 
+type CustomItemUnit = typeof INVENTORY_UNITS[number]
+
 defineProps<{ transactionType: 'assign' | 'return' }>()
 const rows = defineModel<HandoverCustomRow[]>('rows', { default: () => [] })
 
 const open = ref(false)
-const draft = reactive<HandoverCustomRow>({ name: '', code: '', quantity: 1, unit: 'pcs', note: '' })
+const unitOptions = INVENTORY_UNITS.map(unit => ({ label: unit, value: unit }))
+const draft = reactive<Omit<HandoverCustomRow, 'unit'> & { unit: CustomItemUnit }>({ name: '', code: '', quantity: 1, unit: 'Pcs', note: '' })
 const canAdd = computed(() => draft.name.trim().length > 0 && Number(draft.quantity) >= 1)
 
-const resetDraft = () => Object.assign(draft, { name: '', code: '', quantity: 1, unit: 'pcs', note: '' })
+const resetDraft = () => Object.assign(draft, { name: '', code: '', quantity: 1, unit: 'Pcs', note: '' })
 const addItem = () => {
   if (!canAdd.value) return
   rows.value = [...rows.value, {
