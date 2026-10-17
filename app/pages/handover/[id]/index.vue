@@ -223,12 +223,12 @@
               class="w-3.5 h-3.5"
             />
             {{ $t('pages.handover.itemInfo') }}
-            <span class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">{{ handover.items.length + handover.stockItems.length }}</span>
+            <span class="text-xs text-muted bg-elevated px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">{{ handover.items.length + handover.stockItems.length + handover.customItems.length }}</span>
           </h4>
         </div>
 
         <div
-          v-if="!handover.items.length && !handover.stockItems.length"
+          v-if="!handover.items.length && !handover.stockItems.length && !handover.customItems.length"
           class="text-center text-sm text-dimmed py-8"
         >
           {{ $t('common.noData') }}
@@ -324,6 +324,43 @@
                 </div>
               </div>
 
+              <div
+                v-if="item.note"
+                class="text-xs text-toned bg-muted border border-muted rounded-lg p-2 whitespace-pre-line"
+              >
+                {{ item.note }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom items -->
+        <div
+          v-if="handover.customItems.length"
+          class="space-y-3"
+          :class="{ 'mt-6 pt-6 border-t border-muted': handover.items.length || handover.stockItems.length }"
+        >
+          <h5 class="text-xs font-semibold text-dimmed uppercase tracking-wider">
+            Custom Items
+          </h5>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              v-for="item in handover.customItems"
+              :key="item.id"
+              class="border border-default rounded-lg p-3 flex flex-col gap-2.5"
+            >
+              <div class="flex items-start gap-3">
+                <div class="w-11 h-11 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
+                  <UIcon
+                    name="i-lucide-clipboard-plus"
+                    class="w-5 h-5"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <span class="text-sm font-semibold text-highlighted block truncate">{{ item.name }}</span>
+                  <span class="text-xs text-muted mt-0.5 block truncate">{{ item.code || 'No code' }} · {{ item.quantity }} {{ item.unit || 'pcs' }}</span>
+                </div>
+              </div>
               <div
                 v-if="item.note"
                 class="text-xs text-toned bg-muted border border-muted rounded-lg p-2 whitespace-pre-line"

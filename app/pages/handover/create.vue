@@ -139,7 +139,7 @@
         />
 
         <!-- ═══ Items: asset items and stock items side by side ═══ -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6 pt-6 border-t border-muted">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6 pt-6 border-t border-muted">
           <!-- Asset items -->
           <div class="space-y-4">
             <div class="flex items-center justify-between border-b border-muted pb-2">
@@ -388,6 +388,12 @@
               </div>
             </div>
           </div>
+
+          <!-- Custom items (return only) -->
+          <HandoverCustomItems
+            v-model:rows="form.customItems"
+            :transaction-type="form.transactionType"
+          />
         </div>
 
         <!-- Footer Actions -->
@@ -448,6 +454,7 @@ import { employeeService } from '~/services/employee-service'
 import type { HandoverField } from '~/types/handover-field'
 import type { CreateHandoverPayload } from '~/types/handover'
 import type { HandoverStockRow } from '~/components/handover/StockItems.vue'
+import type { HandoverCustomRow } from '~/components/handover/CustomItems.vue'
 import type { Attachment } from '~/types/attachment'
 import type { EmployeePickerOption } from '~/types/employee'
 
@@ -471,7 +478,8 @@ const form = reactive({
   handedOverById: undefined as unknown as number,
   customFields: {} as Record<string, string | null>,
   items: [] as { assetId: number, name: string, code: string, image: string | null, note: string }[],
-  stockItems: [] as HandoverStockRow[]
+  stockItems: [] as HandoverStockRow[],
+  customItems: [] as HandoverCustomRow[]
 })
 
 // Supporting documents uploaded by the user (the signing form is generated server-side).
@@ -528,6 +536,7 @@ const onScanned = (code: string) => {
 watch(() => form.transactionType, (type) => {
   form.items = []
   form.stockItems = []
+  form.customItems = []
   lookupError.value = null
   form.customFields = {}
   fetchCustomFields(type)
@@ -536,6 +545,7 @@ watch(() => form.handedOverById, () => {
   if (form.transactionType === 'return') {
     form.items = []
     form.stockItems = []
+    form.customItems = []
     lookupError.value = null
   }
 })
@@ -636,9 +646,10 @@ const schema = z.object({
   receivedById: z.number().int().positive(t('pages.handover.form.validation.receivedByRequired')),
   handedOverById: z.number().int().positive(t('pages.handover.form.validation.handedOverByRequired')),
   items: z.array(z.object({ assetId: z.number().int().positive(), note: z.string().optional().nullable() })).optional(),
-  stockItems: z.array(z.object({ variantId: z.number(), branchId: z.number(), condition: z.enum(['new', 'used']), quantity: z.number().int().min(1) })).optional()
+  stockItems: z.array(z.object({ variantId: z.number(), branchId: z.number(), condition: z.enum(['new', 'used']), quantity: z.number().int().min(1) })).optional(),
+  customItems: z.array(z.object({ name: z.string().trim().min(1), code: z.string().optional(), quantity: z.number().int().min(1), unit: z.string().optional(), note: z.string().optional() })).optional()
 }).superRefine((data, ctx) => {
-  if ((!data.items || data.items.length === 0) && (!data.stockItems || data.stockItems.length === 0)) {
+  if ((!data.items || data.items.length === 0) && (!data.stockItems || data.stockItems.length === 0) && (!data.customItems || data.customItems.length === 0)) {
     ctx.addIssue({ code: 'custom', path: ['items'], message: t('pages.handover.form.validation.itemsRequired') })
   }
 })
@@ -706,6 +717,9 @@ const handleSubmit = async () => {
     }
     if (form.stockItems.length > 0) {
       payload.stockItems = form.stockItems.map(r => ({ variantId: r.variantId, branchId: r.branchId, condition: r.condition, quantity: r.quantity, note: r.note || null }))
+    }
+    if (form.customItems.length > 0) {
+      payload.customItems = form.customItems.map(r => ({ name: r.name, code: r.code || null, quantity: r.quantity, unit: r.unit || null, note: r.note || null }))
     }
 
     const response = await handoverService.create(payload)

@@ -38,6 +38,23 @@ export interface HandoverStockItemPayload {
   note?: string | null
 }
 
+export interface HandoverCustomItem {
+  id: number
+  name: string
+  code: string | null
+  quantity: number
+  unit: string | null
+  note: string | null
+}
+
+export interface HandoverCustomItemPayload {
+  name: string
+  code?: string | null
+  quantity: number
+  unit?: string | null
+  note?: string | null
+}
+
 export interface Handover {
   id: number
   received: {
@@ -68,6 +85,7 @@ export interface Handover {
   updatedAt: string
   items: HandoverItem[]
   stockItems: HandoverStockItem[]
+  customItems: HandoverCustomItem[]
   attachments: Attachment[]
   createdBy: {
     id: number
@@ -90,5 +108,6 @@ export interface CreateHandoverPayload {
   customFields?: Record<string, string | number | null>
   items?: HandoverItemPayload[]
   stockItems?: HandoverStockItemPayload[]
+  customItems?: HandoverCustomItemPayload[]
   attachmentIds?: number[]
 }
