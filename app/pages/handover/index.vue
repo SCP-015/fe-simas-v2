@@ -155,7 +155,7 @@ const {
   sortBy,
   order,
   sortHeader
-} = useTableQuery(() => fetchHandovers(), { defaultSortBy: 'createdAt', defaultOrder: 'DESC' })
+} = useTableQuery(() => fetchHandovers(), { defaultSortBy: 'id', defaultOrder: 'DESC' })
 
 const fetchHandovers = async () => {
   isLoading.value = true
