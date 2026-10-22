@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="transactionType === 'return'"
-    class="space-y-4"
-  >
+  <div class="space-y-4">
     <div class="flex items-center justify-between border-b border-muted pb-2">
       <h3 class="text-md font-semibold text-highlighted flex items-center gap-1.5">
         <UIcon
@@ -90,7 +87,7 @@
     <UModal
       v-model:open="open"
       title="Add Custom Item"
-      description="Record an unregistered item returned by the employee."
+      description="Record an unregistered item included in this handover."
       :ui="{ content: 'sm:max-w-lg', footer: 'justify-end' }"
     >
       <template #body>
